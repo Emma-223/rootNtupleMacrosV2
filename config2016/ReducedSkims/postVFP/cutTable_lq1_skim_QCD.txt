@@ -30,28 +30,28 @@ reducedSkimType	      	   0		-		-		-		-1
 # Trigger scale factors
 #-----------------------------------------------------------------------------------------------------------------------------
 #TriggerSFFileName   /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/wrAnalysis_triggerScaleFactors/2016/egammaEffi.txt_EGM2D.root  - - - -1
-TriggerSFFileName   /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/wprimeLeptonic_ulTriggerScaleFactors/2016preVFP/egammaEffi.txt_EGM2D.root  - - - -1
+TriggerSFFileName   /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/wprimeLeptonic_ulTriggerScaleFactors/2016postVFP/egammaEffi.txt_EGM2D.root  - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # EGM ID scale factors
 #-----------------------------------------------------------------------------------------------------------------------------
-EGMIDJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/EGM/2016preVFP_UL/electron.json.gz  - - - -1
+EGMIDJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/EGM/2016postVFP_UL/electron.json.gz  - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # PU JSON
 #-----------------------------------------------------------------------------------------------------------------------------
-PUJSONFileName   /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/LUM/2016preVFP_UL/puWeights.json.gz  - - - -1
+PUJSONFileName   /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/LUM/2016postVFP_UL/puWeights.json.gz  - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # BTV JSON
 #-----------------------------------------------------------------------------------------------------------------------------
-BTVJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/BTV/2016preVFP_UL/btagging.json.gz  - - - -1
+BTVJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/BTV/2016postVFP_UL/btagging.json.gz  - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # JME JSON
 #-----------------------------------------------------------------------------------------------------------------------------
-JMEJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/2016preVFP_UL/jet_jerc.json.gz  - - - -1
-JERTag   Summer20UL16APV_JRV3_MC  - - - -1
+JMEJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/2016postVFP_UL/jet_jerc.json.gz  - - - -1
+JERTag   Summer20UL16_JRV3_MC  - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Analysis year
 #-----------------------------------------------------------------------------------------------------------------------------
-AnalysisYear   2016preVFP  - - - -1
+AnalysisYear   2016postVFP  - - - -1
 #------------------------------------------------------------------------------------------------------
 # Energy scaling / smearing on electrons & jets -- not needed with NanoAOD-based setup
 #------------------------------------------------------------------------------------------------------
