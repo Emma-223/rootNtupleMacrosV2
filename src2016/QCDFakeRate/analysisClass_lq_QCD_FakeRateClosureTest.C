@@ -511,7 +511,11 @@ void analysisClass::Loop()
      }
 
      // Jets
+<<<<<<< HEAD
      fillVariableWithValue(   "nJet"                          , nJet_ptCut , pileup_weight * min_prescale  * fakeRateEffective );
+=======
+     fillVariableWithValue(   "nJet"                          , nJet_store , pileup_weight * min_prescale  * fakeRateEffective );
+>>>>>>> fixing up closure test analysis class
      if ( nJet_store >= 1 ) {
        fillVariableWithValue( "Jet1_Pt"                       , Jet1_Pt   , pileup_weight * min_prescale  * fakeRateEffective ) ;
        fillVariableWithValue( "Jet1_Eta"                      , Jet1_Eta , pileup_weight * min_prescale  * fakeRateEffective ) ;
@@ -548,7 +552,11 @@ void analysisClass::Loop()
        //fill these for all events
        FillUserTH1D("nElectron_PAS"        , nEle_ptCut                , pileup_weight * min_prescale * fakeRateEffective );
        FillUserTH1D("nMuon_PAS"            , nMuon_ptCut               , pileup_weight * min_prescale * fakeRateEffective );
+<<<<<<< HEAD
        FillUserTH1D("nJet_PAS"             , nJet_ptCut                , pileup_weight * min_prescale * fakeRateEffective );
+=======
+       FillUserTH1D("nJet_PAS"             , nJet_store                , pileup_weight * min_prescale * fakeRateEffective );
+>>>>>>> fixing up closure test analysis class
        FillUserTH1D("Pt1stEle_PAS"	   , Ele1_Pt                   , pileup_weight * min_prescale * fakeRateEffective );
        FillUserTH1D("Eta1stEle_PAS"	   , Ele1_Eta                  , pileup_weight * min_prescale * fakeRateEffective );
        FillUserTH1D("Phi1stEle_PAS"	   , Ele1_Phi                  , pileup_weight * min_prescale * fakeRateEffective );
