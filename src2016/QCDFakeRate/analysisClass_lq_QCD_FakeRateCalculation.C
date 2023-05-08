@@ -197,6 +197,11 @@ void analysisClass::Loop()
   //--------------------------------------------------------------------------
   // Tell the user how many entries we'll look at
   //--------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+  Int_t forLoopDebugCounterA = 0; //debugging 
+  Int_t forLoopDebugCounterB = 0;
+>>>>>>> debugging MC SF
   Long64_t nentries = GetTreeEntries();
   std::cout << "analysisClass::analysisClass(): nentries = " << nentries << std::endl;
   //--------------------------------------------------------------------------
@@ -2657,4 +2662,6 @@ void analysisClass::Loop()
   } // End loop over events
 
   std::cout << "analysisClass::Loop() ends" <<std::endl;   
+  std::cout << "number of MC eles with SF applied = "<<forLoopDebugCounterA<<std::endl;
+  std::cout << "number of MC eles with no SF = "<<forLoopDebugCounterB;
 }
