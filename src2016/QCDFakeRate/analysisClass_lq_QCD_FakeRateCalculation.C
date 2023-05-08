@@ -2657,4 +2657,6 @@ void analysisClass::Loop()
   } // End loop over events
 
   std::cout << "analysisClass::Loop() ends" <<std::endl;   
+  std::cout << "number of MC eles with SF applied = "<<forLoopDebugCounterA<<std::endl;
+  std::cout << "number of MC eles with no SF = "<<forLoopDebugCounterB;
 }
