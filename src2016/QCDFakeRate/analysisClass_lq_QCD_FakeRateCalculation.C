@@ -360,7 +360,7 @@ void analysisClass::Loop()
     //fillVariableWithValue(   "nMuon"                   , readerTools_->ReadValueBranch<Float_t>("nMuon_ptCut")     , min_prescale * pileup_weight );
     float nEle_ptCut = readerTools_->ReadValueBranch<Int_t>("nEle_ptCut");
     float nVLooseEle_ptCut = readerTools_->ReadValueBranch<Int_t>("nVLooseEle_ptCut");
-    float nJet_ptCut = readerTools_->ReadValueBranch<Int_t>("nJet_store");
+    float nJet_ptCut = readerTools_->ReadValueBranch<Int_t>("nJet_ptCut");
     // 1st Electron variables				      		              
     fillVariableWithValue(   "nEle"                    , nVLooseEle_ptCut , min_prescale * pileup_weight );
 
@@ -2657,6 +2657,4 @@ void analysisClass::Loop()
   } // End loop over events
 
   std::cout << "analysisClass::Loop() ends" <<std::endl;   
-  std::cout << "number of MC eles with SF applied = "<<forLoopDebugCounterA<<std::endl;
-  std::cout << "number of MC eles with no SF = "<<forLoopDebugCounterB;
 }
