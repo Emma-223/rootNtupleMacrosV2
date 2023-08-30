@@ -33,7 +33,8 @@ gStyle.SetPadTickY(1)
 
 
 def GetFile(filename):
-    tfile = TFile(filename)
+    filename = filename.replace("/eos/cms", "root://eoscms/").replace("/eos/user", "root://eosuser/")
+    tfile = TFile.Open(filename)
     if not tfile or tfile.IsZombie():
         print("ERROR: file " + filename + " not found")
         print("exiting...")
@@ -747,15 +748,20 @@ if "2016" in year:
     #allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson"
     #allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
     #allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-    allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-    #allBkg = "ALLBKG_powhegTTBar_ZJetIncWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+    if not doQCD:
+        allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+    else:
+        allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitch_NLODiboson"
+    # allBkg = "ALLBKG_powhegTTBar_ZJetIncWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
     data = "DATA"
     #data = "SingleElectron_2016_HIPM"
 else:
     zjetDatasetName = "DY.+ToLL"
     wjet = "WJet_amcatnlo_jetBinned"
-    zjet = "ZJet_jetAndPtBinned"
+    # zjet = "ZJet_jetAndPtBinned"
     allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
+    zjetDatasetName = "DYJetsToLL.+"
+    zjet = "ZJet_amcatnlo_ptBinned_IncStitch"
     # zjetDatasetName = "DY.+JetsToLL_M-50_LHEZpT_.+Tune"
     # jet-binned
     # zjet = "ZJet_amcatnlo_jetBinned"
@@ -770,11 +776,21 @@ else:
     # zjetDatasetName = "DYJetsToLL_M-50_.+Tune"
     # ttbar = "TTbar_amcatnlo_Inc"
     # allBkg = "ALLBKG_amcatnloTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
+    if not doQCD:
+        allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+    else:
+        allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitch_NLODiboson"
+    data = "DATA"
 # wjet = "WJet_amcatnlo_ptBinned"
 # diboson = "DIBOSON"
 diboson = "DIBOSON_nlo"
-ttbar = "TTbar_powheg"
-ttbarDatasetName = "TTT"
+if not doQCD:
+    # ttbar = "TTbar_powheg_all"
+    ttbar = "TTbar_powheg"
+else:
+    ttbar = "TTTo2L2Nu"
+# ttbarDatasetName = "TTT"
+ttbarDatasetName = ttbar
 singletop = "SingleTop"
 # qcd = "QCD_EMEnriched"
 qcd = "QCDFakes_DATA"
@@ -792,14 +808,14 @@ histBaseNames.append("Mee_BkgControlRegion_BJETBIN2")
 histBaseNames.append("Mee_EBEB_BkgControlRegion")
 histBaseNames.append("Mee_EBEE_BkgControlRegion")
 histBaseNames.append("Mee_EEEE_BkgControlRegion")
-##histBaseNames.append('Mee_NJetEq2_BkgControlRegion')
-##histBaseNames.append('Mee_NJetEq3_BkgControlRegion')
-##histBaseNames.append('Mee_NJetEq4_BkgControlRegion')
-##histBaseNames.append('Mee_NJetEq5_BkgControlRegion')
-##histBaseNames.append('Mee_NJetEq6_BkgControlRegion')
-##histBaseNames.append('Mee_NJetEq7_BkgControlRegion')
-##histBaseNames.append('Mee_NJetGeq3_BkgControlRegion')
-##histBaseNames.append('Mee_NJetGeq4_BkgControlRegion')
+histBaseNames.append('Mee_NJetEq2_BkgControlRegion')
+histBaseNames.append('Mee_NJetEq3_BkgControlRegion')
+histBaseNames.append('Mee_NJetEq4_BkgControlRegion')
+histBaseNames.append('Mee_NJetEq5_BkgControlRegion')
+histBaseNames.append('Mee_NJetEq6_BkgControlRegion')
+histBaseNames.append('Mee_NJetEq7_BkgControlRegion')
+histBaseNames.append('Mee_NJetGeq3_BkgControlRegion')
+histBaseNames.append('Mee_NJetGeq4_BkgControlRegion')
 histBaseNames.append("Mee_sT300To500_BkgControlRegion")
 histBaseNames.append("Mee_sT500To750_BkgControlRegion")
 histBaseNames.append("Mee_sT750To1250_BkgControlRegion")
@@ -871,17 +887,12 @@ for idx, histBaseName in enumerate(histBaseNames):
             + plotBaseName,
             File_preselection,
         )  # MC all
-
         # powheg ttbar
         h_TTbar_powheg_ttbar = GetHisto(
             thisHistName.replace("SAMPLE", ttbar) + plotBaseName, File_preselection
         )  # MC TTbar
         h_ZJets_amcatnlo_ttbar = GetHisto(
             thisHistName.replace("SAMPLE", zjet) + plotBaseName,
-            File_preselection,
-        )
-        h_WJets_amcatnlo_ttbar = GetHisto(
-            thisHistName.replace("SAMPLE", wjet) + plotBaseName,
             File_preselection,
         )
         # h_WJets_amcatnlo_ttbar = GetHisto("histo1D__WJet_amcatnlo_Inc__"+plotBaseName, File_preselection)
@@ -893,7 +904,6 @@ for idx, histBaseName in enumerate(histBaseNames):
             thisHistName.replace("SAMPLE", diboson) + plotBaseName,
             File_preselection,
         )
-
         # DATA
         h_DATA_ttbar = GetHisto(
             thisHistName.replace("SAMPLE", "DATA") + plotBaseName, File_preselection
@@ -907,6 +917,11 @@ for idx, histBaseName in enumerate(histBaseNames):
                 File_QCD_preselection,
             )
             # h_QCD_ttbar = GetHisto("histo1D__QCD_EMEnriched__"+plotBaseName,File_QCD_preselection)
+        else:
+            h_WJets_amcatnlo_ttbar = GetHisto(
+                thisHistName.replace("SAMPLE", wjet) + plotBaseName,
+                File_preselection,
+            )
     except RuntimeError as e:
         print("Caught exception while getting histo: '", e, "'; skipping this one")
         continue
@@ -919,7 +934,7 @@ for idx, histBaseName in enumerate(histBaseNames):
     if doQCD:
         plotTTbar.histoQCD = h_QCD
     plotTTbar.histoZJet = h_ZJets_amcatnlo_ttbar
-    plotTTbar.histoWJet = h_WJets_amcatnlo_ttbar
+    # plotTTbar.histoWJet = h_WJets_amcatnlo_ttbar
 
     plotTTbar.histoSingleTop = h_SingleTop_ttbar
     plotTTbar.histoDiboson = h_Diboson_ttbar
@@ -966,10 +981,6 @@ for idx, histBaseName in enumerate(histBaseNames):
         thisHistName.replace("SAMPLE", zjet) + plotBaseName,
         File_preselection,
     )
-    h_WJets_amcatnlo_dyjets = GetHisto(
-        thisHistName.replace("SAMPLE", wjet) + plotBaseName,
-        File_preselection,
-    )
     # h_dyjets_amcatnlo_dyjets = GetHisto("histo1D__WJet_amcatnlo_Inc__"+plotBaseName, File_preselection)
     h_SingleTop_dyjets = GetHisto(
         thisHistName.replace("SAMPLE", singletop) + plotBaseName, File_preselection
@@ -979,7 +990,6 @@ for idx, histBaseName in enumerate(histBaseNames):
         thisHistName.replace("SAMPLE", diboson) + plotBaseName,
         File_preselection,
     )
-
     # DATA
     h_DATA_dyjets = GetHisto(
         thisHistName.replace("SAMPLE", data) + plotBaseName, File_preselection
@@ -993,6 +1003,11 @@ for idx, histBaseName in enumerate(histBaseNames):
             File_QCD_preselection,
         )
         # h_QCD_wjets = GetHisto("histo1D__QCD_EMEnriched__"+plotBaseName,File_QCD_preselection)
+    else:
+        h_WJets_amcatnlo_dyjets = GetHisto(
+            thisHistName.replace("SAMPLE", wjet) + plotBaseName,
+            File_preselection,
+        )
 
     plotDYJets = Plot()
     plotDYJets.histoDATA = h_DATA_dyjets
@@ -1002,7 +1017,7 @@ for idx, histBaseName in enumerate(histBaseNames):
     if doQCD:
         plotDYJets.histoQCD = h_QCD
     plotDYJets.histoZJet = h_ZJets_amcatnlo_dyjets
-    plotDYJets.histoWJet = h_WJets_amcatnlo_dyjets
+    # plotDYJets.histoWJet = h_WJets_amcatnlo_dyjets
 
     plotDYJets.histoSingleTop = h_SingleTop_dyjets
     plotDYJets.histoDiboson = h_Diboson_dyjets
@@ -1051,7 +1066,8 @@ print("INFO: using samples:")
 print("\t DATA ------>", data)
 print("\t allBkg ------>", allBkg)
 print("\t DY ---------->", zjet, "; datasetname =", zjetDatasetName)
-print("\t W ----------->", wjet)
+if not doQCD:
+    print("\t W ----------->", wjet)
 print("\t ttbar ------->", ttbar, "; datasetname =", ttbarDatasetName)
 print("\t diboson ----->", diboson)
 if doQCD:
