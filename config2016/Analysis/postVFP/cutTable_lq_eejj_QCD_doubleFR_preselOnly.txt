@@ -133,5 +133,5 @@ sT_eejj_bkgCR                      300            +inf           -           -  
 M_e1e2_bkgCR                       50             +inf           -           -           1           200           0              2000
 preselection                       -inf           +inf           -           -           1           2             -0.5           1.5
 sT_eejj                            400            +inf           -           -           1           200           0              2000
-M_e1e2                             200            +inf           -           -           1           200           0              2000
+M_e1e2                             220            +inf           -           -           1           200           0              2000
 trainingSelection                  -inf           +inf           -           -           1           2             -0.5           1.5

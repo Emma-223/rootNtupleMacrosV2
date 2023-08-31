@@ -30,7 +30,7 @@ AnalysisYear   2016  - - - -1
 #------------------------------------------------------------------------------------------------------
 # Electron ID
 #------------------------------------------------------------------------------------------------------
-electronIDType             EGMLoose  - - - -1
+electronIDType             HEEP  - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # B-tagging
 # See: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation
@@ -83,31 +83,56 @@ PassNEle                           0              1              -           -  
 PassNMuon                          0              1              -           -           0           16            -0.5           15.5
 nEle_hltMatched                    -inf           +inf           -           -           0           3             -0.5           2.5
 nJet_hltMatched                    -inf           +inf           -           -           0           3             -0.5           2.5
-Ele1_Pt                            50             +inf           -           -           0           200           0              2000
-Ele2_Pt                            50             +inf           -           -           0           200           0              2000
+Ele1_Pt_skim                       40             +inf           -           -           0           200           0              2000
+Ele2_Pt_skim                       40             +inf           -           -           0           200           0              2000
 Ele1_PassID                        -inf           0              -           -           0           16            -0.5           15.5
 Ele2_PassID                        -inf           0              -           -           0           16            -0.5           15.5 
-Ele1_PassHEEPSCEtaCut              0              1              -           -           0           16            -0.5           15.5
-Ele2_PassHEEPSCEtaCut              0              1              -           -           0           16            -0.5           15.5
+#Ele1_PassHEEPSCEtaCut              0              1              -           -           0           16            -0.5           15.5
+#Ele2_PassHEEPSCEtaCut              0              1              -           -           0           16            -0.5           15.5
 nJet                               -inf           +inf           -           -           0           16            -0.5           15.5
-Jet1_Pt                            50             +inf           -           -           0           200           0              2000
+Jet1_Pt_skim                       35             +inf           -           -           0           200           0              2000
 Jet1_Eta                           -2.4           2.4            -           -           0           100           -5             5
-Jet2_Pt                            50             +inf           -           -           0           200           0              2000
+Jet2_Pt_skim                       35             +inf           -           -           0           200           0              2000
 Jet2_Eta                           -2.4           2.4            -           -           0           100           -5             5
 DR_Ele1Jet1                        -inf           +inf           -           -           0           100           0              10
 DR_Ele1Jet2                        -inf           +inf           -           -           0           100           0              10
 DR_Ele2Jet1                        -inf           +inf           -           -           0           100           0              10
 DR_Ele2Jet2                        -inf           +inf           -           -           0           100           0              10
 DR_Jet1Jet2                        -inf           +inf           -           -           0           100           0              10
-Pt_e1e2                            70             +inf           -           -           1           200           0              2000
-sT_eejj_bkgCR                      300            +inf           -           -           1           200           0              2000
-M_e1e2_bkgCR                       50             +inf           -           -           1           200           0              2000
-sT_eejj                            400            +inf           -           -           1           200           0              2000
-M_e1e2                             200            +inf           -           -           1           200           0              2000
-preselection                       -inf           +inf           -           -           1           2             -0.5           1.5
-#-----------------------------------------------------------------------------------------------------------------------------
-# Optimization variables (unused)
-#-----------------------------------------------------------------------------------------------------------------------------
+PFMET_Type1_Pt                     -inf           +inf           -           -           0           200           0              20
+PFMET_Type1_Phi                    -inf           +inf           -           -           0           200           0              2000
+Ele1_Phi                           -inf           +inf           -           -           0           60            -3.1416        3.14
+Ele2_Phi                           -inf           +inf           -           -           0           60            -3.1416        3.1416
+Ele1_Eta                           -inf           +inf           -           -           0           100           -5             5
+Ele2_Eta                           -inf           +inf           -           -           0           100           -5             5
+M_e1j1                             -inf           +inf           -           -           0           200           0              2000
+M_e1j2                             -inf           +inf           -           -           0           200           0              2000
+M_e2j1                             -inf           +inf           -           -           0           200           0              2000
+M_e2j2                             -inf           +inf           -           -           0           200           0              2000
+Jet3_Pt                            -inf           +inf           -           -           0           200           0              2000
+Jet3_Eta                           -inf           +inf           -           -           0           100           -5             5
+Jet1_Phi                           -inf           +inf           -           -           0           60            -3.1416        3.1416
+Jet2_Phi                           -inf           +inf           -           -           0           60            -3.1416        3.1416
+Jet3_Phi                           -inf           +inf           -           -           0           60            -3.1416        3.1416
+Masym                              -inf           +inf           -           -           0           200           0              2000
+MejMin                             -inf           +inf           -           -           0           200           0              2000
+MejMax                             -inf           +inf           -           -           0           200           0              2000
+Meejj                              -inf           +inf           -           -           0           200           0              2000
+Pt_e1e2_skim                       50             +inf           -           -           0           200           0              2000
+sT_eejj_skim                       200            +inf           -           -           0           200           0              2000
+M_e1e2_skim                        40             +inf           -           -           0           200           0              2000
+skim_selection                     -inf           +inf           -           -           0           2             -0.5           1.5
+Ele1_Pt                            50             +inf           -           -           0           200           0              2000
+Ele2_Pt                            50             +inf           -           -           0           200           0              2000
+Jet1_Pt                            50             +inf           -           -           0           200           0              2000
+Jet2_Pt                            50             +inf           -           -           0           200           0              2000
+Pt_e1e2                            70             +inf           -           -           0           200           0              2000
+sT_eejj_bkgCR                      300            +inf           -           -           0           200           0              2000
+M_e1e2_bkgCR                       50             +inf           -           -           0           200           0              2000
+preselection                       -inf           +inf           -           -           0           2             -0.5           1.5
+sT_eejj                            400            +inf           -           -           0           200           0              2000
+M_e1e2                             220            +inf           -           -           0           200           0              2000
+trainingSelection                  -inf           +inf           -           -           1           2             -0.5           1.5
 #-----------------------------------------------------------------------------------------------------------------------------
 #  __ _             _            _           _   _                                                                        
 # / _(_)_ __   __ _| |  ___  ___| | ___  ___| |_(_) ___  _ __                                                             
