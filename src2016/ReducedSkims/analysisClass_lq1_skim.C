@@ -40,6 +40,22 @@ analysisClass::~analysisClass()
   std::cout << "analysisClass::~analysisClass(): ends " << std::endl;
 }
 
+std::map<std::string, std::string> triggerNameReplacements = {{"HLT", "H"}, {"CaloId", "CId"}, {"GsfTrkId", "GsfId"}};
+std::string getTriggerBranchName(std::string triggerName)
+{
+    using namespace std;
+    for(const auto& toReplace : triggerNameReplacements) {
+        size_t pos = triggerName.find(toReplace.first);
+        if(pos != string::npos)
+            triggerName.replace(pos, toReplace.first.length(), toReplace.second);
+    }
+    size_t pos = triggerName.find("_Gsf");
+    if(pos != string::npos && pos+4 == triggerName.length())
+        triggerName.replace(pos, 4, "");
+    return triggerName;
+}
+
+
 void analysisClass::Loop()
 {
   std::cout << "analysisClass::Loop(): begins " << std::endl;
@@ -232,6 +248,33 @@ void analysisClass::Loop()
     jetUncertainties.setAddHEM2018Issue(true);
     type1METUncertainties.setAddHEM2018Issue(true);
   }
+
+  //-----------------------------------------------------------------
+  // QCD triggers 2016    2017        2018
+  // - Photon22         
+  //                      Photon25
+  // - Photon30           
+  //                      Photon33    Photon33
+  // - Photon36           
+  // - Photon50           Photon50    Photon50
+  // - Photon75           Photon75    Photon75
+  // - Photon90           Photon90    Photon90
+  // - Photon120          Photon120   Photon120
+  //                      Photon150   Photon150
+  // - Photon175          Photon175   Photon175
+  // - Photon200          Photon200   Photon200
+  //-----------------------------------------------------------------
+  vector<string> singleElectronTriggers = {"HLT_Ele27_WPTight_Gsf", "HLT_Ele32_WPTight_Gsf", "HLT_Ele35_WPTight_Gsf", "HLT_Ele115_CaloIdVT_GsfTrkIdT", "HLT_Ele105_CaloIdVT_GsfTrkIdT"};
+  vector<string> doubleElectronTriggers = {"HLT_DoubleEle33_CaloIdL_GsfTrkIdVL", "HLT_DoubleEle33_CaloIdL_MW", "HLT_DoubleEle25_CaloIdL_MW"};
+  vector<string> triggersToConsiderQCD;
+  vector<int> photonThresholds = {22, 25, 30, 33, 36, 50, 75, 90, 120, 150, 175, 200};
+  for(const auto& thresh : photonThresholds)
+      triggersToConsiderQCD.push_back("HLT_Photon"+to_string(thresh));
+  triggersToConsiderQCD.insert(triggersToConsiderQCD.end(), singleElectronTriggers.begin(), singleElectronTriggers.end());
+  triggersToConsiderQCD.insert(triggersToConsiderQCD.end(), doubleElectronTriggers.begin(), doubleElectronTriggers.end());
+  std::map<string, string> triggerToBranchNameMap;
+  for(const auto& triggerName : triggersToConsiderQCD)
+      triggerToBranchNameMap[triggerName] = getTriggerBranchName(triggerName);
 
   /*//------------------------------------------------------------------
    *
@@ -1356,118 +1399,25 @@ void analysisClass::Loop()
         }
       }
     }
-    //-----------------------------------------------------------------
-    // QCD triggers 2016    2017        2018
-    // - Photon22         
-    //                      Photon25
-    // - Photon30           
-    //                      Photon33    Photon33
-    // - Photon36           
-    // - Photon50           Photon50    Photon50
-    // - Photon75           Photon75    Photon75
-    // - Photon90           Photon90    Photon90
-    // - Photon120          Photon120   Photon120
-    //                      Photon150   Photon150
-    // - Photon175          Photon175   Photon175
-    // - Photon200          Photon200   Photon200
-    //-----------------------------------------------------------------
-    if(triggerExists("HLT_Photon22"))
-      fillTriggerVariable ( "HLT_Photon22" , "H_Photon22"  );
-    else
-      fillVariableWithValue( "H_Photon22", -1.0); 
-    if(triggerExists("HLT_Photon25"))
-      fillTriggerVariable ( "HLT_Photon25" , "H_Photon25"  );
-    else
-      fillVariableWithValue( "H_Photon25", -1.0); 
-    if(triggerExists("HLT_Photon30"))
-      fillTriggerVariable ( "HLT_Photon30" , "H_Photon30"  );
-    else
-      fillVariableWithValue( "H_Photon30", -1.0); 
-    if(triggerExists("HLT_Photon33"))
-      fillTriggerVariable ( "HLT_Photon33" , "H_Photon33"  );
-    else
-      fillVariableWithValue( "H_Photon33", -1.0); 
-    if(triggerExists("HLT_Photon36"))
-      fillTriggerVariable ( "HLT_Photon36" , "H_Photon36"  );
-    else
-      fillVariableWithValue( "H_Photon36", -1.0); 
-    fillTriggerVariable ( "HLT_Photon50"   , "H_Photon50"  );
-    fillTriggerVariable ( "HLT_Photon75"   , "H_Photon75"  );
-    fillTriggerVariable ( "HLT_Photon90"   , "H_Photon90"  );
-    fillTriggerVariable ( "HLT_Photon120"  , "H_Photon120" );
-    if(triggerExists("HLT_Photon150"))
-      fillTriggerVariable ( "HLT_Photon150", "H_Photon150" );
-    else
-      fillVariableWithValue( "H_Photon150", -1.0); 
-    fillTriggerVariable ( "HLT_Photon175" , "H_Photon175" );
-    if(triggerExists("HLT_Photon200"))
-      fillTriggerVariable ( "HLT_Photon200" , "H_Photon200" );
-    else
-      fillVariableWithValue ( "H_Photon200" , -1.0 );
-
-    // analysis triggers
-    // search by prefix
-    if(triggerExists("HLT_Ele27_WPTight_Gsf"))
-      fillTriggerVariable( "HLT_Ele27_WPTight_Gsf" , "H_Ele27_WPTight" );
-    if(triggerExists("HLT_Ele32_WPTight_Gsf"))
-      fillTriggerVariable( "HLT_Ele32_WPTight_Gsf" , "H_Ele32_WPTight" );
-    if(triggerExists("HLT_Ele35_WPTight_Gsf"))
-      fillTriggerVariable( "HLT_Ele35_WPTight_Gsf" , "H_Ele35_WPTight" );
-    // check that we have at least one WPTight trigger
-    if(!triggerExists("HLT_Ele27_WPTight_Gsf") && !triggerExists("HLT_Ele32_WPTight_Gsf") && !triggerExists("HLT_Ele35_WPTight_Gsf"))
-      exit(-5);
-    // Ele115 is absent from first 5/fb of 2017
-    if(triggerExists("HLT_Ele115_CaloIdVT_GsfTrkIdT"))
-      fillTriggerVariable( "HLT_Ele115_CaloIdVT_GsfTrkIdT" , "H_Ele115_CIdVT_GsfIdT");
-    if(triggerExists("HLT_Photon175"))
-      fillTriggerVariable( "HLT_Photon175" , "H_Photon175" );
-    if(triggerExists("HLT_Photon200"))
-      fillTriggerVariable( "HLT_Photon200" , "H_Photon200" );
-    // check that we have at least one photon trigger
-    if(!triggerExists("HLT_Photon175") && !triggerExists("HLT_Photon200"))
-      exit(-5);
-    // other triggers
-    if(triggerExists("HLT_Ele105_CaloIdVT_GsfTrkIdT"))
-      fillTriggerVariable( "HLT_Ele105_CaloIdVT_GsfTrkIdT" , "H_Ele105_CIdVT_GsfIdT");
-    if(triggerExists("HLT_DoubleEle33_CaloIdL_GsfTrkIdVL"))
-      fillTriggerVariable( "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL", "H_DoubleEle33_CIdL_GsfIdVL" ); 
-    if(triggerExists("HLT_DoubleEle33_CaloIdL_MW"))
-      fillTriggerVariable( "HLT_DoubleEle33_CaloIdL_MW", "H_DoubleEle33_CIdL_MW" ); 
-    if(triggerExists("HLT_DoubleEle25_CaloIdL_MW"))
-      fillTriggerVariable( "HLT_DoubleEle25_CaloIdL_MW", "H_DoubleEle25_CIdL_MW" ); 
 
     if ( reducedSkimType == 0 ) {
-      bool pass_trigger = (
-          getVariableValue("H_Photon22") > 0 || 
-          getVariableValue("H_Photon25") > 0 || 
-          getVariableValue("H_Photon30") > 0 || 
-          getVariableValue("H_Photon33") > 0 || 
-          getVariableValue("H_Photon36") > 0 || 
-          getVariableValue("H_Photon50") > 0 || 
-          getVariableValue("H_Photon75") > 0 || 
-          getVariableValue("H_Photon90") > 0 || 
-          getVariableValue("H_Photon120"     ) > 0 || 
-          getVariableValue("H_Photon150"     ) > 0 || 
-          getVariableValue("H_Photon175"     ) > 0 || 
-          getVariableValue("H_Photon200"     ) > 0 );
-
-      fillVariableWithValue ("PassTrigger", pass_trigger ? true : false );
+        for(const auto& trigName : triggersToConsiderQCD) {
+            if(triggerExists(trigName))
+                fillTriggerVariable ( trigName , triggerToBranchNameMap[trigName]  );
+            else
+                fillVariableWithValue( triggerToBranchNameMap[trigName], -1.0); 
+        }
+        bool pass_trigger = false;
+        for(const auto& trig : triggersToConsiderQCD) {
+            if(getVariableValue(triggerToBranchNameMap[trig]) > 0) {
+                pass_trigger = true;
+                break;
+            }
+        }
+        fillVariableWithValue ("PassTrigger", pass_trigger );
     }
 
     else if ( reducedSkimType == 1 || reducedSkimType == 2 || reducedSkimType == 3 || reducedSkimType == 4 ) { 
-
-
-      //bool pass_lowPtEle = (triggerExists("HLT_Ele27_WPTight_Gsf") && getVariableValue("H_Ele27_WPTight") > 0) ||
-      //  (triggerExists("HLT_Ele32_WPTight_Gsf") && getVariableValue("H_Ele32_WPTight") > 0) ||
-      //  (triggerExists("HLT_Ele35_WPTight_Gsf") && getVariableValue("H_Ele35_WPTight") > 0);
-      //bool pass_photon = (triggerExists("HLT_Photon175") && getVariableValue("H_Photon175") > 0) ||
-      //  (triggerExists("HLT_Photon200") && getVariableValue("H_Photon200") > 0);
-      // NB: need to change the EventTriggerScaleFactorErr above if the trigger selection changes below
-      //bool pass_trigger = (
-      //    pass_lowPtEle || 
-      //    //getVariableValue("H_Ele115_CIdVT_GsfIdT") > 0 ||
-      //    pass_photon);
-      //fillVariableWithValue ("PassTrigger", pass_trigger ? true : false );
 
       // NB: need to change the EventTriggerScaleFactorErr above if the trigger selection changes below
       // disambiguate events with multiple triggers at the analysis stage
