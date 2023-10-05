@@ -661,7 +661,7 @@ def CalculateRescaleFactor(plotObjTTBar, plotObjDYJets, fileps):
 
 ##############################################################################
 # ############ USER CODE - BEGIN ##############################################
-doQCD = False
+doQCD = True
 if not doQCD:
     print("INFO: ignoring QCD")
 if len(sys.argv) < 4:
@@ -676,55 +676,11 @@ if len(sys.argv) > 4:
 qcdFile = sys.argv[1]
 mcFile = sys.argv[2]
 year = sys.argv[3]
-#year = 2016
-#qcdFiles = {}
-#qcdFiles[2016] = "$LQDATA/nanoV7/2016/analysis/qcdYield_eejj_23mar2021_oldOptFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-#qcdFiles[2017] = "$LQDATA/nanoV7/2017/analysis/qcdYield_eejj_30apr2021_oldOptFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-#qcdFiles[2018] = "$LQDATA/nanoV7/2018/analysis/qcdYield_eejj_1jun2021_oldOptFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-#mcDataFiles = {}
-##mcDataFiles[2016] = "$LQDATA/nanoV7/2016/analysis/precomputePrefire_looserPSK_eejj_12apr2021_oldOptFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-#mcDataFiles[2016] = "$LQDATA/nanoV7/2016/analysis/precomputePrefire_looserPSK_eejj_4jun2021_oldOptFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-#mcDataFiles[2017] = "$LQDATA/nanoV7/2017/analysis/precomputePrefire_looserPSK_eejj_12apr2021_oldOptFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-#mcDataFiles[2018] = "$LQDATA/nanoV7/2018/analysis/precomputePrefire_looserPSK_eejj_12apr2021_oldOptFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
 
 # --- Input files
 if doQCD:
-    File_QCD_preselection = GetFile(
-            # "$LQDATA/nanoV6/2016/analysis/qcdYield_24jun2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-            # "$LQDATA/nanoV6/2016/analysis/qcdYield_optFinalSels_6aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-            # "$LQDATA/nanoV6/2017/analysis/qcdYield_25jun2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-            # "$LQDATA/nanoV6/2017/analysis/qcdYield_optFinalSels_6aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-            # "$LQDATA/nanoV6/2018/analysis/qcdYield_25jun2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-            # nanoV7
-            # "$LQDATA/nanoV7/2016/analysis/qcdYield_26aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-            # "$LQDATA/nanoV7/analysis/2017/qcdYield_26aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-            # "$LQDATA/nanoV7/2018/analysis/qcdYield_26aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-            # 2021
-            #qcdFiles[year]
-            qcdFile
-    )
-File_preselection = GetFile(
-    # "$LQDATA/nanoV6/2016/analysis/prefire_19may2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV6/2016/analysis/prefire_optFinalSels_6aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV6/2017/analysis/noPrefire_22may2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV6/2017/analysis/prefire_22may2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV6/2017/analysis/prefire_optFinalSels_6aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV6/2017/analysis/prefire_optFinalSels_6aug2020_dyjIncPtBinStitch/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV6/2018/analysis/eejj_6jul2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # nanoV7
-    # "$LQDATA/nanoV7/2016/analysis/26aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV7/analysis/2017/prefire_26aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV7/2018/analysis/eejj_26aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # pt-binned/inc stitch
-    # "$LQDATA/nanoV7/2017/analysis/prefire_3sep2020_dyjPt50Inc/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV7/2018/analysis/eejj_3sep2020_dyjPt50Inc/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # inc only
-    # "$LQDATA/nanoV7/2017/analysis/prefire_8sep2020_dyjIncOnly/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # "$LQDATA/nanoV7/2018/analysis/eejj_8sep2020_dyjIncOnly/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-    # 2021
-    #mcDataFiles[year]
-    mcFile
-)
+    File_QCD_preselection = GetFile(qcdFile)
+File_preselection = GetFile(mcFile)
 
 xsectionFile = "/afs/cern.ch/user/s/scooper/work/private/LQNanoAODAttempt/Leptoquarks/analyzer/rootNtupleAnalyzerV2/config/xsection_13TeV_2022.txt"
 
@@ -732,72 +688,47 @@ histNameDefault = "histo1D__SAMPLE__"
 # histNameReleaseMee = "histo1D__SAMPLE__cutHisto_allOtherCuts___________"
 histNameAllPrevCuts = "histo1D__SAMPLE__cutHisto_allPreviousCuts________"
 #
+# samples to use
+# wjet = "WJet_amcatnlo_Inc"
+# wjet = "WJet_amcatnlo_ptBinned"
+wjet = "WJet_amcatnlo_jetBinned"
+# wjet = "WJet_amcatnlo_ptBinned"
+#zjetDatasetName = "DYJetsToLL_Pt.+Tune"
+#zjetDatasetName = "DYJetsToLL_LHE.+"
+# zjetDatasetName = "DYJetsToLL.+"
+# zjet = "ZJet_amcatnlo_ptBinned_IncStitch"
+zjet = "ZJet_powhegminnlo"
+zjetDatasetName = "DYJetsToEE.+" if zjet == "ZJet_powhegminnlo" else "DYJetsToLL.+"
+#zjet = "ZJet_amcatnlo_ptBinned"
+#zjet = "ZJet_amcatnlo_Inc"
 # allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_DibosonPyth"
 # allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetInc_NLODiboson_triboson"
-if "2016" in year:
-    # wjet = "WJet_amcatnlo_Inc"
-    wjet = "WJet_amcatnlo_jetBinned"
-    # wjet = "WJet_amcatnlo_ptBinned"
-    #zjetDatasetName = "DYJetsToLL_Pt.+Tune"
-    #zjetDatasetName = "DYJetsToLL_LHE.+"
-    zjetDatasetName = "DYJetsToLL.+"
-    #zjet = "ZJet_amcatnlo_ptBinned"
-    zjet = "ZJet_amcatnlo_ptBinned_IncStitch"
-    #zjet = "ZJet_amcatnlo_Inc"
-    # allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCPtBinned_NLODiboson"
-    #allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson"
-    #allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
-    #allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-    if not doQCD:
-        allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-    else:
-        allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitch_NLODiboson"
-    # allBkg = "ALLBKG_powhegTTBar_ZJetIncWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-    data = "DATA"
-    #data = "SingleElectron_2016_HIPM"
-else:
-    zjetDatasetName = "DY.+ToLL"
-    wjet = "WJet_amcatnlo_jetBinned"
-    # zjet = "ZJet_jetAndPtBinned"
-    allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
-    zjetDatasetName = "DYJetsToLL.+"
-    zjet = "ZJet_amcatnlo_ptBinned_IncStitch"
-    # zjetDatasetName = "DY.+JetsToLL_M-50_LHEZpT_.+Tune"
-    # jet-binned
-    # zjet = "ZJet_amcatnlo_jetBinned"
-    # allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetBinnedWJetAMCJetBinned_NLODiboson_triboson"
-    # zjetDatasetName = "DYJetsToLL_.+J_TuneCP5"
-    # pt-binned inc stitch
-    # zjet = "ZJet_amcatnlo_ptBinned_IncStitch"
-    # allBkg = "ALLBKG_powhegTTBar_ZJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
-    # inc only
-    # zjet = "ZJet_amcatnlo_Inc"
-    # allBkg = "ALLBKG_powhegTTBar_ZJetIncWJetAMCJetBinned_NLODiboson_triboson"
-    # zjetDatasetName = "DYJetsToLL_M-50_.+Tune"
-    # ttbar = "TTbar_amcatnlo_Inc"
-    # allBkg = "ALLBKG_amcatnloTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
-    if not doQCD:
-        allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-    else:
-        allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitch_NLODiboson"
-    data = "DATA"
-# wjet = "WJet_amcatnlo_ptBinned"
-# diboson = "DIBOSON"
-diboson = "DIBOSON_nlo"
-if not doQCD:
-    # ttbar = "TTbar_powheg_all"
-    ttbar = "TTbar_powheg"
-else:
-    ttbar = "TTTo2L2Nu"
+# allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCPtBinned_NLODiboson"
+#allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson"
+#allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
+#allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+#
+# if not doQCD:
+#     # allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+#     allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLOWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX" if zjet == "ZJet_powhegminnlo" else "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+# else:
+#     allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLO_NLODiboson"
+allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLOWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX" if zjet == "ZJet_powhegminnlo" else "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+data = "DATA"
+# if not doQCD:
+#     ttbar = "TTbar_powheg_all"
+#     diboson = "DIBOSON_nlo_all"
+# else:
+#     ttbar = "TTTo2L2Nu"
+#     diboson = "DIBOSON_nlo"
 # ttbarDatasetName = "TTT"
+ttbar = "TTbar_powheg_all"
+diboson = "DIBOSON_nlo_all"
 ttbarDatasetName = ttbar
 singletop = "SingleTop"
-# qcd = "QCD_EMEnriched"
 qcd = "QCDFakes_DATA"
-# File_QCD_preselection = File_preselection
 
 # --- Rescaling of W + jet and ttbar+jets background
-
 histBaseNames = []
 # nominal
 histBaseNames.append("Mee_BkgControlRegion")
