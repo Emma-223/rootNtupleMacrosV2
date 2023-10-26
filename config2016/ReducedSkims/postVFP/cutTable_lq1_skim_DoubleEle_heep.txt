@@ -251,6 +251,8 @@ GenLQ2_ID                  -inf           +inf           -           -          
 # LHE info 
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 LHE_Vpt                    -inf           +inf           -           -           1           200           0              2000           SAVE
+LHE_HT                     -inf           +inf           -           -           1           200           0              2000           SAVE
+LHE_HTIncoming             -inf           +inf           -           -           1           200           0              2000           SAVE
 LHE_NpLO                   -inf           +inf           -           -           1           16            -0.5           15.5           SAVE/i
 LHE_NpNLO                  -inf           +inf           -           -           1           16            -0.5           15.5           SAVE/i
 LHE_Njets                  -inf           +inf           -           -           1           16            -0.5           15.5           SAVE/i

@@ -677,6 +677,8 @@ void analysisClass::Loop()
         // add LHE variables if needed
         if(hasBranch("LHE_Vpt")) {
             fillVariableWithValue("LHE_Vpt"	  , readerTools_->ReadValueBranch<Float_t>("LHE_Vpt"));
+            fillVariableWithValue("LHE_HT"	  , readerTools_->ReadValueBranch<Float_t>("LHE_HT"));
+            fillVariableWithValue("LHE_HTIncoming"	  , readerTools_->ReadValueBranch<Float_t>("LHE_HTIncoming"));
             fillVariableWithValue("LHE_NpLO"	, static_cast<unsigned int>(readerTools_->ReadValueBranch<UChar_t>("LHE_NpLO")));
             fillVariableWithValue("LHE_NpNLO"	, static_cast<unsigned int>(readerTools_->ReadValueBranch<UChar_t>("LHE_NpNLO")));
             fillVariableWithValue("LHE_Njets"	, static_cast<unsigned int>(readerTools_->ReadValueBranch<UChar_t>("LHE_Njets")));
