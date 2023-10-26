@@ -67,11 +67,11 @@ void analysisClass::Loop()
   //  1900, 2000
   //};
 
-  // SIC only look at LQ650 selection for now
-  // LQ650 only 2012
+  //// SIC only look at LQ650 selection for now
+  //// LQ650 only 2012
   //const int n_lq_mass = 1;
   //int LQ_MASS[n_lq_mass] = { 
-  //   650
+  //  650
   //};
 
   // turn off totally for optimization
@@ -134,6 +134,11 @@ void analysisClass::Loop()
   if(hasPreCut("BDTWeightFileName")) {
     bdtWeightFileName = getPreCutString1("BDTWeightFileName");
     evaluateBDT = true;
+  }
+  else if(hasPreCut("EvaluateBDT")) {
+    std::string evalBDT = getPreCutString1("EvaluateBDT");
+    if(evalBDT == "true" || evalBDT == "True")
+      evaluateBDT = true;
   }
 
   //--------------------------------------------------------------------------
@@ -840,6 +845,13 @@ void analysisClass::Loop()
   }
 
   //--------------------------------------------------------------------------
+  // Add new skim tree branches if needed
+  //--------------------------------------------------------------------------
+  double eventWeight = 1;
+  if(!hasBranch("EventWeight"))
+    addSkimTreeBranch("EventWeight", &eventWeight, "EventWeight/D");
+
+  //--------------------------------------------------------------------------
   // Tell the user how many entries we'll look at
   //--------------------------------------------------------------------------
 
@@ -851,6 +863,13 @@ void analysisClass::Loop()
   //--------------------------------------------------------------------------
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
     readerTools_->LoadEntry(jentry);
+
+    //--------------------------------------------------------------------------
+    // Tricky part: refine Weight branch to sign of gen weight for powhegMiNNLO
+    //--------------------------------------------------------------------------
+    float weight = 1.0;
+    resetSkimTreeBranchAddress("Weight", &weight);
+    
     //-----------------------------------------------------------------
     // Print progress
     //-----------------------------------------------------------------
@@ -888,7 +907,12 @@ void analysisClass::Loop()
 
     float gen_weight = readerTools_->ReadValueBranch<Float_t>("Weight");
     if ( isData() ) gen_weight = 1.0;
-    if(current_file_name.find("powhegMiNNLO") != std::string::npos) gen_weight = TMath::Sign(1, gen_weight);
+    // special handling for powhegMiNNLO samples
+    if(current_file_name.find("powhegMiNNLO") != std::string::npos) {
+      gen_weight = TMath::Sign(1, gen_weight);
+      restrictPDFWeights(10.0); // max of weight/nominal = 10
+    }
+    weight = gen_weight;
     //if ( isData && Ele2_ValidFrac > 998. ){
     //  gen_weight = 0.0;
     //  if      (  60.0 < M_e1e2 < 120. ) gen_weight = 0.61;
@@ -952,6 +976,7 @@ void analysisClass::Loop()
     gen_weight*=trigSF;
     fillSystVariableWithValue("EleTrigSFUp", trigSF+trigSFErr);
     fillSystVariableWithValue("EleTrigSFDown", trigSF-trigSFErr);
+    eventWeight = gen_weight * pileup_weight;
 
     //--------------------------------------------------------------------------
     // Fill HLT
@@ -1147,32 +1172,33 @@ void analysisClass::Loop()
       PassNMuon = 1;
     // now check if there are no muons but gen muons passing pt/eta which should have passed ID but did not
     // correct by a factor of (1-effData)/(1-effMC) to evaluate uncertainty
-    if(PassNMuon) // no ID'ed muons in event
-    {
-      double GenMu1_Pt =  readerTools_->ReadValueBranch<Float_t>("GenMu1_Pt");
-      double GenMu1_Eta = readerTools_->ReadValueBranch<Float_t>("GenMu1_Eta");
-      double GenMu2_Pt =  readerTools_->ReadValueBranch<Float_t>("GenMu2_Pt");
-      double GenMu2_Eta = readerTools_->ReadValueBranch<Float_t>("GenMu2_Eta");
-      double GenMu3_Pt =  readerTools_->ReadValueBranch<Float_t>("GenMu3_Pt");
-      double GenMu3_Eta = readerTools_->ReadValueBranch<Float_t>("GenMu3_Eta");
-      // check for gen muons which should have passed ID but did not
-      // pt threshold is defined in highPt muon ID in MuonIDs
-      if(GenMu1_Pt > 35.0 && fabs(GenMu1_Eta) <= 2.4) {
-        gen_weight*=MuonScaleFactors::GetVetoMCDataEffRatio(GenMu1_Eta);
-        //cout << "Found gen muon 1 with Pt: " << GenMu1_Pt << " and eta: " << GenMu1_Eta << endl;
-        //cout << "\tCorrect by: " << MuonScaleFactors::GetVetoMCDataEffRatio(GenMu1_Eta) << endl;
-      }
-      if(GenMu2_Pt > 35.0 && fabs(GenMu2_Eta) <= 2.4) {
-        gen_weight*=MuonScaleFactors::GetVetoMCDataEffRatio(GenMu2_Eta);
-        //cout << "Found gen muon 2 with Pt: " << GenMu2_Pt << " and eta: " << GenMu2_Eta << endl;
-        //cout << "\tCorrect by: " << MuonScaleFactors::GetVetoMCDataEffRatio(GenMu2_Eta) << endl;
-      }
-      if(GenMu3_Pt > 35.0 && fabs(GenMu3_Eta) <= 2.4) {
-        gen_weight*=MuonScaleFactors::GetVetoMCDataEffRatio(GenMu3_Eta);
-        //cout << "Found gen muon 3 with Pt: " << GenMu3_Pt << " and eta: " << GenMu3_Eta << endl;
-        //cout << "\tCorrect by: " << MuonScaleFactors::GetVetoMCDataEffRatio(GenMu3_Eta) << endl;
-      }
-    }
+    // XXX FIXME: Sep 26 2023: remove this for now
+    //if(PassNMuon) // no ID'ed muons in event
+    //{
+    //  double GenMu1_Pt =  readerTools_->ReadValueBranch<Float_t>("GenMu1_Pt");
+    //  double GenMu1_Eta = readerTools_->ReadValueBranch<Float_t>("GenMu1_Eta");
+    //  double GenMu2_Pt =  readerTools_->ReadValueBranch<Float_t>("GenMu2_Pt");
+    //  double GenMu2_Eta = readerTools_->ReadValueBranch<Float_t>("GenMu2_Eta");
+    //  double GenMu3_Pt =  readerTools_->ReadValueBranch<Float_t>("GenMu3_Pt");
+    //  double GenMu3_Eta = readerTools_->ReadValueBranch<Float_t>("GenMu3_Eta");
+    //  // check for gen muons which should have passed ID but did not
+    //  // pt threshold is defined in highPt muon ID in MuonIDs
+    //  if(GenMu1_Pt > 35.0 && fabs(GenMu1_Eta) <= 2.4) {
+    //    gen_weight*=MuonScaleFactors::GetVetoMCDataEffRatio(GenMu1_Eta);
+    //    //cout << "Found gen muon 1 with Pt: " << GenMu1_Pt << " and eta: " << GenMu1_Eta << endl;
+    //    //cout << "\tCorrect by: " << MuonScaleFactors::GetVetoMCDataEffRatio(GenMu1_Eta) << endl;
+    //  }
+    //  if(GenMu2_Pt > 35.0 && fabs(GenMu2_Eta) <= 2.4) {
+    //    gen_weight*=MuonScaleFactors::GetVetoMCDataEffRatio(GenMu2_Eta);
+    //    //cout << "Found gen muon 2 with Pt: " << GenMu2_Pt << " and eta: " << GenMu2_Eta << endl;
+    //    //cout << "\tCorrect by: " << MuonScaleFactors::GetVetoMCDataEffRatio(GenMu2_Eta) << endl;
+    //  }
+    //  if(GenMu3_Pt > 35.0 && fabs(GenMu3_Eta) <= 2.4) {
+    //    gen_weight*=MuonScaleFactors::GetVetoMCDataEffRatio(GenMu3_Eta);
+    //    //cout << "Found gen muon 3 with Pt: " << GenMu3_Pt << " and eta: " << GenMu3_Eta << endl;
+    //    //cout << "\tCorrect by: " << MuonScaleFactors::GetVetoMCDataEffRatio(GenMu3_Eta) << endl;
+    //  }
+    //}
 
 
     fillVariableWithValue("PassNEle" , PassNEle , gen_weight * pileup_weight);
@@ -1663,7 +1689,8 @@ void analysisClass::Loop()
         //sprintf(cut_name, "min_M_ej_LQ%d", lq_mass ); // this is actually the last cut in the cut file...!
         // TODO FIXME the right way; hack for now
         sprintf(cut_name, "BDTOutput_LQ%d", lq_mass ); // this is actually the last cut in the cut file...!
-        bool decision = bool ( passedAllPreviousCuts(cut_name) && passedCut (cut_name));
+        //bool decision = bool ( passedAllPreviousCuts(cut_name) && passedCut (cut_name));
+        bool decision = bool ( passedAllPreviousCuts("trainingSelection") && passedCut (cut_name));
         passed_vector.push_back (decision);
       }
     }
