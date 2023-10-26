@@ -145,8 +145,12 @@ maxAxisValue = nSigma2DPaletteMax
 
 
 def GetFile(filename):
+    if filename.startswith("/eos/cms"):
+        filename = "root://eoscms/" + filename
+    elif filename.startswith("/eos/user"):
+        filename = "root://eosuser/" + filename
     print("GetFile("+filename+")")
-    tfile = TFile(filename)
+    tfile = TFile.Open(filename)
     if not tfile or tfile.IsZombie():
         raise RuntimeError("ERROR: file " + filename + " not found")
     return tfile
@@ -421,6 +425,37 @@ def rebinHistos2D(
     return new_histos
 
 
+def QuasiRebinHisto(histoOrig, rebinFactor = 2):
+    if histoOrig.GetDimension() > 2:
+        raise RuntimeError("Cannot rebin histo {} which has {} dimensions. Cannot handle more than two dimensions.".format(histoOrig.GetName(), histoOrig.GetDimension()))
+    if histoOrig.GetNbinsX() < 10:
+        # don't rebin for hists with a small number of bins
+        return histoOrig
+    # XXX TODO: not sure this is exactly working or optimal
+    histoNew = copy.deepcopy(histoOrig)
+    histoNew.Reset()
+    histoRebinned = copy.deepcopy(histoOrig)
+    histoRebinned.Rebin(rebinFactor)
+    numNewBins = histoRebinned.GetNbinsX()
+    binScaleFactor = numNewBins / histoNew.GetNbinsX()
+    for yBin in range(1, histoNew.GetNbinsY()+1):
+        for xBin in range(1, histoNew.GetNbinsX()+1):
+            binCenter = histoNew.GetXaxis().GetBinCenter(xBin)
+            binNumRebinned = histoRebinned.GetXaxis().FindFixBin(binCenter)
+            globalBin = histoRebinned.GetBin(binNumRebinned, yBin)
+            binContent = histoRebinned.GetBinContent(globalBin) * binScaleFactor
+            binError = histoRebinned.GetBinError(globalBin) * binScaleFactor
+            histoNew.SetBinContent(xBin, yBin, binContent)
+            histoNew.SetBinError(xBin, yBin, binError)
+        # copy over underflow and overflow
+        overflowBin = histoNew.GetNbinsX()+1
+        underflowBin = 0
+        for xBin in [underflowBin, overflowBin]:
+            histoNew.SetBinContent(xBin, yBin, histoOrig.GetBinContent(xBin, yBin))
+            histoNew.SetBinError(xBin, yBin, histoOrig.GetBinError(xBin, yBin))
+    return histoNew
+
+
 def GetSystematicEffect(bkgTotalHist, systName, correlated=True):
     upErrs = []
     downErrs = []
@@ -489,8 +524,9 @@ def GetSystematicGraphAndHist(bkgTotalHist, systNames, verbose=False):
         if verbose:
             #headers = ["binNumber", "binLowEdge", "nominal", "%systUp", "%systDown"]
             #xBins = [xBin for xBin in range(0, bkgTotalHist.GetNbinsX()+2)]
-            xBins = [xBin for xBin in range(0, bkgTotalHist.GetNbinsX()+2) if bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) >= 580 and bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) <= 620]
-            #binLowEdges = [bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) for xBin in xBins]
+            xBins = [xBin for xBin in range(0, bkgTotalHist.GetNbinsX()+2) if bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) >= 800 and bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) <= 900]
+            # xBins = [xBin for xBin in range(bkgTotalHist.GetNbinsX()-19, bkgTotalHist.GetNbinsX()+1) if xBin >= 0] # last 20 bins
+            binLowEdges = [bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) for xBin in xBins]
             nominals = [bkgTotalHist.GetBinContent(xBin, 1) for xBin in xBins]
             #upErrorDict = {lowEdge:err for lowEdge in binLowEdges for err in upErrs}
             #print("for bkgTotalHist={}, syst={}, got upErrs={}, downErrs={}".format(bkgTotalHist.GetName(), systName, upErrorDict, downErrs.tolist()))
@@ -510,9 +546,9 @@ def GetSystematicGraphAndHist(bkgTotalHist, systNames, verbose=False):
         headers = ["binNumber", "binLowEdge", "nominal", "%systTotalUp", "%systTotalDown"]
         headers.extend(list(sum([("%{}Up".format(syst), "%{}Down".format(syst)) for syst in upErrsPercentBySyst.keys()], ())))
         #xBins = [xBin for xBin in range(0, bkgTotalHist.GetNbinsX()+2)]
-        xBins = [xBin for xBin in range(0, bkgTotalHist.GetNbinsX()+2) if bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) >= 580 and bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) <= 620]
-        binLowEdges = [bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) for xBin in xBins]
-        nominals = [bkgTotalHist.GetBinContent(xBin, 1) for xBin in xBins]
+        # xBins = [xBin for xBin in range(0, bkgTotalHist.GetNbinsX()+2) if bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) >= 580 and bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) <= 620]
+        # binLowEdges = [bkgTotalHist.GetXaxis().GetBinLowEdge(xBin) for xBin in xBins]
+        # nominals = [bkgTotalHist.GetBinContent(xBin, 1) for xBin in xBins]
         #upErrorDict = {lowEdge:err for lowEdge in binLowEdges for err in upErrs}
         #print("for bkgTotalHist={}, syst={}, got upErrs={}, downErrs={}".format(bkgTotalHist.GetName(), systName, upErrorDict, downErrs.tolist()))
         upErrsSliced = [upErrsComb[xBin] for xBin in xBins]

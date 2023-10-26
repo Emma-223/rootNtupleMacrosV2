@@ -4,7 +4,7 @@ import sys
 import math
 import copy
 import numpy as np
-from plot_class import GetFile, Plot, Plot2D, generateHistoList, generateHisto, generateHistoBlank, generateHistoListFakeSystsFromModel, makeTOC
+from plot_class import GetFile, Plot, Plot2D, generateHistoList, generateHisto, generateHistoBlank, generateHistoListFakeSystsFromModel, makeTOC, QuasiRebinHisto
 from ROOT import gROOT, kCyan, kRed, TCanvas, TGraphAsymmErrors, TH1D
 
 # gROOT.SetBatch(True)
@@ -71,10 +71,11 @@ inputFile = mcFile
 inputFileQCD = qcdFile
 
 doSystematics = True
-doQCD = False
+doQCD = True
+quasiRebinQCD = False  # TODO: not sure the current algorithm works correctly or is optimal
 doPreselPlots = True
 doBTagPlots = True
-doFinalSelectionPlots = False  # was True
+doFinalSelectionPlots = False
 do2016 = False
 do2016pre = False
 do2016post = False
@@ -100,14 +101,12 @@ if "2016" in year:
 else:
     year = int(year)
 
-if do2016:
-    # LQmasses = [700, 1500]  # new samples don't have 650 GeV point
-    #LQmasses = [1500, 2000]  # new samples don't have 650 GeV point
-    LQmasses = []
-    LQmassesFinalSelection = [400, 700, 1000]
-else:
-    LQmasses = []
-    LQmassesFinalSelection = []
+# LQmasses = [700, 1500]  # new samples don't have 650 GeV point
+#LQmasses = [1500, 2000]  # new samples don't have 650 GeV point
+LQmasses = [1000, 1500]
+# LQmassesFinalSelection = [400, 700, 1000]
+# LQmassesFinalSelection = list(range(1000, 2100, 100))
+LQmassesFinalSelection = [1500]
 
 zUncBand = "no"
 makeRatio = 1
@@ -205,31 +204,38 @@ if do2016:
     elif do2016post:
         ilumi = "16.8"  # postVFP
     # nominal
+    # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
+    samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
+    #samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
+    samplesForStackHistos_other = ["OTHERBKG_dibosonNLO_singleTop"]  # UL with single/double QCD fakes from data
+    samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
+    # samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
+    #
     #samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned"]
-    samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_ZJets  = [ "ZJet_amcatnlo_Inc" ]
     # samplesForStackHistos_other = [ "OTHERBKG_WJetPt" ]
     # samplesForStackHistos_other = ["OTHERBKG_WJetPt_amcAtNLODiboson"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCInc_amcAtNLODiboson"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_triboson"] # preUL
-    samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # UL
     #samplesForStackHistos_other = ["SingleTop"]  # high PDF uncertainties
     #samplesForStackHistos_other = ["WJet_amcatnlo_jetBinned"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCPtBinned_dibosonNLO_triboson"]
     # MC ttbar
     # samplesForStackHistos_ttbar = [ "TTbar_amcatnlo_Inc" ]
-    samplesForStackHistos_ttbar = ["TTbar_powheg"]
     # keysStack             = ["QCD multijet (data)", "Other backgrounds", "t#bar{t} (MG5_aMC)"  ,  "Z/#gamma* + jets (MG5_aMC Pt)"  ]
     # data-driven ttbar
     #samplesForStackHistos_ttbar = ["TTBarFromDATA"]
     keysStack = ["QCD multijet (data)"] if doQCD else []
     keysStack.extend([
         # "QCD multijet (MC)",
-        "Other backgrounds",
+        # "Other backgrounds",
+        "Diboson + ST #rightarrow tW",
+        # "t#bar{t} #rightarrow 2L2#nu (powheg)",
         "t#bar{t} (powheg)",
         #"Z/#gamma* + jets (MG5_aMC Pt)",
-        "Z/#gamma* + jets (MG5_aMC Pt+IncStitch)",
         # "Z/#gamma* + jets (MG5_aMC Inc.)",
+        # "Z/#gamma* + jets (MG5_aMC Pt+IncStitch)",
+        "Z/#gamma* + jets (powheg MiNNLO)" if "ZJet_powhegminnlo" in samplesForStackHistos_ZJets else "Z/#gamma* + jets (MG5_aMC Pt)",
     ])
 elif do2017:
     ilumi = "41.5"
@@ -237,13 +243,17 @@ elif do2017:
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_ZJets = ["ZToEE"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_jetBinned"]
-    samplesForStackHistos_ZJets = ["ZJet_jetAndPtBinned"]
+    # samplesForStackHistos_ZJets = ["ZJet_jetAndPtBinned"]
+    samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_other = [ "OTHERBKG_WJetPt" ]
     # samplesForStackHistos_other = ["OTHERBKG_WJetMGInc_DibosonPyth"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_DibosonPyth"]
-    samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_triboson"]
+    # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_triboson"]
+    samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
     # MC ttbar
-    samplesForStackHistos_ttbar = ["TTbar_powheg"]
+    # samplesForStackHistos_ttbar = ["TTbar_powheg"]
+    samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
+    # samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
     keysStack = ["QCD multijet (data)"] if doQCD else []
     keysStack.extend([
         # "QCD multijet (MC)",
@@ -260,13 +270,17 @@ elif do2018:
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_Inc"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_jetBinned"]
-    samplesForStackHistos_ZJets = ["ZJet_jetAndPtBinned"]
+    # samplesForStackHistos_ZJets = ["ZJet_jetAndPtBinned"]
+    samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_other = [ "OTHERBKG_WJetPt" ]
     # samplesForStackHistos_other = ["OTHERBKG_WJetMGInc_DibosonPyth"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_DibosonPyth"]
-    samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_triboson"]
+    # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_triboson"]
+    samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
     # MC ttbar
-    samplesForStackHistos_ttbar = ["TTbar_powheg"]
+    # samplesForStackHistos_ttbar = ["TTbar_powheg"]
+    samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
+    # samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
     keysStack = ["QCD multijet (data)"] if doQCD else []
     keysStack.extend([
         # "QCD multijet (MC)",
@@ -384,6 +398,12 @@ def makeDefaultPlot(
             variableName,
             File_QCD_preselection
         ) if doQCD else []
+    if quasiRebinQCD:
+        qcdHistsNew = []
+        for hist in qcdHists:
+            histNew = QuasiRebinHisto(hist)
+            qcdHistsNew.append(histNew)
+        qcdHists = qcdHistsNew
     plot.histosStack[0:0] = qcdHists
     #plot.histosStack = generateHistoList(histoBaseName, samplesForStackHistos_ZJets, variableName, File_preselection)
     #print("2) histosStack=", plot.histosStack)
@@ -427,6 +447,16 @@ def makeDefaultPlot(
             plot.histos2DStack.append(copy.deepcopy(histo))
         plot.histosStack = newHistosStack
         plot.addBkgUncBand = True
+    newHistos = []
+    # plot.histos2D = []
+    if plot.histos[-1].InheritsFrom("TH2"):
+        #print()
+        #print("INFO: redoing stack plots for histo={}".format(plot.histosStack[0].GetName().split("__")[-1]))
+        for index, sampleHisto in enumerate(plot.histos):
+            histo = copy.deepcopy(sampleHisto)
+            newHistos.append(copy.deepcopy(histo.ProjectionX(histo.GetName()+"projx", 1, 1)))  # convert to 1-D nominal hist
+            # plot.histos.append(copy.deepcopy(histo))
+        plot.histos = newHistos
     plot.keysStack = keysStack
     plot.keys = keys
     plot.addZUncBand = zUncBand
@@ -1110,6 +1140,15 @@ if doPreselPlots:
     plots[-1].xmax = 120.0
     plots[-1].xtit = "M(ee) (preselection, EE-EE) (GeV)"
 
+    plots.append(makeDefaultPlot("Mee_End2End2_PAS", systs=doSystematics))
+    plots[-1].rebin = 1
+    #plots[-1].ymax = 1e3
+    #plots[-1].ymin = 1e-1
+    plots[-1].ylog = "yes"
+    plots[-1].xmin = 60.0
+    plots[-1].xmax = 120.0
+    plots[-1].xtit = "M(ee) (preselection, EE2-EE2) (GeV)"
+
     plots.append(makeDefaultPlot("Mee_EB_PAS", systs=doSystematics))
     plots[-1].rebin = 1
     # plots[-1].ymax = 8e3
@@ -1326,7 +1365,7 @@ if doPreselPlots:
     plots[-1].ylog = "no"
     plots[-1].xtit = "M(ej) average (GeV) [Preselection]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1000
+    # plots[-1].xmax = 1000
     plots[-1].rebin = 5
 
     plots.append(makeDefaultPlot("Mej_selected_min_PAS", systs=doSystematics))
@@ -1336,7 +1375,7 @@ if doPreselPlots:
     plots[-1].ylog = "no"
     plots[-1].xtit = "M(ej) minimum (GeV) [Preselection]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1000
+    # plots[-1].xmax = 1000
     plots[-1].rebin = 5
 
     plots.append(makeDefaultPlot("Mej_selected_max_PAS", systs=doSystematics))
@@ -1346,7 +1385,7 @@ if doPreselPlots:
     plots[-1].ylog = "no"
     plots[-1].xtit = "M(ej) maximum (GeV) [Preselection]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1000
+    # plots[-1].xmax = 1000
     plots[-1].rebin = 5
 
     # USED IN AN
@@ -1357,7 +1396,7 @@ if doPreselPlots:
     plots[-1].ylog = "yes"
     plots[-1].xtit = "M(ej) average (GeV) [Preselection]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1200
+    # plots[-1].xmax = 1200
     plots[-1].rebin = 5
 
     plots.append(makeDefaultPlot("Mej_selected_min_PAS", systs=doSystematics))
@@ -1367,7 +1406,7 @@ if doPreselPlots:
     plots[-1].ylog = "yes"
     plots[-1].xtit = "M(ej) minimum (GeV) [Preselection]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1200
+    # plots[-1].xmax = 1200
     plots[-1].rebin = 5
 
     plots.append(makeDefaultPlot("Mej_selected_max_PAS", systs=doSystematics))
@@ -1377,7 +1416,7 @@ if doPreselPlots:
     plots[-1].ylog = "yes"
     plots[-1].xtit = "M(ej) maximum (GeV) [Preselection]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1200
+    # plots[-1].xmax = 1200
     plots[-1].rebin = 5
 
     # plots.append(makeDefaultPlot("Mej_selected_diff_PAS")
@@ -1417,86 +1456,86 @@ if doPreselPlots:
     # plots[-1].ymax = 6e2
     # plots[-1].xtit = "n(vertices) [Preselection]"
 
-    # XXX REMOVE FOR NO JET REQUIREMENTS
-    ##plots.append(makeDefaultPlot("DR_Ele1Jet1_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    ##plots[-1].rebin = 1
-    ##plots[-1].xtit = "#DeltaR(e_{1},j_{1})"
-    ##plots[-1].ymax = 2000000
-    ##plots[-1].ymin = 1e-1
-    ##plots[-1].xmin = 0
-    ##plots[-1].xmax = 6
-    ##plots[-1].ylog  = "yes"
-    ##
-    ##plots.append(makeDefaultPlot("DR_Ele1Jet2_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    ##plots[-1].rebin = 1
-    ##plots[-1].xtit = "#DeltaR(e_{1},j_{2})"
-    ##plots[-1].ymax = 2000000
-    ##plots[-1].ymin = 1e-1
-    ##plots[-1].xmin = 0
-    ##plots[-1].xmax = 6
-    ##plots[-1].ylog  = "yes"
-    ##
-    ##plots.append(makeDefaultPlot("DR_Ele2Jet1_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    ##plots[-1].rebin = 1
-    ##plots[-1].xtit = "#DeltaR(e_{2},j_{1})"
-    ##plots[-1].ymax = 2000000
-    ##plots[-1].ymin = 1e-1
-    ##plots[-1].xmin = 0
-    ##plots[-1].xmax = 6
-    ##plots[-1].ylog  = "yes"
-    ##
-    ##plots.append(makeDefaultPlot("DR_Ele2Jet2_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    ##plots[-1].rebin = 1
-    ##plots[-1].xtit = "#DeltaR(e_{2},j_{2})"
-    ##plots[-1].ymax = 2000000
-    ##plots[-1].ymin = 1e-1
-    ##plots[-1].xmin = 0
-    ##plots[-1].xmax = 6
-    ##plots[-1].ylog  = "yes"
-    ##
-    ##plots.append(makeDefaultPlot("DR_Ele1Ele2_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    ##plots[-1].rebin = 4
-    ##plots[-1].xtit = "#DeltaR(e_{1},e_{2})"
-    ##plots[-1].ymax = 2000000
-    ##plots[-1].ymin = 1e-1
-    ##plots[-1].xmin = 0
-    ##plots[-1].xmax = 6
-    ##plots[-1].ylog  = "yes"
-    ##
-    ##plots.append(makeDefaultPlot("minDR_EleJet_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    ##plots[-1].rebin = 1
-    ##plots[-1].xtit = "Minimum #DeltaR(e_{1},(j_{1}, j_{2}, j_{3}))"
-    ##plots[-1].ymax = 2000000
-    ##plots[-1].ymin = 1e-1
-    ##plots[-1].ylog  = "yes"
-    ##plots[-1].xmin = 0
-    ##plots[-1].xmax = 6
-    #plots.append(makeDefaultPlot("minDR_ZJet_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    # plots[-1].rebin = 4
-    # plots[-1].xtit = "Minimum #DeltaR(ee, (j_{1}, j_{2})) [Preselection]"
-    # plots[-1].ymax = 2000000
-    # plots[-1].ymin = 1e-1
-    # plots[-1].ylog  = "yes"
-    # plots[-1].xmin = 0
-    # plots[-1].xmax = 6
-    #
-    #plots.append(makeDefaultPlot("DR_ZJet1_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    # plots[-1].rebin = 4
-    # plots[-1].xtit = "#DeltaR(ee, j_{1}) [Preselection]"
-    # plots[-1].ymax = 2000000
-    # plots[-1].ymin = 1e-1
-    # plots[-1].ylog  = "yes"
-    # plots[-1].xmin = 0
-    # plots[-1].xmax = 6
-    #
-    #plots.append(makeDefaultPlot("DR_ZJet2_PAS",histoBaseName_userDef,samplesForHistos,keys,samplesForStackHistos,keysStack,sampleForDataHisto,zUncBand,makeRatio))
-    # plots[-1].rebin = 4
-    # plots[-1].xtit = "#DeltaR(ee, j_{2}) [Preselection]"
-    # plots[-1].ymax = 2000000
-    # plots[-1].ymin = 1e-1
-    # plots[-1].ylog  = "yes"
-    # plots[-1].xmin = 0
-    # plots[-1].xmax = 6
+    plots.append(makeDefaultPlot("DR_Ele1Jet1_PAS", systs=doSystematics))
+    plots[-1].rebin = 1
+    plots[-1].xtit = "#DeltaR(e_{1},j_{1})"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
+    plots[-1].ylog  = "yes"
+    
+    plots.append(makeDefaultPlot("DR_Ele1Jet2_PAS", systs=doSystematics))
+    plots[-1].rebin = 1
+    plots[-1].xtit = "#DeltaR(e_{1},j_{2})"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
+    plots[-1].ylog  = "yes"
+    
+    plots.append(makeDefaultPlot("DR_Ele2Jet1_PAS", systs=doSystematics))
+    plots[-1].rebin = 1
+    plots[-1].xtit = "#DeltaR(e_{2},j_{1})"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
+    plots[-1].ylog  = "yes"
+    
+    plots.append(makeDefaultPlot("DR_Ele2Jet2_PAS", systs=doSystematics))
+    plots[-1].rebin = 1
+    plots[-1].xtit = "#DeltaR(e_{2},j_{2})"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
+    plots[-1].ylog  = "yes"
+    
+    plots.append(makeDefaultPlot("DR_Ele1Ele2_PAS", systs=doSystematics))
+    plots[-1].rebin = 4
+    plots[-1].xtit = "#DeltaR(e_{1},e_{2})"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
+    plots[-1].ylog  = "yes"
+    
+    plots.append(makeDefaultPlot("minDR_EleJet_PAS"))
+    plots[-1].rebin = 1
+    plots[-1].xtit = "Minimum #DeltaR(e_{1},(j_{1}, j_{2}, j_{3}))"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].ylog  = "yes"
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
+
+    plots.append(makeDefaultPlot("minDR_ZJet_PAS"))
+    plots[-1].rebin = 4
+    plots[-1].xtit = "Minimum #DeltaR(ee, (j_{1}, j_{2})) [Preselection]"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].ylog  = "yes"
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
+    
+    plots.append(makeDefaultPlot("DR_ZJet1_PAS"))
+    plots[-1].rebin = 4
+    plots[-1].xtit = "#DeltaR(ee, j_{1}) [Preselection]"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].ylog  = "yes"
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
+    
+    plots.append(makeDefaultPlot("DR_ZJet2_PAS"))
+    plots[-1].rebin = 4
+    plots[-1].xtit = "#DeltaR(ee, j_{2}) [Preselection]"
+    plots[-1].ymax = 2000000
+    plots[-1].ymin = 1e-1
+    plots[-1].ylog  = "yes"
+    plots[-1].xmin = 0
+    plots[-1].xmax = 6
 
     plots.append(makeDefaultPlot("Meejj_PAS", systs=doSystematics))
     plots[-1].rebin = 10
@@ -2242,7 +2281,7 @@ if doBTagPlots:
     plots[-1].ylog = "no"
     plots[-1].xtit = "M(ej) average (GeV) [Preselection, >= 2 b-tags]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1000
+    # plots[-1].xmax = 1000
     plots[-1].rebin = 5
 
     plots.append(makeDefaultPlot("Mej_selected_min_gteTwoBtaggedJets"))
@@ -2252,7 +2291,7 @@ if doBTagPlots:
     plots[-1].ylog = "no"
     plots[-1].xtit = "M(ej) minimum (GeV) [Preselection, >= 2 b-tags]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1000
+    # plots[-1].xmax = 1000
     plots[-1].rebin = 5
 
     plots.append(makeDefaultPlot("Mej_selected_max_gteTwoBtaggedJets"))
@@ -2262,7 +2301,7 @@ if doBTagPlots:
     plots[-1].ylog = "no"
     plots[-1].xtit = "M(ej) maximum (GeV) [Preselection, >= 2 b-tags]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1000
+    # plots[-1].xmax = 1000
     plots[-1].rebin = 5
 
     # USED IN AN
@@ -2273,7 +2312,7 @@ if doBTagPlots:
     plots[-1].ylog = "yes"
     plots[-1].xtit = "M(ej) average (GeV) [Preselection, >= 2 b-tags]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1200
+    # plots[-1].xmax = 1200
     plots[-1].rebin = 5
 
     plots.append(makeDefaultPlot("Mej_selected_min_gteTwoBtaggedJets"))
@@ -2283,7 +2322,7 @@ if doBTagPlots:
     plots[-1].ylog = "yes"
     plots[-1].xtit = "M(ej) minimum (GeV) [Preselection, >= 2 b-tags]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1200
+    # plots[-1].xmax = 1200
     plots[-1].rebin = 5
 
     plots.append(makeDefaultPlot("Mej_selected_max_gteTwoBtaggedJets"))
@@ -2293,7 +2332,7 @@ if doBTagPlots:
     plots[-1].ylog = "yes"
     plots[-1].xtit = "M(ej) maximum (GeV) [Preselection, >= 2 b-tags]"
     plots[-1].xmin = 0
-    plots[-1].xmax = 1200
+    # plots[-1].xmax = 1200
     plots[-1].rebin = 5
 
     # plots.append(makeDefaultPlot("Mej_selected_diff_gteTwoBtaggedJets")
@@ -2456,8 +2495,8 @@ if doBTagPlots:
 if doFinalSelectionPlots:
     print("INFO: creating final selection plots...", end=' ')
     for mass_point in LQmassesFinalSelection:
-        samplesForHistos = ["LQ_M{}".format(mass_point)]
-        keys = ["LQ, M={} GeV".format(mass_point)]
+        samplesForHistos = [signalSampleName.format(mass_point)]
+        keys = [signalSampleLabel.format(mass_point)]
 
         plots.append(
             makeDefaultPlot(
@@ -2697,7 +2736,7 @@ if doFinalSelectionPlots:
 
         mej_rebin = 1
         mej_xmin = 0
-        mej_xmax = 2300
+        mej_xmax = 3000
         mee_rebin = 1
         st_rebin = 1
         dr_rebin = 2
@@ -3157,31 +3196,33 @@ if doFinalSelectionPlots:
         plots[-1].xtit = "M(ej)^{min} (GeV), (LQ M = " + str(mass_point) + " selection)"
         plots[-1].ytit = "M(ej)^{max} (GeV), (LQ M = " + str(mass_point) + " selection)"
 
-        plots.append(
-            makeDefaultPlot2D_Ratio(
-                "Mej_selected_min_vs_max_LQ" + str(mass_point),
-                histoBaseName2D_userDef,
-                samplesForStackHistos,
-                sampleForDataHisto,
-            )
-        )
-        plots[-1].xrebin = 2
-        plots[-1].yrebin = 2
-        plots[-1].xtit = "M(ej)^{min} (GeV), (LQ M = " + str(mass_point) + " selection)"
-        plots[-1].ytit = "M(ej)^{max} (GeV), (LQ M = " + str(mass_point) + " selection)"
+        # FIXME
+        # plots.append(
+        #     makeDefaultPlot2D_Ratio(
+        #         "Mej_selected_min_vs_max_LQ" + str(mass_point),
+        #         histoBaseName2D_userDef,
+        #         samplesForStackHistos,
+        #         sampleForDataHisto,
+        #     )
+        # )
+        # plots[-1].xrebin = 2
+        # plots[-1].yrebin = 2
+        # plots[-1].xtit = "M(ej)^{min} (GeV), (LQ M = " + str(mass_point) + " selection)"
+        # plots[-1].ytit = "M(ej)^{max} (GeV), (LQ M = " + str(mass_point) + " selection)"
 
-        plots.append(
-            makeDefaultPlot2D_NSigma(
-                "Mej_selected_min_vs_max_LQ" + str(mass_point),
-                histoBaseName2D_userDef,
-                samplesForStackHistos,
-                sampleForDataHisto,
-            )
-        )
-        plots[-1].xrebin = 2
-        plots[-1].yrebin = 2
-        plots[-1].xtit = "M(ej)^{min} (GeV), (LQ M = " + str(mass_point) + " selection)"
-        plots[-1].ytit = "M(ej)^{max} (GeV), (LQ M = " + str(mass_point) + " selection)"
+        # FIXME
+        # plots.append(
+        #     makeDefaultPlot2D_NSigma(
+        #         "Mej_selected_min_vs_max_LQ" + str(mass_point),
+        #         histoBaseName2D_userDef,
+        #         samplesForStackHistos,
+        #         sampleForDataHisto,
+        #     )
+        # )
+        # plots[-1].xrebin = 2
+        # plots[-1].yrebin = 2
+        # plots[-1].xtit = "M(ej)^{min} (GeV), (LQ M = " + str(mass_point) + " selection)"
+        # plots[-1].ytit = "M(ej)^{max} (GeV), (LQ M = " + str(mass_point) + " selection)"
 
         # plots.append ( makeDefaultPlot ("Classif_1stEle_LQ" + str ( int ( mass_point )  )               , histoBaseName_userDef, samplesForHistos, keys, samplesForStackHistos, keysStack, sampleForDataHisto, zUncBand, makeRatio) )
         # plots[-1].xtit  = "1st Electron classification, (LQ M = " + str ( mass_point ) + " selection)"
