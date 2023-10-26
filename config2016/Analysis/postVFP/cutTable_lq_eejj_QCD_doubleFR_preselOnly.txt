@@ -24,8 +24,6 @@ eleEta_end2           2.000            2.5              -               -       
 #-----------------------------------------------------------------------------------------------------------------------------
 QCDFakeRateFilename	   /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/ultralegacy/fakeRate/2016postVFP/fr2DpostVFP.root - - - -1
 QCDCalcType            double   -   -   -   -1
-# 
-#TrigCorrForSingleLeptonFinalState false   -   -   -   -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Analysis year
 #-----------------------------------------------------------------------------------------------------------------------------
@@ -40,9 +38,9 @@ electronIDType             HEEP  - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 BTagAlgo       DeepJet  - - - -1
 #BTagWP         Loose    - - - -1
-#BTagCutValue   0.0508   - - - -1
+#BTagCutValue   0.0480   - - - -1
 BTagWP         Medium   - - - -1
-BTagCutValue   0.2598   - - - -1
+BTagCutValue   0.2489   - - - -1
 #
 #-----------------------------------------------------------------------------------------------------------------------------
 #--------------------------------- Cuts (level 0,1,2,3 ... n) below --------------------------------------------
@@ -70,7 +68,7 @@ BTagCutValue   0.2598   - - - -1
 #| .__/|_|  \___||___/\___|_|\___|\___|\__|_|\___/|_| |_|
 #|_|                    
 #-----------------------------------------------------------------------------------------------------------------------------
-Reweighting			0	     1			-		-		0	2 -0.5 1.5	     
+Reweighting                        0              1              -           -           0           2             -0.5           1.5
 PassLHECuts                        0              1              -           -           0           2             -0.5           1.5
 PassJSON                           0              1              -           -           0           2             -0.5           1.5
 PassHLT                            0              1              -           -           0           2             -0.5           1.5
@@ -81,16 +79,14 @@ PassHBHENoiseIsoFilter             0              1              -           -  
 PassBadEESupercrystalFilter        0              1              -           -           0           2             -0.5           1.5
 PassEcalDeadCellTrigPrim           0              1              -           -           0           2             -0.5           1.5
 PassBadPFMuonFilter                0              1              -           -           0           2             -0.5           1.5
-PassEcalBadCalibV2Filter           0              1              -           -           0           2             -0.5           1.5
-PassNEle                           0              1              -           -           0           2             -0.5           1.5
-PassNMuon                          0              1              -           -           0           2             -0.5           1.5
+PassEcalBadCalibFilter             0              1              -           -           0           2             -0.5           1.5
+PassNEle                           0              1              -           -           0           11            -0.5           10.5
+PassNMuon                          0              1              -           -           0           16            -0.5           15.5
 nEle_hltMatched                    -inf           +inf           -           -           0           3             -0.5           2.5
 nJet_hltMatched                    -inf           +inf           -           -           0           3             -0.5           2.5
 Ele1_Pt_skim                       40             +inf           -           -           0           200           0              2000
 Ele2_Pt_skim                       40             +inf           -           -           0           200           0              2000
 PassIDRequirements                 0              1              -           -           0           2             -0.5           1.5
-#Ele1_PassHEEPSCEtaCut              0              1              -           -           0           2             -0.5           1.5
-#Ele2_PassHEEPSCEtaCut              0              1              -           -           0           2             -0.5           1.5
 nJet                               -inf           +inf           -           -           0           16            -0.5           15.5
 Jet1_Pt_skim                       35             +inf           -           -           0           200           0              2000
 Jet1_Eta                           -2.4           2.4            -           -           0           100           -5             5
