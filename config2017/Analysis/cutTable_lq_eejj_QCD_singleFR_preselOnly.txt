@@ -24,8 +24,7 @@ eleEta_end2           2.000            2.5              -               -       
 #-----------------------------------------------------------------------------------------------------------------------------
 QCDFakeRateFilename			/afs/cern.ch/user/s/scooper/work/public/Leptoquarks/ul-analysis-inputs/fakeRate/2017/fr2D2017.root - - - -1
 QCDCalcType            single   -   -   -   -1
-# 
-#TrigCorrForSingleLeptonFinalState false   -   -   -   -1
+PrescaleProviderInfo   /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/ul-analysis-inputs/prescales/2017/triggerData2017 - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Analysis year
 #-----------------------------------------------------------------------------------------------------------------------------
