@@ -1,5 +1,4 @@
 #define analysisClass_cxx
-#define USE_QCD_REDUCED_NTUPLE
 #include "analysisClass.h"
 #include <TH2.h>
 #include <TH1F.h>
@@ -61,10 +60,9 @@ void analysisClass::Loop()
   // QCD Fake Rate loading part
   //--------------------------------------------------------------------------
   std::string qcdFileName = getPreCutString1("QCDFakeRateFilename");
-  //HistoReader qcdFakeRateReader(qcdFileName,"fr2D_Bar_2Jet","fr2D_End_2Jet",true,false);
   std::vector<std::string> regionVec;
   if(analysisYear < 2018)
-    regionVec = {"Bar_2Jet", "End1_2Jet", "End2_2Jet"};
+    regionVec = {"2Jet"};
   else
     regionVec = {
       "Bar_pre319077_2Jet",
@@ -76,7 +74,7 @@ void analysisClass::Loop()
       "Bar_HEMonly_post319077_2Jet",
       "End1_HEMonly_post319077_2Jet",
       "End2_HEMonly_post319077_2Jet"};
-  QCDFakeRate qcdFR(qcdFileName, regionVec, analysisYear);
+  QCDFakeRate qcdFR(qcdFileName, "fr2D_", regionVec, true); // look up from hist
 
   //--------------------------------------------------------------------------
   // Create TH1D's
@@ -398,13 +396,9 @@ void analysisClass::Loop()
     double min_prescale = 1;
     int passTrigger  = 0;
 
-    bool ele1PassedHLTPhoton = readerTools_->ReadValueBranch<Bool_t>("Ele1_PassedHLTriggerPhotonFilter");
-    bool ele2PassedHLTPhoton = readerTools_->ReadValueBranch<Bool_t>("Ele2_PassedHLTriggerPhotonFilter");
-    float hltPhotonPt = -1.;
-    if(ele1PassedHLTPhoton)
-      hltPhotonPt = readerTools_->ReadValueBranch<Float_t>("Ele1_MatchedHLTriggerObjectPt");
-    else if(ele2PassedHLTPhoton)
-      hltPhotonPt = readerTools_->ReadValueBranch<Float_t>("Ele2_MatchedHLTriggerObjectPt");
+    float hltPhoton1Pt = readerTools_->ReadValueBranch<Float_t>("Ele1_MatchedHLTriggerObjectPt");
+    float hltPhoton2Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_MatchedHLTriggerObjectPt");
+    float hltPhotonPt = hltPhoton1Pt > hltPhoton2Pt ? hltPhoton1Pt : hltPhoton2Pt;
     
     std::string triggerName = "";
 
@@ -522,14 +516,12 @@ void analysisClass::Loop()
     float fakeRate1 = -1;
     float fakeRate2 = -1;
     if(analysisYear < 2018) {
-      fakeRate1 = qcdFR.GetFakeRate(Ele1_Pt, QCDFakeRate::GetFakeRateRegion(ele1_isBarrel, ele1_isEndcap1, ele1_isEndcap2));
-      fakeRate2 = qcdFR.GetFakeRate(Ele2_Pt, QCDFakeRate::GetFakeRateRegion(ele2_isBarrel, ele2_isEndcap1, ele2_isEndcap2));
+      fakeRate1 = qcdFR.GetFakeRate(Ele1_Pt, "2Jet", Ele1_SCEta);
+      fakeRate2 = qcdFR.GetFakeRate(Ele2_Pt, "2Jet", Ele2_SCEta);
     }
     else {
-      fakeRate1 = qcdFR.GetFakeRate(Ele1_Pt, QCDFakeRate::GetFakeRateRegion(ele1_isBarrel, ele1_isEndcap1, ele1_isEndcap2,
-            Ele1_SCEta, Ele1_Phi, run));
-      fakeRate2 = qcdFR.GetFakeRate(Ele2_Pt, QCDFakeRate::GetFakeRateRegion(ele2_isBarrel, ele2_isEndcap1, ele2_isEndcap2,
-            Ele2_SCEta, Ele2_Phi, run ));
+      fakeRate1 = qcdFR.GetFakeRate(Ele1_Pt, Ele1_SCEta, Ele1_Phi, run);
+      fakeRate2 = qcdFR.GetFakeRate(Ele2_Pt, Ele2_SCEta, Ele2_Phi, run);
     }
 
     //--------------------------------------------------------------------------
@@ -644,12 +636,14 @@ void analysisClass::Loop()
     if ( nEle_store >= 1 ) { 							        
       //fillVariableWithValue( "Ele1_Eta"                      , Ele1_Eta            , fakeRateEffective * min_prescale ) ;
       fillVariableWithValue( "Ele1_Pt"                       , Ele1_Pt            , fakeRateEffective * min_prescale ) ;
+      fillVariableWithValue( "Ele1_Pt_skim"                  , Ele1_Pt            , fakeRateEffective * min_prescale ) ;
       fillVariableWithValue( "Ele1_PassID"               , Ele1_PassID                , fakeRateEffective * min_prescale ) ;
       fillVariableWithValue( "Ele1_PassHEEPSCEtaCut"                      , Ele1_PassHEEPEta            , fakeRateEffective * min_prescale ) ;
     }										        
     if ( nEle_store >= 2 ) { 							        
       //fillVariableWithValue( "Ele2_Eta"                        , Ele2_Eta            , fakeRateEffective * min_prescale ) ;
       fillVariableWithValue( "Ele2_Pt"                       , Ele2_Pt                 , fakeRateEffective * min_prescale ) ;
+      fillVariableWithValue( "Ele2_Pt_skim"                  , Ele2_Pt                 , fakeRateEffective * min_prescale ) ;
       fillVariableWithValue( "Ele2_PassID"                 , Ele2_PassID                , fakeRateEffective * min_prescale ) ;
       fillVariableWithValue( "Ele2_PassHEEPSCEtaCut"                      , Ele2_PassHEEPEta            , fakeRateEffective * min_prescale ) ;
       fillVariableWithValue( "Pt_e1e2"                       , Pt_e1e2             , fakeRateEffective * min_prescale ) ;
