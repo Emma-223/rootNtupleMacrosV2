@@ -208,8 +208,8 @@ if do2016:
     samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
     #samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
     samplesForStackHistos_other = ["OTHERBKG_dibosonNLO_singleTop"]  # UL with single/double QCD fakes from data
-    samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
-    # samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
+    #samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
+    samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
     #
     #samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned"]
     # samplesForStackHistos_ZJets  = [ "ZJet_amcatnlo_Inc" ]
