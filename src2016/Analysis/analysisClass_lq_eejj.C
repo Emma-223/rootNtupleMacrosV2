@@ -876,15 +876,10 @@ void analysisClass::Loop()
     if(jentry < 10 || jentry%10000 == 0) std::cout << "analysisClass:Loop(): jentry = " << jentry << "/" << nentries << std::endl;
     //std::cout << "analysisClass:Loop(): jentry = " << jentry << "/" << nentries << std::endl;
     // run ls event
-    unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
-    //XXX TEST
-    //if(jentry!=1295 && jentry!=1586) continue;
-    //if(jentry > 1000) continue;
-    //if(run==319077) continue;
-    //XXX TEST
-    //float ls = readerTools_->ReadValueBranch<Float_t>("ls");
-    //float event = readerTools_->ReadValueBranch<Float_t>("event");
-    //std::cout << static_cast<unsigned int>(run) << " " << static_cast<unsigned int>(ls) << " " << static_cast<unsigned int>(event) << std::endl;
+    const unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
+    const unsigned int ls = readerTools_->ReadValueBranch<UInt_t>("ls");
+    const unsigned long long int event = readerTools_->ReadValueBranch<ULong64_t>("event");
+    //std::cout << static_cast<unsigned int>(run) << " " << static_cast<unsigned int>(ls) << " " << static_cast<unsigned long long int>(event) << std::endl;
 
 
     //--------------------------------------------------------------------------
@@ -974,8 +969,8 @@ void analysisClass::Loop()
     float trigSF = readerTools_->ReadValueBranch<Float_t>("EventTriggerScaleFactor");
     float trigSFErr = readerTools_->ReadValueBranch<Float_t>("EventTriggerScaleFactorErr");
     gen_weight*=trigSF;
-    fillSystVariableWithValue("EleTrigSFUp", trigSF+trigSFErr);
-    fillSystVariableWithValue("EleTrigSFDown", trigSF-trigSFErr);
+    fillSystVariableWithValue("EleTrigSFUp", (trigSF+trigSFErr)/trigSF);
+    fillSystVariableWithValue("EleTrigSFDown", (trigSF-trigSFErr)/trigSF);
     eventWeight = gen_weight * pileup_weight;
 
     //--------------------------------------------------------------------------
@@ -1692,6 +1687,9 @@ void analysisClass::Loop()
         //bool decision = bool ( passedAllPreviousCuts(cut_name) && passedCut (cut_name));
         bool decision = bool ( passedAllPreviousCuts("trainingSelection") && passedCut (cut_name));
         passed_vector.push_back (decision);
+        if(decision) {
+          //std::cout << "Passed selection" << cut_name << ", run ls event = " << run << " " << ls << " " << event << std::endl;
+        }
       }
     }
 
