@@ -45,42 +45,38 @@ AnalysisYear   2017  - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 BTagAlgo       DeepJet  - - - -1
 #BTagWP         Loose    - - - -1
-#BTagCutValue   0.0521   - - - -1
+#BTagCutValue   0.0532   - - - -1
 #BTagAlgo       DeepJet  - - - -1
 BTagWP         Medium   - - - -1
-BTagCutValue   0.3033   - - - -1
-#BTagAlgo       DeepCSV  - - - -1
-#BTagWP         Loose    - - - -1
-#BTagCutValue   0.1522   - - - -1
-#BTagAlgo       DeepCSV  - - - -1
-#BTagWP         Medium   - - - -1
-#BTagCutValue   0.4941   - - - -1
+BTagCutValue   0.3040   - - - -1
 #
 #-----------------------------------------------------------------------------------------------------------------------------
 # systematics
 #-----------------------------------------------------------------------------------------------------------------------------
 #         name              source/formula/branch                                       cutVars
 #         ------------      ------------------------------------------------------      --------------------------------------
-##SYST      FivePercentUp     1.05
+#SYST      FivePercentUp     1.05
 SYST      PrefireDown       PrefireWeight_Dn/PrefireWeight
 SYST      PrefireUp         PrefireWeight_Up/PrefireWeight
-SYST      JERDown           regex=".+JER_Dn.*"                                          sT_eejj,Jet2_Pt,Jet1_Pt,min_M_ej
-SYST      JERUp             regex=".+JER_Up.*"                                          sT_eejj,Jet2_Pt,Jet1_Pt,min_M_ej
-SYST      JESDown           regex=".+JESTotal_Dn.*"                                     sT_eejj,Jet2_Pt,Jet1_Pt,min_M_ej
-SYST      JESUp             regex=".+JESTotal_Up.*"                                     sT_eejj,Jet2_Pt,Jet1_Pt,min_M_ej
-SYST      EER               regex=".+_EER.*"                                            sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,min_M_ej
-SYST      EESDown           regex=".+EES_Dn.*"                                          sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,min_M_ej
-SYST      EESUp             regex=".+EES_Up.*"                                          sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,min_M_ej
-SYST      EleRecoSFUp       (Ele1_RecoSF+Ele1_RecoSF_Err)*(Ele2_RecoSF+Ele2_RecoSF_Err)/(Ele1_RecoSF*Ele2_RecoSF)
-SYST      EleRecoSFDown     (Ele1_RecoSF-Ele1_RecoSF_Err)*(Ele2_RecoSF-Ele2_RecoSF_Err)/(Ele1_RecoSF*Ele2_RecoSF)
-SYST      EleHEEPSFUp       (Ele1_HEEPSF+Ele1_HEEPSF_Err)*(Ele2_HEEPSF+Ele2_HEEPSF_Err)/(Ele1_HEEPSF*Ele2_HEEPSF)
-SYST      EleHEEPSFDown     (Ele1_HEEPSF-Ele1_HEEPSF_Err)*(Ele2_HEEPSF-Ele2_HEEPSF_Err)/(Ele1_HEEPSF*Ele2_HEEPSF)
-SYST      EleTrigSFUp       (Ele1_TrigSF+Ele1_TrigSF_Err)*(Ele2_TrigSF+Ele2_TrigSF_Err)/(Ele1_TrigSF*Ele2_TrigSF)
-SYST      EleTrigSFDown     (Ele1_TrigSF-Ele1_TrigSF_Err)*(Ele2_TrigSF-Ele2_TrigSF_Err)/(Ele1_TrigSF*Ele2_TrigSF)
+SYST      JERDown           regex=".+jerdown.*"                                         sT_eejj,Jet2_Pt,Jet1_Pt,Jet3_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,PFMET_Type1_Pt,PFMET_Type1_Phi,Masym,MejMin,MejMax,Meejj
+SYST      JERUp             regex=".+jerup.*"                                           sT_eejj,Jet2_Pt,Jet1_Pt,Jet3_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,PFMET_Type1_Pt,PFMET_Type1_Phi,Masym,MejMin,MejMax,Meejj
+SYST      JESDown           regex=".+jesTotaldown.*"                                    sT_eejj,Jet2_Pt,Jet1_Pt,Jet3_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,PFMET_Type1_Pt,PFMET_Type1_Phi,Masym,MejMin,MejMax,Meejj
+SYST      JESUp             regex=".+jesTotalup.*"                                      sT_eejj,Jet2_Pt,Jet1_Pt,Jet3_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,PFMET_Type1_Pt,PFMET_Type1_Phi,Masym,MejMin,MejMax,Meejj
+#FIXME: EER/EES effect on MET?
+SYST      EERDown           regex=".+EER_Dn.*"                                           sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,Pt_e1e2,Masym,MejMin,MejMax,Meejj
+SYST      EERUp             regex=".+EER_Up.*"                                           sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,Pt_e1e2,Masym,MejMin,MejMax,Meejj
+SYST      EESDown           regex=".+EES_Dn.*"                                           sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,Pt_e1e2,Masym,MejMin,MejMax,Meejj
+SYST      EESUp             regex=".+EES_Up.*"                                           sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,Pt_e1e2,Masym,MejMin,MejMax,Meejj
+SYST      EleRecoSFUp       (Ele1_RecoSF_Up/Ele1_RecoSF)*(Ele2_RecoSF_Up/Ele2_RecoSF)
+SYST      EleRecoSFDown     (Ele1_RecoSF_Dn/Ele1_RecoSF)*(Ele2_RecoSF_Dn/Ele2_RecoSF)
+SYST      EleIDSFUp         ((Ele1_HEEPSF+Ele1_HEEPSF_Err)/Ele1_HEEPSF)*((Ele2_HEEPSF+Ele2_HEEPSF_Err)/Ele2_HEEPSF)
+SYST      EleIDSFDown       ((Ele1_HEEPSF-Ele1_HEEPSF_Err)/Ele1_HEEPSF)*((Ele2_HEEPSF-Ele2_HEEPSF_Err)/Ele2_HEEPSF)
+SYST      EleTrigSFUp       
+SYST      EleTrigSFDown     
 SYST      PileupUp          puWeight_Up/puWeight
 SYST      PileupDown        puWeight_Dn/puWeight
 SYST      LHEPdfWeight      LHEPdfWeight
-SYST      LHEScaleWeight      LHEScaleWeight
+SYST      LHEScaleWeight    LHEScaleWeight
 #--------------------------------- Cuts (level 0,1,2,3 ... n) below --------------------------------------------
 # The cut variable names, cut boundaries and histogram binnings are provided here by the user.
 # In the event loop of the analysisClass_template.C, the user have to fill each variable with its value using
