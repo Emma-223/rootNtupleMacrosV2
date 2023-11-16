@@ -149,7 +149,7 @@ def GetFile(filename):
         filename = "root://eoscms/" + filename
     elif filename.startswith("/eos/user"):
         filename = "root://eosuser/" + filename
-    print("GetFile("+filename+")")
+    print("GetFile("+filename+")", flush=True)
     tfile = TFile.Open(filename)
     if not tfile or tfile.IsZombie():
         raise RuntimeError("ERROR: file " + filename + " not found")
@@ -846,6 +846,7 @@ class Plot:
             stkcp.append(copy.deepcopy(stackedHistos[-1]))
             # legend.AddEntry(stackedHistos[-1], self.keysStack[index],"lf")
             thStack.Add(histo)
+            # print("INFO: Add histo name={} with entries={} to thStack".format(histo.GetName(), histo.GetEntries()), flush=True)
             if index == 0:
                 bkgTotalHist = histo.Clone()
             else:
@@ -886,8 +887,9 @@ class Plot:
             thStack.SetMinimum(my_ymin)
             thStack.SetMaximum(my_ymax)
         # set stack style
-        thStack.Draw()
         thStack.SetTitle("")
+        thStack.Draw()
+        # print("INFO: Draw stack for thStack xtit={}".format(self.xtit), flush=True)
         thStack.GetXaxis().SetTitle(self.xtit)
         thStack.GetXaxis().SetTitleFont(132)
         thStack.GetXaxis().SetTitleOffset(0.8)
