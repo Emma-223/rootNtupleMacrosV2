@@ -708,23 +708,23 @@ zjetDatasetName = "DYJetsToEE.+" if zjet == "ZJet_powhegminnlo" else "DYJetsToLL
 #allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
 #allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
 #
-# if not doQCD:
-#     # allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-#     allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLOWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX" if zjet == "ZJet_powhegminnlo" else "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-# else:
-#     allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLO_NLODiboson"
-allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLOWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX" if zjet == "ZJet_powhegminnlo" else "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+if not doQCD:
+    # allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+    allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLOWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX" if zjet == "ZJet_powhegminnlo" else "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
+else:
+    allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLO_NLODiboson"
+# allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLOWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX" if zjet == "ZJet_powhegminnlo" else "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
 data = "DATA"
-# if not doQCD:
-#     ttbar = "TTbar_powheg_all"
-#     diboson = "DIBOSON_nlo_all"
-# else:
-#     ttbar = "TTTo2L2Nu"
-#     diboson = "DIBOSON_nlo"
-# ttbarDatasetName = "TTT"
-ttbar = "TTbar_powheg_all"
-diboson = "DIBOSON_nlo_all"
-ttbarDatasetName = ttbar
+if not doQCD:
+    ttbar = "TTbar_powheg_all"
+    diboson = "DIBOSON_nlo_all"
+else:
+    ttbar = "TTTo2L2Nu"
+    diboson = "DIBOSON_nlo"
+ttbarDatasetName = "TTT"
+# ttbar = "TTbar_powheg_all"
+# diboson = "DIBOSON_nlo_all"
+# ttbarDatasetName = ttbar
 singletop = "SingleTop"
 qcd = "QCDFakes_DATA"
 
