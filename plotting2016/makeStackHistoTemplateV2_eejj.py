@@ -244,16 +244,19 @@ elif do2017:
     # samplesForStackHistos_ZJets = ["ZToEE"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_jetBinned"]
     # samplesForStackHistos_ZJets = ["ZJet_jetAndPtBinned"]
-    samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
+    # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_other = [ "OTHERBKG_WJetPt" ]
     # samplesForStackHistos_other = ["OTHERBKG_WJetMGInc_DibosonPyth"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_DibosonPyth"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_triboson"]
-    samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
+    # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
     # MC ttbar
     # samplesForStackHistos_ttbar = ["TTbar_powheg"]
-    samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
+    # samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
     # samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
+    samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
+    samplesForStackHistos_other = ["OTHERBKG_dibosonNLO_singleTop"]  # UL with single/double QCD fakes from data
+    samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
     keysStack = ["QCD multijet (data)"] if doQCD else []
     keysStack.extend([
         # "QCD multijet (MC)",
@@ -266,21 +269,24 @@ elif do2017:
         "Z/#gamma* + jets (MG5_aMC jet/pt-binned)",
     ])
 elif do2018:
-    ilumi = "59.7"
+    ilumi = "59.8"
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_Inc"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_jetBinned"]
     # samplesForStackHistos_ZJets = ["ZJet_jetAndPtBinned"]
-    samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
+    # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_other = [ "OTHERBKG_WJetPt" ]
     # samplesForStackHistos_other = ["OTHERBKG_WJetMGInc_DibosonPyth"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_DibosonPyth"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_triboson"]
-    samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
+    # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
     # MC ttbar
     # samplesForStackHistos_ttbar = ["TTbar_powheg"]
-    samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
+    # samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
     # samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
+    samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
+    samplesForStackHistos_other = ["OTHERBKG_dibosonNLO_singleTop"]  # UL with single/double QCD fakes from data
+    samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
     keysStack = ["QCD multijet (data)"] if doQCD else []
     keysStack.extend([
         # "QCD multijet (MC)",
@@ -978,6 +984,7 @@ if doPreselPlots:
     plots.append(makeDefaultPlot("Mee_BkgControlRegion", systs=doSystematics))
     plots[-1].rebin = 1
     plots[-1].addOvfl = "no"
+    plots[-1].ymin = 1e-1
     plots[-1].ymax = 1e6
     #plots[-1].rebin = "var"
     #plots[-1].xbins = list(range(0, 410, 10)) + [
