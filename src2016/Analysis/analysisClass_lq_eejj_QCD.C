@@ -781,6 +781,7 @@ void analysisClass::Loop()
     addSkimTreeBranch("EventWeight", &eventWeight, "EventWeight/D");
 
   map<string, int> hltPathToL1PrescaleValueMap;
+  bool checkForDifferingL1Prescales = false; // only works when running on all data in a single year in a single job
   //--------------------------------------------------------------------------
   // Tell the user how many entries we'll look at
   //--------------------------------------------------------------------------
@@ -939,7 +940,6 @@ void analysisClass::Loop()
       //min_prescale = run2PhotonTriggerPrescales.LookupPrescale(analysisYear,triggerName);
       int hltPrescale = psProv.hltPrescale("HLT_"+triggerName+"_v", run, ls);
       int l1Prescale = 1;
-      int multiL1SeedPrescale = 1;
       std::string l1Seed = "";
       if(triggerName == "Photon22") {
         l1Seed = "L1_SingleEG18";
@@ -957,8 +957,7 @@ void analysisClass::Loop()
         if(analysisYearInt == 2018) {
           l1Seed = "L1_SingleEG26er2p5";
           l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-          multiL1SeedPrescale = l1Prescale;
-          if(hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
+          if(checkForDifferingL1Prescales && hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
             if(hltPathToL1PrescaleValueMap[triggerName] != l1Prescale) {
               std::cout << "WARN: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << " while previously we stored a prescale = " << hltPathToL1PrescaleValueMap[triggerName] << "; hlt prescale = " << hltPrescale << 
                 "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
@@ -968,8 +967,7 @@ void analysisClass::Loop()
           if(l1Prescale <= 0) {
             l1Seed = "L1_SingleEG26";
             l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-            multiL1SeedPrescale = l1Prescale;
-            if(hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
+            if(checkForDifferingL1Prescales && hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
               if(hltPathToL1PrescaleValueMap[triggerName] != l1Prescale) {
                 std::cout << "WARN: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << " while previously we stored a prescale = " << hltPathToL1PrescaleValueMap[triggerName] << "; hlt prescale = " << hltPrescale << 
                   "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
@@ -983,14 +981,12 @@ void analysisClass::Loop()
       }
       else if(triggerName == "Photon50" || triggerName == "Photon75" || triggerName == "Photon90" || triggerName == "Photon120" ||
           triggerName == "Photon150" || (analysisYearInt > 2016 && triggerName == "Photon175") ) {
-        //int eg34Prescale = psProv.l1Prescale("L1_SingleEG34", run, ls);
         l1Seed = "L1_SingleEG40";
         l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
         if(analysisYearInt == 2018) {
           l1Seed = "L1_SingleEG42er2p5";
           l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-          multiL1SeedPrescale = l1Prescale;
-          if(hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
+          if(checkForDifferingL1Prescales && hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
             if(hltPathToL1PrescaleValueMap[triggerName] != l1Prescale) {
               std::cout << "WARN: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << " while previously we stored a prescale = " << hltPathToL1PrescaleValueMap[triggerName] << "; hlt prescale = " << hltPrescale << 
                 "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
@@ -1000,8 +996,7 @@ void analysisClass::Loop()
           if(l1Prescale <= 0) {
             l1Seed = "L1_SingleEG42";
             l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-            multiL1SeedPrescale = l1Prescale;
-            if(hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
+            if(checkForDifferingL1Prescales && hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
               if(hltPathToL1PrescaleValueMap[triggerName] != l1Prescale) {
                 std::cout << "WARN: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << " while previously we stored a prescale = " << hltPathToL1PrescaleValueMap[triggerName] << "; hlt prescale = " << hltPrescale << 
                   "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
@@ -1011,8 +1006,7 @@ void analysisClass::Loop()
             if(l1Prescale <= 0) {
               l1Seed = "L1_SingleEG45er2p5";
               l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-              multiL1SeedPrescale = l1Prescale;
-              if(hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
+              if(checkForDifferingL1Prescales && hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end()) {
                 if(hltPathToL1PrescaleValueMap[triggerName] != l1Prescale) {
                   std::cout << "WARN: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << " while previously we stored a prescale = " << hltPathToL1PrescaleValueMap[triggerName] << "; hlt prescale = " << hltPrescale << 
                     "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
@@ -1021,7 +1015,7 @@ void analysisClass::Loop()
               }
             }
           }
-          if(hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end())
+          if(checkForDifferingL1Prescales && hltPathToL1PrescaleValueMap.find(triggerName) != hltPathToL1PrescaleValueMap.end())
             hltPathToL1PrescaleValueMap[triggerName] = l1Prescale;
         }
       }
@@ -1037,13 +1031,13 @@ void analysisClass::Loop()
         std::cout << "WARN: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << "; hlt prescale = " << hltPrescale << 
           "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
           "; hlt menu=" << psProv.getRunInfo(run)->hltMenu() << "; trig mode=" << psProv.getRunInfo(run)->triggerMode() << std::endl;
-      //assert(l1Prescale > 0);
-      //assert(hltPrescale > 0);
+      assert(l1Prescale > 0);
+      assert(hltPrescale > 0);
       min_prescale = l1Prescale * hltPrescale;
       //if(hltPhotonPt < 100)
       //  std::cout << "INFO: found prescale " << min_prescale << " for trigger name " << triggerName << " with hltPhotonPt = " << hltPhotonPt << ", for year: " << analysisYear << std::endl;
-      if(min_prescale <= 0)
-        passTrigger = false;
+      //if(min_prescale <= 0)
+      //  passTrigger = false;
     }
     //else {
     //  std::vector<std::string> triggerNames {"H_Photon22", "H_Photon30", "H_Photon36", "H_Photon50", "H_Photon75", "H_Photon90", "H_Photon120", "H_Photon175"};
