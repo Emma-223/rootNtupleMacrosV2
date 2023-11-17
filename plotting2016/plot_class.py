@@ -823,6 +823,8 @@ class Plot:
             # stackedHistos[-1].GetYaxis().SetLabelFont(132)
             # stackedHistos[-1].GetYaxis().SetTitle(self.ytit + " #times ("+ str(minBinW) + ")/(bin width)") # units omitted or no units for x-axis
             # stackedHistos[iter].GetYaxis().SetTitle((self.ytit + " #times (%.0f GeV)/(bin width)")%(minBinW)) # for x-axis in units of GeV
+            if (self.ymin == "" and self.ymax != "") or (self.ymax == "" and self.ymin != ""):
+                raise RuntimeError("For plot {}, you specified ymax='{}' and ymin='{}', but both need to be specified for the y-axis scale to be adjusted.".format(self.name, self.ymax, self.ymin))
             if self.ymin != "" and self.ymax != "":
                 # stackedHistos[iter].GetYaxis().SetLimits(self.ymin,self.ymax)
                 stackedHistos[-1].GetYaxis().SetRangeUser(self.ymin, self.ymax)

@@ -578,7 +578,7 @@ plots = []
 if doPreselPlots:
     print("INFO: creating preselection plots...", end=' ')
     plots.append(makeDefaultPlot("nElectron_PAS", systs=doSystematics))
-    plots[-1].ymax = 10000000
+    # plots[-1].ymax = 10000000
     # plots[-1].ymin = 1e-1
     plots[-1].xmin = -0.5
     plots[-1].xmax = 6.5
@@ -1450,7 +1450,7 @@ if doPreselPlots:
     plots[-1].rebin = 1
     plots[-1].xmin = -0.5
     plots[-1].xmax = 60.5
-    plots[-1].ymin = 1e-1
+    # plots[-1].ymin = 1e-1
     # plots[-1].ymax = 5e7
     # plots[-1].ylog = "yes"
     plots[-1].xtit = "n(vertices) [Preselection]"
@@ -1611,7 +1611,7 @@ if doPreselPlots:
 if doBTagPlots:
     print("INFO: creating B-tag plots...", end=' ')
     plots.append(makeDefaultPlot("nElectron_gteTwoBtaggedJets"))
-    plots[-1].ymax = 10000000
+    # plots[-1].ymax = 10000000
     # plots[-1].ymin = 1e-1
     plots[-1].xmin = -0.5
     plots[-1].xmax = 6.5
