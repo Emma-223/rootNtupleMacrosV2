@@ -1095,16 +1095,16 @@ void analysisClass::Loop()
       passLHECuts = false;
       // construct mass of dielectron system
       TLorentzVector e1, e2;
-      float Ele1_Pt = readerTools_->ReadValueBranch<Float_t>("Ele1_Pt");
-      float Ele2_Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_Pt");
-      float Ele1_Eta = readerTools_->ReadValueBranch<Float_t>("Ele1_Eta");
-      float Ele2_Eta = readerTools_->ReadValueBranch<Float_t>("Ele2_Eta");
-      float Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
-      float Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
-      e1.SetPtEtaPhiM ( Ele1_Pt, Ele1_Eta, Ele1_Phi, 0.0 );
-      e2.SetPtEtaPhiM ( Ele2_Pt, Ele2_Eta, Ele2_Phi, 0.0 );
+      float LHEEle1_Pt = readerTools_->ReadValueBranch<Float_t>("LHEElectron1_Pt");
+      float LHEEle2_Pt = readerTools_->ReadValueBranch<Float_t>("LHEElectron2_Pt");
+      float LHEEle1_Eta = readerTools_->ReadValueBranch<Float_t>("LHEElectron1_Eta");
+      float LHEEle2_Eta = readerTools_->ReadValueBranch<Float_t>("LHEElectron2_Eta");
+      float LHEEle1_Phi = readerTools_->ReadValueBranch<Float_t>("LHEElectron1_Phi");
+      float LHEEle2_Phi = readerTools_->ReadValueBranch<Float_t>("LHEElectron2_Phi");
+      e1.SetPtEtaPhiM ( LHEEle1_Pt, LHEEle1_Eta, LHEEle1_Phi, 0.0 );
+      e2.SetPtEtaPhiM ( LHEEle2_Pt, LHEEle2_Eta, LHEEle2_Phi, 0.0 );
       float dielectron_mass = (e1 + e2).M();
-      if(dielectron_mass < 100) // next mass bin starts at 100 GeV
+      if(dielectron_mass > 50 && dielectron_mass < 100) // next mass bin starts at 100 GeV and previous ends at 50 GeV
         passLHECuts = true;
     }
     fillVariableWithValue("PassLHECuts",passLHECuts,gen_weight*pileup_weight);
