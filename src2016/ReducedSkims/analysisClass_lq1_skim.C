@@ -737,166 +737,162 @@ void analysisClass::Loop()
     // All skims need GEN particles/jets
     //-----------------------------------------------------------------
 
-    if ( reducedSkimType != 0 ) {
+    fillVariableWithValue("nGenJet_ptCut", n_genJet_store);
+    fillVariableWithValue("nGenEle_ptCut", n_genEle_store);
+    fillVariableWithValue("nGenNu_ptCut",  n_genNu_store);
+    fillVariableWithValue("nGenMu_ptCut",  n_genMu_store);
 
-      fillVariableWithValue("nGenJet_ptCut", n_genJet_store);
-      fillVariableWithValue("nGenEle_ptCut", n_genEle_store);
-      fillVariableWithValue("nGenNu_ptCut",  n_genNu_store);
-      fillVariableWithValue("nGenMu_ptCut",  n_genMu_store);
+    fillVariableWithValue("nGenJet_store", min(n_genJet_store,5));
+    fillVariableWithValue("nGenEle_store", min(n_genEle_store,2));
+    fillVariableWithValue("nGenNu_store" , min(n_genNu_store,2));
+    fillVariableWithValue("nGenMu_store" , min(n_genMu_store,3));
 
-      fillVariableWithValue("nGenJet_store", min(n_genJet_store,5));
-      fillVariableWithValue("nGenEle_store", min(n_genEle_store,2));
-      fillVariableWithValue("nGenNu_store" , min(n_genNu_store,2));
-      fillVariableWithValue("nGenMu_store" , min(n_genMu_store,3));
+    fillVariableWithValue("nGenNuFromW_ptCut"	 , n_genNuFromW_store   );
 
-      fillVariableWithValue("nGenNuFromW_ptCut"	 , n_genNuFromW_store   );
+    fillVariableWithValue("nGenNuFromW_store"	 , min(n_genNuFromW_store  ,2));
 
-      fillVariableWithValue("nGenNuFromW_store"	 , min(n_genNuFromW_store  ,2));
+    if ( n_genJet_store >= 1 ) { 
+      GenJet genJet1 = c_genJet_final -> GetConstituent<GenJet>(0);
+      fillVariableWithValue ( "GenJet1_Pt" , genJet1.Pt () );
+      fillVariableWithValue ( "GenJet1_Eta", genJet1.Eta() );
+      fillVariableWithValue ( "GenJet1_Phi", genJet1.Phi() );
 
-      if ( n_genJet_store >= 1 ) { 
-        GenJet genJet1 = c_genJet_final -> GetConstituent<GenJet>(0);
-        fillVariableWithValue ( "GenJet1_Pt" , genJet1.Pt () );
-        fillVariableWithValue ( "GenJet1_Eta", genJet1.Eta() );
-        fillVariableWithValue ( "GenJet1_Phi", genJet1.Phi() );
+      if ( n_genJet_store >= 2 ) { 
+        GenJet genJet2 = c_genJet_final -> GetConstituent<GenJet>(1);
+        fillVariableWithValue ( "GenJet2_Pt" , genJet2.Pt () );
+        fillVariableWithValue ( "GenJet2_Eta", genJet2.Eta() );
+        fillVariableWithValue ( "GenJet2_Phi", genJet2.Phi() );
 
-        if ( n_genJet_store >= 2 ) { 
-          GenJet genJet2 = c_genJet_final -> GetConstituent<GenJet>(1);
-          fillVariableWithValue ( "GenJet2_Pt" , genJet2.Pt () );
-          fillVariableWithValue ( "GenJet2_Eta", genJet2.Eta() );
-          fillVariableWithValue ( "GenJet2_Phi", genJet2.Phi() );
+        if ( n_genJet_store >= 3 ) { 
+          GenJet genJet3 = c_genJet_final -> GetConstituent<GenJet>(2);
+          fillVariableWithValue ( "GenJet3_Pt" , genJet3.Pt () );
+          fillVariableWithValue ( "GenJet3_Eta", genJet3.Eta() );
+          fillVariableWithValue ( "GenJet3_Phi", genJet3.Phi() );
 
-          if ( n_genJet_store >= 3 ) { 
-            GenJet genJet3 = c_genJet_final -> GetConstituent<GenJet>(2);
-            fillVariableWithValue ( "GenJet3_Pt" , genJet3.Pt () );
-            fillVariableWithValue ( "GenJet3_Eta", genJet3.Eta() );
-            fillVariableWithValue ( "GenJet3_Phi", genJet3.Phi() );
+          if ( n_genJet_store >= 4 ) { 
+            GenJet genJet4 = c_genJet_final -> GetConstituent<GenJet>(3);
+            fillVariableWithValue ( "GenJet4_Pt" , genJet4.Pt () );
+            fillVariableWithValue ( "GenJet4_Eta", genJet4.Eta() );
+            fillVariableWithValue ( "GenJet4_Phi", genJet4.Phi() );
 
-            if ( n_genJet_store >= 4 ) { 
-              GenJet genJet4 = c_genJet_final -> GetConstituent<GenJet>(3);
-              fillVariableWithValue ( "GenJet4_Pt" , genJet4.Pt () );
-              fillVariableWithValue ( "GenJet4_Eta", genJet4.Eta() );
-              fillVariableWithValue ( "GenJet4_Phi", genJet4.Phi() );
-
-              if ( n_genJet_store >= 5 ) { 
-                GenJet genJet5 = c_genJet_final -> GetConstituent<GenJet>(4);
-                fillVariableWithValue ( "GenJet5_Pt" , genJet5.Pt () );
-                fillVariableWithValue ( "GenJet5_Eta", genJet5.Eta() );
-                fillVariableWithValue ( "GenJet5_Phi", genJet5.Phi() );
-              }
-              //else {
-              //  std::cout << "This event: " <<
-              //    static_cast<unsigned int>(run) << " " << static_cast<unsigned int>(luminosityBlock) << " " << static_cast<unsigned int>(event) <<
-              //    " had no 5th gen Jet; examine other GenJets." << std::endl;
-              //  c_genJet_final->examine<GenJet>("finalGenJets");
-              //}
+            if ( n_genJet_store >= 5 ) { 
+              GenJet genJet5 = c_genJet_final -> GetConstituent<GenJet>(4);
+              fillVariableWithValue ( "GenJet5_Pt" , genJet5.Pt () );
+              fillVariableWithValue ( "GenJet5_Eta", genJet5.Eta() );
+              fillVariableWithValue ( "GenJet5_Phi", genJet5.Phi() );
             }
+            //else {
+            //  std::cout << "This event: " <<
+            //    static_cast<unsigned int>(run) << " " << static_cast<unsigned int>(luminosityBlock) << " " << static_cast<unsigned int>(event) <<
+            //    " had no 5th gen Jet; examine other GenJets." << std::endl;
+            //  c_genJet_final->examine<GenJet>("finalGenJets");
+            //}
           }
         }
       }
+    }
 
-      if ( n_genEle_store >= 1 ){ 
-        GenParticle genEle1 = c_genEle_final -> GetConstituent<GenParticle>(0);
-        fillVariableWithValue ( "GenEle1_Pt" , genEle1.Pt () );
-        fillVariableWithValue ( "GenEle1_Eta", genEle1.Eta() );
-        fillVariableWithValue ( "GenEle1_Phi", genEle1.Phi() );
+    if ( n_genEle_store >= 1 ){ 
+      GenParticle genEle1 = c_genEle_final -> GetConstituent<GenParticle>(0);
+      fillVariableWithValue ( "GenEle1_Pt" , genEle1.Pt () );
+      fillVariableWithValue ( "GenEle1_Eta", genEle1.Eta() );
+      fillVariableWithValue ( "GenEle1_Phi", genEle1.Phi() );
 
-        if ( n_genEle_store >= 2 ){ 
-          GenParticle genEle2 = c_genEle_final -> GetConstituent<GenParticle>(1);
-          fillVariableWithValue ( "GenEle2_Pt" , genEle2.Pt () );
-          fillVariableWithValue ( "GenEle2_Eta", genEle2.Eta() );
-          fillVariableWithValue ( "GenEle2_Phi", genEle2.Phi() );
-        }
+      if ( n_genEle_store >= 2 ){ 
+        GenParticle genEle2 = c_genEle_final -> GetConstituent<GenParticle>(1);
+        fillVariableWithValue ( "GenEle2_Pt" , genEle2.Pt () );
+        fillVariableWithValue ( "GenEle2_Eta", genEle2.Eta() );
+        fillVariableWithValue ( "GenEle2_Phi", genEle2.Phi() );
+      }
+    }
+
+    // neutrinos
+    if ( n_genNu_store >= 1 ){ 
+      GenParticle genNu1 = c_genNu_final -> GetConstituent<GenParticle>(0);
+      fillVariableWithValue ( "GenNu1_Pt" , genNu1.Pt () );
+      fillVariableWithValue ( "GenNu1_Eta", genNu1.Eta() );
+      fillVariableWithValue ( "GenNu1_Phi", genNu1.Phi() );
+
+      if ( n_genNu_store >= 2 ){ 
+        GenParticle genNu2 = c_genNu_final -> GetConstituent<GenParticle>(1);
+        fillVariableWithValue ( "GenNu2_Pt" , genNu2.Pt () );
+        fillVariableWithValue ( "GenNu2_Eta", genNu2.Eta() );
+        fillVariableWithValue ( "GenNu2_Phi", genNu2.Phi() );
+      }
+    }
+
+    // muons
+    if ( n_genMu_store >= 1 ){ 
+      GenParticle genMu1 = c_genMu_final -> GetConstituent<GenParticle>(0);
+      fillVariableWithValue ( "GenMu1_Pt" , genMu1.Pt () );
+      fillVariableWithValue ( "GenMu1_Eta", genMu1.Eta() );
+      fillVariableWithValue ( "GenMu1_Phi", genMu1.Phi() );
+
+      if ( n_genMu_store >= 2 ){ 
+        GenParticle genMu2 = c_genMu_final -> GetConstituent<GenParticle>(1);
+        fillVariableWithValue ( "GenMu2_Pt" , genMu2.Pt () );
+        fillVariableWithValue ( "GenMu2_Eta", genMu2.Eta() );
+        fillVariableWithValue ( "GenMu2_Phi", genMu2.Phi() );
       }
 
-      // neutrinos
-      if ( n_genNu_store >= 1 ){ 
-        GenParticle genNu1 = c_genNu_final -> GetConstituent<GenParticle>(0);
-        fillVariableWithValue ( "GenNu1_Pt" , genNu1.Pt () );
-        fillVariableWithValue ( "GenNu1_Eta", genNu1.Eta() );
-        fillVariableWithValue ( "GenNu1_Phi", genNu1.Phi() );
-
-        if ( n_genNu_store >= 2 ){ 
-          GenParticle genNu2 = c_genNu_final -> GetConstituent<GenParticle>(1);
-          fillVariableWithValue ( "GenNu2_Pt" , genNu2.Pt () );
-          fillVariableWithValue ( "GenNu2_Eta", genNu2.Eta() );
-          fillVariableWithValue ( "GenNu2_Phi", genNu2.Phi() );
-        }
+      if ( n_genMu_store >= 3 ){ 
+        GenParticle genMu3 = c_genMu_final -> GetConstituent<GenParticle>(2);
+        fillVariableWithValue ( "GenMu3_Pt" , genMu3.Pt () );
+        fillVariableWithValue ( "GenMu3_Eta", genMu3.Eta() );
+        fillVariableWithValue ( "GenMu3_Phi", genMu3.Phi() );
       }
+    }
 
-      // muons
-      if ( n_genMu_store >= 1 ){ 
-        GenParticle genMu1 = c_genMu_final -> GetConstituent<GenParticle>(0);
-        fillVariableWithValue ( "GenMu1_Pt" , genMu1.Pt () );
-        fillVariableWithValue ( "GenMu1_Eta", genMu1.Eta() );
-        fillVariableWithValue ( "GenMu1_Phi", genMu1.Phi() );
+    if ( n_genNuFromW_store >= 1 ){ 
+      GenParticle genNuFromW1 = c_genNuFromW_final -> GetConstituent<GenParticle>(0);
+      fillVariableWithValue ( "GenNuFromW1_Pt" , genNuFromW1.Pt () );
+      fillVariableWithValue ( "GenNuFromW1_Eta", genNuFromW1.Eta() );
+      fillVariableWithValue ( "GenNuFromW1_Phi", genNuFromW1.Phi() );
+      fillVariableWithValue ( "GenNuFromW1_ID" , genNuFromW1.PdgId());
 
-        if ( n_genMu_store >= 2 ){ 
-          GenParticle genMu2 = c_genMu_final -> GetConstituent<GenParticle>(1);
-          fillVariableWithValue ( "GenMu2_Pt" , genMu2.Pt () );
-          fillVariableWithValue ( "GenMu2_Eta", genMu2.Eta() );
-          fillVariableWithValue ( "GenMu2_Phi", genMu2.Phi() );
-        }
-
-        if ( n_genMu_store >= 3 ){ 
-          GenParticle genMu3 = c_genMu_final -> GetConstituent<GenParticle>(2);
-          fillVariableWithValue ( "GenMu3_Pt" , genMu3.Pt () );
-          fillVariableWithValue ( "GenMu3_Eta", genMu3.Eta() );
-          fillVariableWithValue ( "GenMu3_Phi", genMu3.Phi() );
-        }
+      if ( n_genNuFromW_store >= 2 ){ 
+        GenParticle genNuFromW2 = c_genNuFromW_final -> GetConstituent<GenParticle>(1);
+        fillVariableWithValue ( "GenNuFromW2_Pt" , genNuFromW2.Pt () );
+        fillVariableWithValue ( "GenNuFromW2_Eta", genNuFromW2.Eta() );
+        fillVariableWithValue ( "GenNuFromW2_Phi", genNuFromW2.Phi() );
+        fillVariableWithValue ( "GenNuFromW2_ID" , genNuFromW2.PdgId());
       }
+    }
 
-      if ( n_genNuFromW_store >= 1 ){ 
-        GenParticle genNuFromW1 = c_genNuFromW_final -> GetConstituent<GenParticle>(0);
-        fillVariableWithValue ( "GenNuFromW1_Pt" , genNuFromW1.Pt () );
-        fillVariableWithValue ( "GenNuFromW1_Eta", genNuFromW1.Eta() );
-        fillVariableWithValue ( "GenNuFromW1_Phi", genNuFromW1.Phi() );
-        fillVariableWithValue ( "GenNuFromW1_ID" , genNuFromW1.PdgId());
+    if ( n_genLQ_store >= 1 ){ 
+      GenParticle genLQ1 = c_genLQ_final -> GetConstituent<GenParticle>(0);
+      fillVariableWithValue ( "GenLQ1_Pt" , genLQ1.Pt () );
+      fillVariableWithValue ( "GenLQ1_Eta", genLQ1.Eta() );
+      fillVariableWithValue ( "GenLQ1_Phi", genLQ1.Phi() );
+      fillVariableWithValue ( "GenLQ1_Mass", genLQ1.Mass() );
+      fillVariableWithValue ( "GenLQ1_ID" , genLQ1.PdgId());
 
-        if ( n_genNuFromW_store >= 2 ){ 
-          GenParticle genNuFromW2 = c_genNuFromW_final -> GetConstituent<GenParticle>(1);
-          fillVariableWithValue ( "GenNuFromW2_Pt" , genNuFromW2.Pt () );
-          fillVariableWithValue ( "GenNuFromW2_Eta", genNuFromW2.Eta() );
-          fillVariableWithValue ( "GenNuFromW2_Phi", genNuFromW2.Phi() );
-          fillVariableWithValue ( "GenNuFromW2_ID" , genNuFromW2.PdgId());
-        }
+      if ( n_genLQ_store >= 2 ){ 
+        GenParticle genLQ2 = c_genLQ_final -> GetConstituent<GenParticle>(1);
+        fillVariableWithValue ( "GenLQ2_Pt" , genLQ2.Pt () );
+        fillVariableWithValue ( "GenLQ2_Eta", genLQ2.Eta() );
+        fillVariableWithValue ( "GenLQ2_Phi", genLQ2.Phi() );
+        fillVariableWithValue ( "GenLQ2_Mass", genLQ2.Mass() );
+        fillVariableWithValue ( "GenLQ2_ID" , genLQ2.PdgId());
       }
+    }
 
-      if ( n_genLQ_store >= 1 ){ 
-        GenParticle genLQ1 = c_genLQ_final -> GetConstituent<GenParticle>(0);
-        fillVariableWithValue ( "GenLQ1_Pt" , genLQ1.Pt () );
-        fillVariableWithValue ( "GenLQ1_Eta", genLQ1.Eta() );
-        fillVariableWithValue ( "GenLQ1_Phi", genLQ1.Phi() );
-        fillVariableWithValue ( "GenLQ1_Mass", genLQ1.Mass() );
-        fillVariableWithValue ( "GenLQ1_ID" , genLQ1.PdgId());
+    if ( n_lheElectron_store >= 1 ){ 
+      LHEParticle lheElectron1 = c_lheElectrons -> GetConstituent<LHEParticle>(0);
+      fillVariableWithValue ( "LHEElectron1_Pt" , lheElectron1.Pt () );
+      fillVariableWithValue ( "LHEElectron1_Eta", lheElectron1.Eta() );
+      fillVariableWithValue ( "LHEElectron1_Phi", lheElectron1.Phi() );
+      fillVariableWithValue ( "LHEElectron1_Mass", lheElectron1.Mass() );
+      fillVariableWithValue ( "LHEElectron1_ID" , lheElectron1.PdgId());
 
-        if ( n_genLQ_store >= 2 ){ 
-          GenParticle genLQ2 = c_genLQ_final -> GetConstituent<GenParticle>(1);
-          fillVariableWithValue ( "GenLQ2_Pt" , genLQ2.Pt () );
-          fillVariableWithValue ( "GenLQ2_Eta", genLQ2.Eta() );
-          fillVariableWithValue ( "GenLQ2_Phi", genLQ2.Phi() );
-          fillVariableWithValue ( "GenLQ2_Mass", genLQ2.Mass() );
-          fillVariableWithValue ( "GenLQ2_ID" , genLQ2.PdgId());
-        }
+      if ( n_lheElectron_store >= 2 ){ 
+        LHEParticle lheElectron2 = c_lheElectrons -> GetConstituent<LHEParticle>(1);
+        fillVariableWithValue ( "LHEElectron2_Pt" , lheElectron2.Pt () );
+        fillVariableWithValue ( "LHEElectron2_Eta", lheElectron2.Eta() );
+        fillVariableWithValue ( "LHEElectron2_Phi", lheElectron2.Phi() );
+        fillVariableWithValue ( "LHEElectron2_Mass", lheElectron2.Mass() );
+        fillVariableWithValue ( "LHEElectron2_ID" , lheElectron2.PdgId());
       }
-
-      if ( n_lheElectron_store >= 1 ){ 
-        LHEParticle lheElectron1 = c_lheElectrons -> GetConstituent<LHEParticle>(0);
-        fillVariableWithValue ( "LHEElectron1_Pt" , lheElectron1.Pt () );
-        fillVariableWithValue ( "LHEElectron1_Eta", lheElectron1.Eta() );
-        fillVariableWithValue ( "LHEElectron1_Phi", lheElectron1.Phi() );
-        fillVariableWithValue ( "LHEElectron1_Mass", lheElectron1.Mass() );
-        fillVariableWithValue ( "LHEElectron1_ID" , lheElectron1.PdgId());
-
-        if ( n_lheElectron_store >= 2 ){ 
-          LHEParticle lheElectron2 = c_lheElectrons -> GetConstituent<LHEParticle>(1);
-          fillVariableWithValue ( "LHEElectron2_Pt" , lheElectron2.Pt () );
-          fillVariableWithValue ( "LHEElectron2_Eta", lheElectron2.Eta() );
-          fillVariableWithValue ( "LHEElectron2_Phi", lheElectron2.Phi() );
-          fillVariableWithValue ( "LHEElectron2_Mass", lheElectron2.Mass() );
-          fillVariableWithValue ( "LHEElectron2_ID" , lheElectron2.PdgId());
-        }
-      }
-
     }
 
     //-----------------------------------------------------------------
