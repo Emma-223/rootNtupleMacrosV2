@@ -266,14 +266,14 @@ void analysisClass::Loop()
   //-----------------------------------------------------------------
   vector<string> singleElectronTriggers = {"HLT_Ele27_WPTight_Gsf", "HLT_Ele32_WPTight_Gsf", "HLT_Ele35_WPTight_Gsf", "HLT_Ele115_CaloIdVT_GsfTrkIdT", "HLT_Ele105_CaloIdVT_GsfTrkIdT"};
   vector<string> doubleElectronTriggers = {"HLT_DoubleEle33_CaloIdL_GsfTrkIdVL", "HLT_DoubleEle33_CaloIdL_MW", "HLT_DoubleEle25_CaloIdL_MW"};
-  vector<string> triggersToConsiderQCD;
+  vector<string> triggersToConsider;
   vector<int> photonThresholds = {22, 25, 30, 33, 36, 50, 75, 90, 120, 150, 175, 200};
   for(const auto& thresh : photonThresholds)
-      triggersToConsiderQCD.push_back("HLT_Photon"+to_string(thresh));
-  triggersToConsiderQCD.insert(triggersToConsiderQCD.end(), singleElectronTriggers.begin(), singleElectronTriggers.end());
-  triggersToConsiderQCD.insert(triggersToConsiderQCD.end(), doubleElectronTriggers.begin(), doubleElectronTriggers.end());
+      triggersToConsider.push_back("HLT_Photon"+to_string(thresh));
+  triggersToConsider.insert(triggersToConsider.end(), singleElectronTriggers.begin(), singleElectronTriggers.end());
+  triggersToConsider.insert(triggersToConsider.end(), doubleElectronTriggers.begin(), doubleElectronTriggers.end());
   std::map<string, string> triggerToBranchNameMap;
-  for(const auto& triggerName : triggersToConsiderQCD)
+  for(const auto& triggerName : triggersToConsider)
       triggerToBranchNameMap[triggerName] = getTriggerBranchName(triggerName);
 
   /*//------------------------------------------------------------------
@@ -1398,15 +1398,17 @@ void analysisClass::Loop()
       }
     }
 
+    // fill trigger variables
+    for(const auto& trigName : triggersToConsider) {
+        if(triggerExists(trigName))
+            fillTriggerVariable ( trigName , triggerToBranchNameMap[trigName]  );
+        else
+            fillVariableWithValue( triggerToBranchNameMap[trigName], -1.0); 
+    }
+
     if ( reducedSkimType == 0 ) {
-        for(const auto& trigName : triggersToConsiderQCD) {
-            if(triggerExists(trigName))
-                fillTriggerVariable ( trigName , triggerToBranchNameMap[trigName]  );
-            else
-                fillVariableWithValue( triggerToBranchNameMap[trigName], -1.0); 
-        }
         bool pass_trigger = false;
-        for(const auto& trig : triggersToConsiderQCD) {
+        for(const auto& trig : triggersToConsider) {
             if(getVariableValue(triggerToBranchNameMap[trig]) > 0) {
                 pass_trigger = true;
                 break;
