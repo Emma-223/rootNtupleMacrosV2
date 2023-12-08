@@ -410,8 +410,6 @@ void analysisClass::Loop()
     CollectionPtr c_ele_loose;
     CollectionPtr c_ele_vLoose;
     ID heepIdType = HEEP70;
-    if(analysisYearInt == 2018)
-      heepIdType = HEEP70_2018;
 
     if ( reducedSkimType == 0 ){ 
       if(electronIDType == "HEEP") {
@@ -460,7 +458,15 @@ void analysisClass::Loop()
     //  }
     //}
     ////c_ele_final_ptCut->examine<Electron>("c_ele_final_ptCut");
-    //c_ele_final->examine<Electron>("c_ele_final");
+    //if(c_ele_final->GetSize() > 1) {
+    //  Electron ele = c_ele_final -> GetConstituent<Electron>(0);
+    //  if(ele.Pt() > 35) {
+    //    std::cout << "| " << run << " | " << ls << "             | " << event << std::endl;
+    //    c_ele_all->examine<Electron>("c_ele_all");
+    //    c_ele_final->examine<Electron>("c_ele_final");
+    //    c_ele_final_ptCut->examine<Electron>("c_ele_final_ptCut");
+    //  }
+    //}
     FillUserTH1D("nEleNTuple",c_ele_all->GetSize());
     FillUserTH1D("nEleNrsk",c_ele_final->GetSize());
     FillUserTH2D("nEleNTupleVsNeleRsk",c_ele_final->GetSize(),c_ele_all->GetSize());
