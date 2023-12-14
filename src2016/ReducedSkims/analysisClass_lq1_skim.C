@@ -23,6 +23,7 @@
 #include "HLTriggerObjectCollectionHelper.h"
 #include "HistoReader.h"
 #include "ElectronScaleFactors.C"
+#include "EWKCorrections.h"
 #include "JMEUncertainties.C"
 
 #include "CorrectionHandler.h"
@@ -359,8 +360,8 @@ void analysisClass::Loop()
     CollectionPtr c_genEle_final = c_gen_all    -> SkimByID<GenParticle>(GEN_ELE_HARDPROCESS_FINALSTATE);
     //c_genEle_final->examine<GenParticle>("c_genEle_final = c_gen_all after SkimByID<GenParticle>(GEN_ELE_HARDPROCESS_FINALSTATE)");
 
-    CollectionPtr c_genEle_fromLQ_finalState = c_gen_all -> SkimByID<GenParticle>(GEN_ELE_FROM_LQ);
-    c_genEle_fromLQ_finalState = c_genEle_fromLQ_finalState -> SkimByID<GenParticle>(GEN_ELE_HARDPROCESS_FINALSTATE);
+    //CollectionPtr c_genEle_fromLQ_finalState = c_gen_all -> SkimByID<GenParticle>(GEN_ELE_FROM_LQ);
+    //c_genEle_fromLQ_finalState = c_genEle_fromLQ_finalState -> SkimByID<GenParticle>(GEN_ELE_HARDPROCESS_FINALSTATE);
     //c_genEle_fromLQ_finalState->examine<GenParticle>("c_genEle_fromLQ_finalState = (GEN_ELE_FROM_LQ && GEN_ELE_HARDPROCESS_FINALSTATE)");
 
     CollectionPtr c_genMu_final = c_gen_all    -> SkimByID<GenParticle>(GEN_MU_HARD_SCATTER);
@@ -372,8 +373,8 @@ void analysisClass::Loop()
 
     //c_genZgamma_final->examine<GenParticle>("c_genZgamma_final = c_gen_all after SkimByID<GenParticle>(GEN_ZGAMMA_HARD_SCATTER)");
     CollectionPtr c_genNuFromW_final   = c_gen_all -> SkimByID<GenParticle>(GEN_NU_FROM_W);
-    CollectionPtr c_genTop             = c_gen_all -> SkimByID<GenParticle>(GEN_TOP);
-    CollectionPtr c_genTop_final       = c_genTop  -> SkimByID<GenParticle>(GEN_STATUS62);
+    //CollectionPtr c_genTop             = c_gen_all -> SkimByID<GenParticle>(GEN_TOP);
+    //CollectionPtr c_genTop_final       = c_genTop  -> SkimByID<GenParticle>(GEN_STATUS62);
 
     CollectionPtr c_genLQ              = c_gen_all ->SkimByID<GenParticle>(GEN_LQ);
     CollectionPtr c_genLQ_final        = c_genLQ  -> SkimByID<GenParticle>(GEN_STATUS62);
@@ -384,6 +385,14 @@ void analysisClass::Loop()
     const CollectionPtr c_genQuark_hardScatter_const(c_genQuark_hardScatter);
     CollectionPtr c_genJetMatchedLQ = c_genJet_all -> SkimByRequireDRMatch<GenJet, GenParticle>(c_genQuark_hardScatter_const, 0.1);
    // c_genJetMatchedLQ->examine<GenJet>("c_genJetMatchedLQ");
+
+    CollectionPtr c_genZHardProcessFinalCopy = c_gen_all->SkimByID<GenParticle>(GEN_Z_FROMHARDPROCESS_LASTCOPY);
+    //if(c_genZHardProcessFinalCopy->GetSize() != 1) {
+    //  cout << "c_genZHardProcessFinalCopy != 1" << endl;
+    //  c_gen_all->examine<GenParticle>("c_gen_all");
+    //  CollectionPtr c_genZHardProcessFinalCopy2 = c_gen_all->SkimByID<GenParticle>(GEN_Z_FROMHARDPROCESS_LASTCOPY, true);
+    //  c_genZHardProcessFinalCopy2->examine<GenParticle>("c_genZHardProcessFinalCopy");
+    //}
 
     // old systematics handling for electron energy resolution and scale
     //std::vector<Electron> smearedEles;
@@ -720,6 +729,7 @@ void analysisClass::Loop()
     int n_genEle_store       = c_genEle_final                -> GetSize();
     int n_genNu_store        = c_genNu_final                 -> GetSize();
     int n_genMu_store        = c_genMu_final                 -> GetSize();
+    int n_genZGamma_store    = c_genZHardProcessFinalCopy    -> GetSize();
     int n_genJet_store       = c_genJet_final                -> GetSize();
 
     int n_muon_ptCut         = c_muon_final_ptCut            -> GetSize();
@@ -811,6 +821,20 @@ void analysisClass::Loop()
         fillVariableWithValue ( "GenEle2_Phi", genEle2.Phi() );
       }
     }
+
+    if ( n_genZGamma_store >= 1 ){ 
+      GenParticle genZ = c_genZHardProcessFinalCopy -> GetConstituent<GenParticle>(0);
+      fillVariableWithValue ( "GenZ_Pt" , genZ.Pt () );
+      fillVariableWithValue ( "GenZ_Eta", genZ.Eta() );
+      fillVariableWithValue ( "GenZ_Phi", genZ.Phi() );
+      fillVariableWithValue ( "GenZ_Status",genZ.Status() );
+      fillVariableWithValue ( "GenZ_StatusFlags",genZ.StatusFlags() );
+      fillVariableWithValue ( "GenZ_ID" , genZ.PdgId());
+      fillVariableWithValue ( "EWKNLOCorrection", EWKCorrections::LookupEWKCorrection(genZ.Pt()));
+    }
+    else
+      fillVariableWithValue( "EWKNLOCorrection", 1.0);
+
 
     // neutrinos
     if ( n_genNu_store >= 1 ){ 
