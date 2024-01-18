@@ -54,157 +54,114 @@ def GetHisto(histoName, tfile, scale=1):
     return new
 
 
-def SetupPlots(thisHistName, plotBaseName):
-    h_ALLBKG_powheg_ttbar = GetHisto(
-        thisHistName.replace("SAMPLE", allBkg)
-        + plotBaseName,
-        File_preselection,
-    )  # MC all
-    # powheg ttbar
-    h_TTbar_powheg_ttbar = GetHisto(
-        thisHistName.replace("SAMPLE", ttbar) + plotBaseName, File_preselection
-    )  # MC TTbar
-    h_ZJets_amcatnlo_ttbar = GetHisto(
-        thisHistName.replace("SAMPLE", zjet) + plotBaseName,
-        File_preselection,
-    )
-    # h_WJets_amcatnlo_ttbar = GetHisto("histo1D__WJet_amcatnlo_Inc__"+plotBaseName, File_preselection)
-    h_SingleTop_ttbar = GetHisto(
-        thisHistName.replace("SAMPLE", singletop) + plotBaseName, File_preselection
-    )
-    # h_Diboson_ttbar = GetHisto("histo1D__DIBOSON__"+plotBaseName, File_preselection)
-    h_Diboson_ttbar = GetHisto(
-        thisHistName.replace("SAMPLE", diboson) + plotBaseName,
-        File_preselection,
-    )
-    # DATA
-    h_DATA_ttbar = GetHisto(
-        thisHistName.replace("SAMPLE", "DATA") + plotBaseName, File_preselection
-    )  # DATA
-    # QCD
+def Create1DSlice(hist, xmin, xmax):
+    histName = hist.GetName() + "_" + str(xmin) + "to" + str(xmax)
+    minXBin = hist.GetXaxis().FindBin(xmin)
+    maxXBin = hist.GetXaxis().FindBin(xmax-1e-10)  # in case xmax is exactly a bin boundary, go a tiny bit inside the bin to get the right bin number
+    # print("INFO: Create1DSlice() - for hist named {}, got xmin={} to bin={} [center={}] and xmax={} to bin={} [center={}]".format(hist.GetName(), xmin, minXBin, hist.GetXaxis().GetBinCenter(minXBin), xmax, maxXBin, hist.GetXaxis().GetBinCenter(maxXBin)), flush=True)
+    return hist.ProjectionY(histName, minXBin, maxXBin, "e")
+
+
+def FillPlotObjects(plotBaseName, suffix, meeMin, meeMax, datasetName, h_DATA, h_ALLBKG, h_TTbar, h_ZJets, h_SingleTop, h_Diboson, h_QCD, h_WJets):
+    plot = Plot()
+    plot.histoDATA = copy.deepcopy(h_DATA)
+    plot.histoMCall = copy.deepcopy(h_ALLBKG)
+    plot.histoTTbar = copy.deepcopy(h_TTbar)
     if doQCD:
-        h_QCD = GetHisto(
-            thisHistName.replace("SAMPLE", qcd)
-            #+ plotBaseName.replace("_btagSFDownShift", "").replace("_btagSFUpShift", ""),
-            + plotBaseName,
-            File_QCD_preselection,
-        )
-        # h_QCD_ttbar = GetHisto("histo1D__QCD_EMEnriched__"+plotBaseName,File_QCD_preselection)
-    elif useSingleFakeMC:
-        h_WJets_amcatnlo_ttbar = GetHisto(
-            thisHistName.replace("SAMPLE", wjet) + plotBaseName,
-            File_preselection,
-        )
+        plot.histoQCD = copy.deepcopy(h_QCD)
+    plot.histoZJet = copy.deepcopy(h_ZJets)
+    # plot.histoWJet = h_WJets # FIXME
+    plot.histoSingleTop = copy.deepcopy(h_SingleTop)
+    plot.histoDiboson = copy.deepcopy(h_Diboson)
+    plot.xmin = meeMin
+    plot.xmax = meeMax
+    plot.name = plotBaseName + suffix
+    plot.fileXsectionNoRescale = xsectionFile
+    plot.xminplot = 0
+    plot.xmaxplot = 2000
+    plot.yminplot = 0
+    plot.ymaxplot = 2000
+    plot.datasetName = datasetName
+    return plot
 
-    plotTTbar = Plot()
-    plotTTbar.histoDATA = h_DATA_ttbar
-    plotTTbar.histoMCall = h_ALLBKG_powheg_ttbar
-    plotTTbar.histoTTbar = h_TTbar_powheg_ttbar
-    # plotTTbar.histoQCD = h_QCD_ttbar
-    if doQCD:
-        plotTTbar.histoQCD = h_QCD
-    plotTTbar.histoZJet = h_ZJets_amcatnlo_ttbar
-    # plotTTbar.histoWJet = h_WJets_amcatnlo_ttbar
 
-    plotTTbar.histoSingleTop = h_SingleTop_ttbar
-    plotTTbar.histoDiboson = h_Diboson_ttbar
-    plotTTbar.xmin = meeMinTTBar
-    # plotTTbar.xmax = h_TTbar_amcatnlo_ttbar.GetXaxis().GetXmax()
-    plotTTbar.xmax = meeMaxTTBar
-    # plotTTbar.name = "TTbarRescale"
-    plotTTbar.name = plotBaseName + "_TTbar"
-    plotTTbar.fileXsectionNoRescale = xsectionFile
-    plotTTbar.xminplot = 0
-    plotTTbar.xmaxplot = 2000
-    plotTTbar.yminplot = 0
-    plotTTbar.ymaxplot = 2000
-    plotTTbar.datasetName = ttbarDatasetName
-    # plotTTbar.datasetName = "TT"
-    # plot0.datasetName = "DYJetsToLL_M-50_HT.+Tune"
-    # plot0.datasetName = "Z.+Jets_Pt.+alpgen"
-    # example: this match with /Z3Jets_Pt300to800-alpgen/Spring10-START3X_V26_S09-v1/GEN-SIM-RECO
-
-    # -----------------------------------------
-    # for wjets-enriched region
-    # plotBaseName = 'MTenu_50_110_Njet_lte3'
-    # plotBaseName = 'MTenu_50_110_noBtaggedJets'
-    # plotBaseName = 'MTenu_70_150_noBtaggedJets'
-    # plotBaseName = 'MTenu_110_190_noBtaggedJets'
-    # plotBaseName= 'MTenu_50_110_noBtaggedJets_LQ800'
-
+def SetupPlots(thisHistName, histBaseName, bins=[]):
+    ttbarPlotBaseName = histBaseName.replace("BJETBIN1", "gteOneBtaggedJet")
+    ttbarPlotBaseName = ttbarPlotBaseName.replace("BJETBIN2", "gteTwoBtaggedJets")
+    plotsTTbar = []
     # plotBaseName = histBaseName.replace("BJETBIN1", "noBtaggedJets")
     # plotBaseName = plotBaseName.replace("BJETBIN2", "noBtaggedJets")
-    plotBaseName = histBaseName.replace("_BJETBIN1", "")
-    plotBaseName = plotBaseName.replace("_BJETBIN2", "")
-    print("for DYJets, using plotBaseName:", plotBaseName)
-
-    h_ALLBKG_powheg_dyjets = GetHisto(
-        thisHistName.replace("SAMPLE", allBkg)
-        + plotBaseName,
-        File_preselection,
-    )  # MC all
-    h_TTbar_powheg_dyjets = GetHisto(
-        thisHistName.replace("SAMPLE", ttbar) + plotBaseName, File_preselection
-    )  # MC TTbar
-    h_ZJets_amcatnlo_dyjets = GetHisto(
-        thisHistName.replace("SAMPLE", zjet) + plotBaseName,
-        File_preselection,
-    )
-    # h_dyjets_amcatnlo_dyjets = GetHisto("histo1D__WJet_amcatnlo_Inc__"+plotBaseName, File_preselection)
-    h_SingleTop_dyjets = GetHisto(
-        thisHistName.replace("SAMPLE", singletop) + plotBaseName, File_preselection
-    )
-    # h_Diboson_dyjets = GetHisto("histo1D__DIBOSON__"+plotBaseName, File_preselection)
-    h_Diboson_dyjets = GetHisto(
-        thisHistName.replace("SAMPLE", diboson) + plotBaseName,
-        File_preselection,
-    )
-    # DATA
-    h_DATA_dyjets = GetHisto(
-        thisHistName.replace("SAMPLE", data) + plotBaseName, File_preselection
-    )  # DATA
-    # QCD
-    if doQCD:
-        h_QCD = GetHisto(
-            thisHistName.replace("SAMPLE", qcd)
-            # + plotBaseName.replace("_btagSFDownShift", "").replace("_btagSFUpShift", ""),
+    dyjPlotBaseName = histBaseName.replace("_BJETBIN1", "")
+    dyjPlotBaseName = dyjPlotBaseName.replace("_BJETBIN2", "")
+    plotsDYJets = []
+    backgroundNames = ["DATA", allBkg, ttbar, zjet, singletop, diboson, qcd, wjet]
+    for idx, plotBaseName in enumerate([ttbarPlotBaseName, dyjPlotBaseName]):
+        isDYJ = True
+        sampleName = "DYJets"
+        if idx == 0:
+            sampleName = "TTBar"
+            isDYJ = False
+        print("INFO: For {}, using plotBaseName: {}".format(sampleName, plotBaseName))
+        histDict = {}
+        histDict[allBkg] = GetHisto(
+            thisHistName.replace("SAMPLE", allBkg)
             + plotBaseName,
-            File_QCD_preselection,
-        )
-        # h_QCD_wjets = GetHisto("histo1D__QCD_EMEnriched__"+plotBaseName,File_QCD_preselection)
-    elif useSingleFakeMC:
-        h_WJets_amcatnlo_dyjets = GetHisto(
-            thisHistName.replace("SAMPLE", wjet) + plotBaseName,
             File_preselection,
         )
-
-    plotDYJets = Plot()
-    plotDYJets.histoDATA = h_DATA_dyjets
-    plotDYJets.histoMCall = h_ALLBKG_powheg_dyjets
-    plotDYJets.histoTTbar = h_TTbar_powheg_dyjets
-    # plotDYJets.histoQCD = h_QCD_dyjets
-    if doQCD:
-        plotDYJets.histoQCD = h_QCD
-    plotDYJets.histoZJet = h_ZJets_amcatnlo_dyjets
-    # plotDYJets.histoWJet = h_WJets_amcatnlo_dyjets
-
-    plotDYJets.histoSingleTop = h_SingleTop_dyjets
-    plotDYJets.histoDiboson = h_Diboson_dyjets
-    plotDYJets.xmin = meeMinDYJets
-    # plotDYJets.xmax = h_TTbar_amcatnlo_wjets.GetXaxis().GetXmax()
-    plotDYJets.xmax = meeMaxDYJets
-    # plotDYJets.name = "DYJetsRescale"
-    plotDYJets.name = plotBaseName + "_DYJets"
-    plotDYJets.fileXsectionNoRescale = xsectionFile
-    plotDYJets.xminplot = 0
-    plotDYJets.xmaxplot = 2000
-    plotDYJets.yminplot = 0
-    plotDYJets.ymaxplot = 2000
-    plotDYJets.datasetName = zjetDatasetName
-    # plotDYJets.datasetName = "DYJetsToLNu_Pt.+Tune"
-    # plot0.datasetName = "Z.+Jets_Pt.+alpgen"
-    # example: this match with /Z3Jets_Pt300to800-alpgen/Spring10-START3X_V26_S09-v1/GEN-SIM-RECO
-    return plotDYJets, plotTTbar
+        histDict[ttbar] = GetHisto(
+            thisHistName.replace("SAMPLE", ttbar) + plotBaseName, File_preselection
+        )
+        histDict[zjet] = GetHisto(
+            thisHistName.replace("SAMPLE", zjet) + plotBaseName,
+            File_preselection,
+        )
+        histDict[singletop] = GetHisto(
+            thisHistName.replace("SAMPLE", singletop) + plotBaseName, File_preselection
+        )
+        histDict[diboson] = GetHisto(
+            thisHistName.replace("SAMPLE", diboson) + plotBaseName,
+            File_preselection,
+        )
+        histDict["DATA"] = GetHisto(
+            thisHistName.replace("SAMPLE", "DATA") + plotBaseName, File_preselection
+            )
+        histDict[qcd] = None
+        histDict[wjet] = None
+        if doQCD:
+            histDict[qcd] = GetHisto(
+                thisHistName.replace("SAMPLE", qcd)
+                #+ plotBaseName.replace("_btagSFDownShift", "").replace("_btagSFUpShift", ""),
+                + plotBaseName,
+                File_QCD_preselection,
+            )
+            # h_QCD = GetHisto("histo1D__QCD_EMEnriched__"+plotBaseName,File_QCD_preselection)
+        elif useSingleFakeMC:
+            histDict[wjet] = GetHisto(
+                thisHistName.replace("SAMPLE", wjet) + plotBaseName,
+                File_preselection,
+            )
+        if len(bins):
+            for idx, binCoord in enumerate(bins):
+                if idx == len(bins)-1:
+                    break
+                print("INFO: make plot from {} from {} to {}; histDict[zjet] has {} entries".format(plotBaseName, binCoord, bins[idx+1], histDict[zjet].GetEntries()), flush=True)
+                thisPlotBaseName = plotBaseName + "_" + str(binCoord) + "to" + str(bins[idx+1])
+                histsForBinRange = []
+                for bkg in backgroundNames:
+                    if histDict[bkg] is None:
+                        histsForBinRange.append(histDict[bkg])
+                        continue
+                    histsForBinRange.append(Create1DSlice(histDict[bkg], binCoord, bins[idx+1]))
+                if isDYJ:
+                    plotsDYJets.append(FillPlotObjects(thisPlotBaseName, "_DYJets", meeMinDYJets, meeMaxDYJets, zjetDatasetName, *histsForBinRange))
+                else:
+                    plotsTTbar.append(FillPlotObjects(thisPlotBaseName, "_TTbar", meeMinTTBar, meeMaxTTBar, ttbarDatasetName, *histsForBinRange))
+        else:
+            if isDYJ:
+                plotsDYJets.append(FillPlotObjects(plotBaseName, "_DYJets", meeMinDYJets, meeMaxDYJets, zjetDatasetName, *[histDict[bkg] for bkg in backgroundNames]))
+            else:
+                plotsTTbar.append(FillPlotObjects(plotBaseName, "_TTbar", meeMinTTBar, meeMaxTTBar, ttbarDatasetName, *[histDict[bkg] for bkg in backgroundNames]))
+    return plotsDYJets, plotsTTbar
 
 
 def GetIntegralTH1(histo, xmin, xmax, verbose=False):
@@ -267,33 +224,34 @@ def GetErrorIntegralTH1(histo, xmin, xmax, verbose=False):
 
 # The Plot class: add members if needed
 class Plot:
-    histoDATA = ""  # DATA
-    histoTTbar = ""  # MCTTbar
-    histoMCall = ""  # MCall
-    histoQCD = ""  # QCD
-    histoZJet = ""
-    histoWJet = ""
-    histoSingleTop = ""
-    histoDiboson = ""
-    xtit = ""  # xtitle
-    ytit = ""  # ytitle
-    xmin = ""  # set xmin to calculate rescaling factor (-- please take into account the bin size of histograms --)
-    xmax = ""  # # set xmax to calculate rescaling factor (-- please take into account the bin size of histograms --)
-    xminplot = ""  # min x axis range (need to set both min and max. Leave it as is for full range)
-    xmaxplot = ""  # max x axis range (need to set both min and max. Leave it as is for full range)
-    yminplot = ""  # min y axis range (need to set both min and max. Leave it as is for full range)
-    ymaxplot = ""  # max y axis range (need to set both min and max. Leave it as is for full range)
-    lpos = (
-        ""  # legend position (default = top-right, option="bottom-center", "top-left")
-    )
-    #    xlog         = "" # log scale of X axis (default = no, option="yes") ### IT SEEMS IT DOES NOT WORK
-    ylog = ""  # log scale of Y axis (default = no, option="yes")
-    # rebin       = "" # rebin x axis (default = 1, option = set it to whatever you want )
-    name = ""  # name of the final plots
-    lint = "2.6 fb^{-1}"  # integrated luminosity of the sample ( example "10 pb^{-1}" )
-    fileXsectionNoRescale = ""  # cross section file (with no rescale
-    writeXSecFile = False
-    datasetName = ""  # string for pattern recognition of dataset name (rescaling will be done only on matched datasets)
+    def __init__(self):
+        histoDATA = ""  # DATA
+        histoTTbar = ""  # MCTTbar
+        histoMCall = ""  # MCall
+        histoQCD = ""  # QCD
+        histoZJet = ""
+        histoWJet = ""
+        histoSingleTop = ""
+        histoDiboson = ""
+        xtit = ""  # xtitle
+        ytit = ""  # ytitle
+        xmin = ""  # set xmin to calculate rescaling factor (-- please take into account the bin size of histograms --)
+        xmax = ""  # # set xmax to calculate rescaling factor (-- please take into account the bin size of histograms --)
+        xminplot = ""  # min x axis range (need to set both min and max. Leave it as is for full range)
+        xmaxplot = ""  # max x axis range (need to set both min and max. Leave it as is for full range)
+        yminplot = ""  # min y axis range (need to set both min and max. Leave it as is for full range)
+        ymaxplot = ""  # max y axis range (need to set both min and max. Leave it as is for full range)
+        lpos = (
+            ""  # legend position (default = top-right, option="bottom-center", "top-left")
+        )
+        #    xlog         = "" # log scale of X axis (default = no, option="yes") ### IT SEEMS IT DOES NOT WORK
+        ylog = ""  # log scale of Y axis (default = no, option="yes")
+        # rebin       = "" # rebin x axis (default = 1, option = set it to whatever you want )
+        name = ""  # name of the final plots
+        lint = "2.6 fb^{-1}"  # integrated luminosity of the sample ( example "10 pb^{-1}" )
+        fileXsectionNoRescale = ""  # cross section file (with no rescale
+        writeXSecFile = False
+        datasetName = ""  # string for pattern recognition of dataset name (rescaling will be done only on matched datasets)
 
     def CheckMCDataConsistency(self):
         # checks
@@ -840,6 +798,7 @@ File_preselection = GetFile(mcFile)
 xsectionFile = "/afs/cern.ch/user/s/scooper/work/private/LQNanoAODAttempt/Leptoquarks/analyzer/rootNtupleAnalyzerV2/config/xsection_13TeV_2022.txt"
 
 histNameDefault = "histo1D__SAMPLE__"
+hist2DNameDefault = "histo2D__SAMPLE__"
 # histNameReleaseMee = "histo1D__SAMPLE__cutHisto_allOtherCuts___________"
 histNameAllPrevCuts = "histo1D__SAMPLE__cutHisto_allPreviousCuts________"
 #
@@ -888,14 +847,12 @@ ttbarDatasetName = "TTT"
 singletop = "SingleTop"
 qcd = "QCDFakes_DATA"
 
-# --- Rescaling of W + jet and ttbar+jets background
+# --- Rescaling of DY+jets and ttbar+jets backgrounds
 histBaseNames = []
 # nominal
 histBaseNames.append("Mee_BkgControlRegion")
 histBaseNames.append("Mee_BkgControlRegion_BJETBIN1")
 histBaseNames.append("Mee_BkgControlRegion_BJETBIN2")
-# histBaseNames.append("Mee_80_100_Preselection")
-# histBaseNames.append("Mee_70_110_Preselection")
 histBaseNames.append("Mee_EBEB_BkgControlRegion")
 histBaseNames.append("Mee_EBEE_BkgControlRegion")
 histBaseNames.append("Mee_EEEE_BkgControlRegion")
@@ -905,49 +862,10 @@ histBaseNames.append('Mee_NJetEq4_BkgControlRegion')
 histBaseNames.append('Mee_NJetEq5_BkgControlRegion')
 histBaseNames.append('Mee_NJetEq6_BkgControlRegion')
 histBaseNames.append('Mee_NJetEq7_BkgControlRegion')
-histBaseNames.append('Mee_NJetGeq3_BkgControlRegion')
-histBaseNames.append('Mee_NJetGeq4_BkgControlRegion')
-histBaseNames.append("Mee_sT300To500_BkgControlRegion")
-histBaseNames.append("Mee_sT500To750_BkgControlRegion")
-histBaseNames.append("Mee_sT750To1250_BkgControlRegion")
-histBaseNames.append("Mee_sT1250ToInf_BkgControlRegion")
-histBaseNames.append("Mee_MejMin100To200_BkgControlRegion")
-histBaseNames.append("Mee_MejMin200To300_BkgControlRegion")
-histBaseNames.append("Mee_MejMin300To400_BkgControlRegion")
-histBaseNames.append("Mee_MejMin400To500_BkgControlRegion")
-histBaseNames.append("Mee_MejMin500To650_BkgControlRegion")
-histBaseNames.append("Mee_MejMin650ToInf_BkgControlRegion")
-##histBaseNames.append( "Mee_sT340_BkgControlRegion")
-##histBaseNames.append( "Mee_sT405_BkgControlRegion")
-##histBaseNames.append( "Mee_sT470_BkgControlRegion")
-##histBaseNames.append( "Mee_sT535_BkgControlRegion")
-##histBaseNames.append( "Mee_sT595_BkgControlRegion")
-##histBaseNames.append( "Mee_sT660_BkgControlRegion")
-##histBaseNames.append( "Mee_sT720_BkgControlRegion")
-##histBaseNames.append( "Mee_sT780_BkgControlRegion")
-##histBaseNames.append( "Mee_sT840_BkgControlRegion")
-##histBaseNames.append( "Mee_sT900_BkgControlRegion")
-##histBaseNames.append( "Mee_sT960_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1015_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1075_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1130_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1190_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1245_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1300_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1355_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1410_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1460_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1515_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1565_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1615_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1670_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1720_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1770_BkgControlRegion")
-##histBaseNames.append( "Mee_sT1815_BkgControlRegion")
-histBaseNames.append("Mee_70_110_LQ300")
-histBaseNames.append("Mee_70_110_LQ600")
-histBaseNames.append("Mee_70_110_LQ800")
-histBaseNames.append("Mee_70_110_LQ900")
+#histBaseNames.append("Mee_70_110_LQ300")
+#histBaseNames.append("Mee_70_110_LQ600")
+#histBaseNames.append("Mee_70_110_LQ800")
+#histBaseNames.append("Mee_70_110_LQ900")
 histBaseNames.append("MeeVsNJet_BkgControlRegion")
 
 binsForVarDict = {}
@@ -964,32 +882,23 @@ plotsTTBar = []
 plotsDYJets = []
 
 for idx, histBaseName in enumerate(histBaseNames):
-    # -----------------------------------------
-    # for ttbar-enriched region
-    # plotBaseName = 'MTenu_50_110_Njet_gte4'
-    # plotBaseName = 'MTenu_50_110_gteOneBtaggedJet'
-    # plotBaseName = 'MTenu_70_150_gteOneBtaggedJet'
-    # plotBaseName = 'MTenu_110_190_gteOneBtaggedJet'
-    # plotBaseName= 'MTenu_50_110_gteOneBtaggedJet_LQ800'
-    thisHistName = histNameDefault
+    histName = histNameDefault
     writeXSecFile = (histBaseName == histNameBaseForXSecFile)
 
-    plotBaseName = histBaseName.replace("BJETBIN1", "gteOneBtaggedJet")
-    plotBaseName = plotBaseName.replace("BJETBIN2", "gteTwoBtaggedJets")
-    # plotBaseName = histBaseName
-    print("for TTBar, using plotBaseName:", plotBaseName)
-    
-    plotBaseNamesToGet = [plotBaseName]
-    # if "Vs" in plotBaseName:
-    #     var = plotBaseName[plotBaseName.find("Vs")+2:plotBaseName.find("_", plotBaseName.find("Vs"))]
-    #     for binLowEdge in binsForVarDict[var]:
+    bins = []
+    if "Vs" in histBaseName:
+        histName = hist2DNameDefault
+        var = histBaseName[histBaseName.find("Vs")+2:histBaseName.find("_", histBaseName.find("Vs"))]
+        bins = binsForVarDict[var]
 
     try:
-        plotDYJets, plotTTbar = SetupPlots(thisHistName, plotBaseName)
-        plotDYJets.writeXSecFile = writeXSecFile
-        plotTTbar.writeXSecFile = writeXSecFile
-        plotsTTBar.append(plotTTbar)
-        plotsDYJets.append(plotDYJets)
+        plotsDYjets, plotsTTbar = SetupPlots(histName, histBaseName, bins)
+        for plot in plotsDYjets:
+            plot.writeXSecFile = writeXSecFile
+        for plot in plotsTTbar:
+            plot.writeXSecFile = writeXSecFile
+        plotsTTBar.extend(plotsTTbar)
+        plotsDYJets.extend(plotsDYjets)
     except RuntimeError as e:
         print("Caught exception while getting histo: '", e, "'; skipping this one")
         continue
@@ -1009,8 +918,9 @@ fileps = "allPlots_calc_dyJetsAndTTBarRescale_And_xsecFile.ps"
 # --- Generate and print the plots from the list 'plots' define above
 # c = TCanvas()
 # c.Print(fileps+"[")
+# print("INFO: plot names look like: (TTBar) ", [plot.name for plot in plotsTTBar], " and (DYJets) ", [plot.name for plot in plotsDYJets])
 for idx, plot in enumerate(plotsTTBar):
-    print("plot:",plot.name)
+    print("plot:", plot.name, flush=True)
     CalculateRescaleFactor(plot, plotsDYJets[idx], fileps)
 # c.Print(fileps+"]")
 # os.system('ps2pdf '+fileps)
