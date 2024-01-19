@@ -57,7 +57,10 @@ def GetHisto(histoName, tfile, scale=1):
 def Create1DSlice(hist, xmin, xmax):
     histName = hist.GetName() + "_" + str(xmin) + "to" + str(xmax)
     minXBin = hist.GetXaxis().FindBin(xmin)
-    maxXBin = hist.GetXaxis().FindBin(xmax-1e-10)  # in case xmax is exactly a bin boundary, go a tiny bit inside the bin to get the right bin number
+    if xmax == "Inf":
+        maxXBin = hist.GetNbinsX()+1  # include overflow
+    else:
+        maxXBin = hist.GetXaxis().FindBin(xmax-1e-10)  # in case xmax is exactly a bin boundary, go a tiny bit inside the bin to get the right bin number
     # print("INFO: Create1DSlice() - for hist named {}, got xmin={} to bin={} [center={}] and xmax={} to bin={} [center={}]".format(hist.GetName(), xmin, minXBin, hist.GetXaxis().GetBinCenter(minXBin), xmax, maxXBin, hist.GetXaxis().GetBinCenter(maxXBin)), flush=True)
     return hist.ProjectionY(histName, minXBin, maxXBin, "e")
 
@@ -144,14 +147,15 @@ def SetupPlots(thisHistName, histBaseName, bins=[]):
             for idx, binCoord in enumerate(bins):
                 if idx == len(bins)-1:
                     break
-                print("INFO: make plot from {} from {} to {}; histDict[zjet] has {} entries".format(plotBaseName, binCoord, bins[idx+1], histDict[zjet].GetEntries()), flush=True)
-                thisPlotBaseName = plotBaseName + "_" + str(binCoord) + "to" + str(bins[idx+1])
+                binHigh = bins[idx+1]
+                # print("INFO: make plot from {} from {} to {}; histDict[zjet] has {} entries".format(plotBaseName, binCoord, binHigh, histDict[zjet].GetEntries()), flush=True)
+                thisPlotBaseName = plotBaseName + "_" + str(binCoord) + "to" + str(binHigh)
                 histsForBinRange = []
                 for bkg in backgroundNames:
                     if histDict[bkg] is None:
                         histsForBinRange.append(histDict[bkg])
                         continue
-                    histsForBinRange.append(Create1DSlice(histDict[bkg], binCoord, bins[idx+1]))
+                    histsForBinRange.append(Create1DSlice(histDict[bkg], binCoord, binHigh))
                 if isDYJ:
                     plotsDYJets.append(FillPlotObjects(thisPlotBaseName, "_DYJets", meeMinDYJets, meeMaxDYJets, zjetDatasetName, *histsForBinRange))
                 else:
@@ -857,22 +861,92 @@ histBaseNames.append("Mee_BkgControlRegion_BJETBIN2")
 histBaseNames.append("Mee_EBEB_BkgControlRegion")
 histBaseNames.append("Mee_EBEE_BkgControlRegion")
 histBaseNames.append("Mee_EEEE_BkgControlRegion")
-#histBaseNames.append('Mee_NJetEq2_BkgControlRegion')
-#histBaseNames.append('Mee_NJetEq3_BkgControlRegion')
-#histBaseNames.append('Mee_NJetEq4_BkgControlRegion')
-#histBaseNames.append('Mee_NJetEq5_BkgControlRegion')
-#histBaseNames.append('Mee_NJetEq6_BkgControlRegion')
-#histBaseNames.append('Mee_NJetEq7_BkgControlRegion')
 #histBaseNames.append("Mee_70_110_LQ300")
 #histBaseNames.append("Mee_70_110_LQ600")
 #histBaseNames.append("Mee_70_110_LQ800")
 #histBaseNames.append("Mee_70_110_LQ900")
+# SF variations
 histBaseNames.append("MeeVsNJet_BkgControlRegion")
+histBaseNames.append("MeeVsST_BkgControlRegion")
+histBaseNames.append("MeeVsSTjet_BkgControlRegion")
+histBaseNames.append("MeeVsSTlep_BkgControlRegion")
+histBaseNames.append("MeeVsMejMin_BkgControlRegion")
+histBaseNames.append("MeeVsMejMax_BkgControlRegion")
+histBaseNames.append("MeeVsMeejj_BkgControlRegion")
+histBaseNames.append("MeeVsMe1j1_BkgControlRegion")
+histBaseNames.append("MeeVsMe1j2_BkgControlRegion")
+histBaseNames.append("MeeVsMe2j1_BkgControlRegion")
+histBaseNames.append("MeeVsMe2j2_BkgControlRegion")
+#histBaseNames.append("MeeVsEle1Pt_BkgControlRegion")
+#histBaseNames.append("MeeVsEle2Pt_BkgControlRegion")
+#histBaseNames.append("MeeVsJet1Pt_BkgControlRegion")
+#histBaseNames.append("MeeVsJet2Pt_BkgControlRegion")
+#histBaseNames.append("MeeVsPFMETType1Pt_BkgControlRegion")
 
+STBins = [300, 400, 500, 700, 900, 1250, "Inf"]
+MejBins = [100, 200, 300, 400, 500, 700, 900, "Inf"]
+PtBins = MejBins
+METBins = MejBins
 binsForVarDict = {}
-binsForVarDict["NJet"] = np.arange(1.5, 8.5, 1)
+binsForVarDict["NJet"] = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, "Inf"]
+binsForVarDict["ST"] = STBins
+binsForVarDict["STjet"] = STBins
+binsForVarDict["STlep"] = STBins
+binsForVarDict["MejMin"] = MejBins
+binsForVarDict["MejMax"] = MejBins
+binsForVarDict["Meejj"] = MejBins
+binsForVarDict["Me1j1"] = MejBins
+binsForVarDict["Me1j2"] = MejBins
+binsForVarDict["Me2j1"] = MejBins
+binsForVarDict["Me2j2"] = MejBins
+binsForVarDict["Ele1Pt"] = PtBins
+binsForVarDict["Ele2Pt"] = PtBins
+binsForVarDict["Jet1Pt"] = PtBins
+binsForVarDict["Jet2Pt"] = PtBins
+binsForVarDict["PFMETType1Pt"] = METBins
 
-varToTitleDict = {"NJet" : "N_{jet}"}
+varToXTitleDict = {}
+varToXTitleDict["NJet"] = "N_{jet}"
+varToXTitleDict["ST"] = "S_{T} [GeV]"
+varToXTitleDict["STjet"] = "S_{T} (jets) [GeV]"
+varToXTitleDict["STlep"] = "S_{T} (electrons) [GeV]"
+varToXTitleDict["MejMin"] = "M_{ej}^{min} [GeV]"
+varToXTitleDict["MejMax"] = "M_{ej}^{max} [GeV]"
+varToXTitleDict["Meejj"] = "M_{eejj} [GeV]"
+varToXTitleDict["Me1j1"] = "M_{e1j1} [GeV]"
+varToXTitleDict["Me1j2"] = "M_{e1j2} [GeV]"
+varToXTitleDict["Me2j1"] = "M_{e2j1} [GeV]"
+varToXTitleDict["Me2j2"] = "M_{e2j2} [GeV]"
+varToXTitleDict["Ele1Pt"] = "P_{T} (e_{1} [GeV])"
+varToXTitleDict["Ele2Pt"] = "P_{T} (e_{2} [GeV])"
+varToXTitleDict["Jet1Pt"] = "P_{T} (j_{1} [GeV])"
+varToXTitleDict["Jet2Pt"] = "P_{T} (j_{2} [GeV])"
+varToXTitleDict["PFMETType1Pt"] = "PFMET [GeV]"
+
+varToYRangeDict = {}
+varToYRangeDict["NJet"] = [0.5, 4]
+varToYRangeDict["ST"] = [0.5, 1.5]
+varToYRangeDict["STjet"] = [0.5, 1.5]
+varToYRangeDict["STlep"] = [0.5, 1.5]
+varToYRangeDict["MejMin"] = [0.5, 1.5]
+varToYRangeDict["MejMax"] = [0.5, 1.5]
+varToYRangeDict["Meejj"] = [0.5, 1.5]
+varToYRangeDict["Me1j1"] = [0.5, 1.5]
+varToYRangeDict["Me1j2"] = [0.5, 1.5]
+varToYRangeDict["Me2j1"] = [0.5, 1.5]
+varToYRangeDict["Me2j2"] = [0.5, 1.5]
+varToYRangeDict["Ele1Pt"] = [0.5, 1.5]
+varToYRangeDict["Ele2Pt"] = [0.5, 1.5]
+varToYRangeDict["Jet1Pt"] = [0.5, 1.5]
+varToYRangeDict["Jet2Pt"] = [0.5, 1.5]
+varToYRangeDict["PFMETType1Pt"] = [0.5, 1.5]
+
+legCoordsDict = {}
+legCoordsDict["upper-left"] = [0.12,0.65,0.5,0.85]
+legCoordsDict["upper-right"] = [0.5,0.65,0.88,0.85]
+
+varToLegPosDict = {}
+varToLegPosDict["STlep"] = "upper-right"
 
 histNameBaseForXSecFile = "Mee_BkgControlRegion_BJETBIN2"
 nominalBkgSFPlotNames = ['Mee_BkgControlRegion_DYJets', 'Mee_BkgControlRegion_gteTwoBtaggedJets_TTbar']
@@ -884,6 +958,7 @@ meeMaxDYJets = 100
 
 plotsTTBar = []
 plotsDYJets = []
+plotsNotFound = []
 
 for idx, histBaseName in enumerate(histBaseNames):
     histName = histNameDefault
@@ -905,6 +980,7 @@ for idx, histBaseName in enumerate(histBaseNames):
         plotsDYJets.extend(plotsDYjets)
     except RuntimeError as e:
         print("Caught exception while getting histo: '", e, "'; skipping this one")
+        plotsNotFound.append(histBaseName)
         continue
 
 # -----------------------------------------------------------------------------------
@@ -920,6 +996,7 @@ for idx, histBaseName in enumerate(histBaseNames):
 fileps = "allPlots_calc_dyJetsAndTTBarRescale_And_xsecFile.ps"
 
 # --- Generate and print the plots from the list 'plots' define above
+plotErrors = []
 nominalScaleFactors = {}
 nominalScaleFactorErrs = {}
 sfXValsForVar = {}
@@ -935,9 +1012,11 @@ sfXErrsForVar["TTBar"] = {}
 sfYValsForVar["TTBar"] = {}
 sfYErrsForVar["TTBar"] = {}
 for idx, plot in enumerate(plotsTTBar):
-    # print("plot:", plot.name, flush=True)
     dyjPlot = plotsDYJets[idx]
-    rDYJets, rDYJetsSigma, rTTBar, rTTBarSigma = CalculateRescaleFactor(plot, dyjPlot, fileps)
+    try:
+        rDYJets, rDYJetsSigma, rTTBar, rTTBarSigma = CalculateRescaleFactor(plot, dyjPlot, fileps)
+    except Exception as e:
+        plotErrors.append("Had an exception doing CalculateRescaleFactor for plot {}: {}".format(plot.name, e))
     if dyjPlot.name == nominalBkgSFPlotNames[0]:
         nominalScaleFactors["DYJets"] = rDYJets
         nominalScaleFactorErrs["DYJets"] = rDYJetsSigma
@@ -945,15 +1024,20 @@ for idx, plot in enumerate(plotsTTBar):
         nominalScaleFactors["TTBar"] = rTTBar
         nominalScaleFactorErrs["TTBar"] = rTTBarSigma
     if "Vs" in plot.name or "Vs" in dyjPlot.name:
-        var = histBaseName[histBaseName.find("Vs")+2:histBaseName.find("_", histBaseName.find("Vs"))]
+        var = plot.name[plot.name.find("Vs")+2:plot.name.find("_", plot.name.find("Vs"))]
         xrange = plot.name.split("_")[-2]
         # print("histBaseName={}, plot.name.split('_')={}".format(histBaseName, plot.name.split("_")), flush=True)
+        # print("INFO: found var={}".format(var), flush=True)
         xmin = float(xrange.split("to")[0])
-        xmax = float(xrange.split("to")[1])
+        xmax = xrange.split("to")[1]
+        if xmax == "Inf":
+            xmax = plot.histoMCall.GetXaxis().GetXmax()
+        else:
+            xmax = float(xmax)
         xwidth = xmax-xmin
         xcenter = (xmax+xmin)/2
         for bkgName in ["DYJets", "TTBar"]:
-            if var not in sfXValsForVar[bkgName]:
+            if var not in sfXValsForVar[bkgName].keys():
                 sfXValsForVar[bkgName][var] = []
                 sfXErrsForVar[bkgName][var] = []
                 sfYValsForVar[bkgName][var] = []
@@ -967,6 +1051,7 @@ for idx, plot in enumerate(plotsTTBar):
 
 for bkgName in ["DYJets", "TTBar"]:
     for var in sfXValsForVar[bkgName].keys():
+        print("INFO: examine var={}".format(var), flush=True)
         xPoints = sfXValsForVar[bkgName][var]
         xPointErrs = sfXErrsForVar[bkgName][var]
         yPoints = sfYValsForVar[bkgName][var]
@@ -981,13 +1066,12 @@ for bkgName in ["DYJets", "TTBar"]:
         graph.SetMarkerColor(kBlue)
         graph.SetLineColor(kBlue)
         graph.Draw('ap0')
-        graph.GetXaxis().SetTitle(varToTitleDict[var])
+        graph.GetXaxis().SetTitle(varToXTitleDict[var])
         graph.GetXaxis().SetTitleSize(0.05)
         graph.GetXaxis().SetTitleOffset(0.8)
         graph.GetYaxis().SetTitle("data/MC")
         graph.GetYaxis().SetTitleSize(0.05)
         graph.GetYaxis().SetTitleOffset(0.8)
-        graph.GetYaxis().SetRangeUser(0.5, 1.5)
         uncertaintyXpoints = [xPoints[0]-xPointErrs[0],xPoints[-1]+xPointErrs[-1]]
         uncertaintyYpoints = [sfNom,sfNom]
         uncertaintyXpointsErrs = [0,0]
@@ -997,13 +1081,15 @@ for bkgName in ["DYJets", "TTBar"]:
         uncertaintyRegionGraph.SetFillStyle(3001)
         uncertaintyRegionGraph.SetLineColor(1)
         uncertaintyRegionGraph.Draw('3l')
-        upperLeftDYJ = [0.12,0.65,0.5,0.85]
-        leg = TLegend(*upperLeftDYJ)
+        legPos = "upper-left"
+        if var in varToLegPosDict.keys():
+            legPos = varToLegPosDict[var]
+        legCoords = legCoordsDict[legPos]
+        leg = TLegend(*legCoords)
         leg.SetTextSize(0.027)
-        graph.GetYaxis().SetRangeUser(0.5, 4.0)
+        graph.GetYaxis().SetRangeUser(varToYRangeDict[var][0], varToYRangeDict[var][1])
         leg.AddEntry(graph,'{} scale factor variations'.format(bkgName),'lp')
         leg.AddEntry(uncertaintyRegionGraph,'Nominal scale factor = '+str(round(sfNom,3))+' #pm '+str(round(sfNomErr,3)),'fl')
-        # leg.SetBorderSize(0)
         leg.Draw()
         graph.Draw('p0')
         canvas.Modified()
@@ -1012,6 +1098,11 @@ for bkgName in ["DYJets", "TTBar"]:
         canvas.Print(baseName+'.pdf')
 
 
+if len(plotsNotFound):
+    print("WARN: plots not found:", plotsNotFound, file=sys.stderr)
+if len(plotErrors):
+    for err in plotErrors:
+        print("WARN: {}".format(err), file=sys.stderr)
 print("INFO: year = {}".format(year))
 print("INFO: using file: " + File_preselection.GetName())
 if doQCD:
