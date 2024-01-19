@@ -10,7 +10,7 @@
 import sys
 import string
 import os.path
-from ROOT import kTRUE, gROOT, gStyle, TFile, TCanvas, TRandom3, kWhite
+from ROOT import kTRUE, gROOT, gStyle, TFile, TCanvas, TRandom3, kWhite, TGraphErrors, kBlue, TLegend
 import re
 import copy
 import math
@@ -763,6 +763,7 @@ def CalculateRescaleFactor(plotObjTTBar, plotObjDYJets, fileps):
         outputFile.close()
         print("New xsection file (after DYJets rescaling) is: " + newFileName)
         print(" ")
+    return rDYJets, rDYJetsSigma, rTTBar, rTTBarSigma
 
 
 # ############ DON'T NEED TO MODIFY ANYTHING HERE - END #######################
@@ -856,12 +857,12 @@ histBaseNames.append("Mee_BkgControlRegion_BJETBIN2")
 histBaseNames.append("Mee_EBEB_BkgControlRegion")
 histBaseNames.append("Mee_EBEE_BkgControlRegion")
 histBaseNames.append("Mee_EEEE_BkgControlRegion")
-histBaseNames.append('Mee_NJetEq2_BkgControlRegion')
-histBaseNames.append('Mee_NJetEq3_BkgControlRegion')
-histBaseNames.append('Mee_NJetEq4_BkgControlRegion')
-histBaseNames.append('Mee_NJetEq5_BkgControlRegion')
-histBaseNames.append('Mee_NJetEq6_BkgControlRegion')
-histBaseNames.append('Mee_NJetEq7_BkgControlRegion')
+#histBaseNames.append('Mee_NJetEq2_BkgControlRegion')
+#histBaseNames.append('Mee_NJetEq3_BkgControlRegion')
+#histBaseNames.append('Mee_NJetEq4_BkgControlRegion')
+#histBaseNames.append('Mee_NJetEq5_BkgControlRegion')
+#histBaseNames.append('Mee_NJetEq6_BkgControlRegion')
+#histBaseNames.append('Mee_NJetEq7_BkgControlRegion')
 #histBaseNames.append("Mee_70_110_LQ300")
 #histBaseNames.append("Mee_70_110_LQ600")
 #histBaseNames.append("Mee_70_110_LQ800")
@@ -871,7 +872,10 @@ histBaseNames.append("MeeVsNJet_BkgControlRegion")
 binsForVarDict = {}
 binsForVarDict["NJet"] = np.arange(1.5, 8.5, 1)
 
+varToTitleDict = {"NJet" : "N_{jet}"}
+
 histNameBaseForXSecFile = "Mee_BkgControlRegion_BJETBIN2"
+nominalBkgSFPlotNames = ['Mee_BkgControlRegion_DYJets', 'Mee_BkgControlRegion_gteTwoBtaggedJets_TTbar']
 
 meeMinTTBar = 140
 meeMaxTTBar = 220 # TODO check range
@@ -910,20 +914,103 @@ for idx, histBaseName in enumerate(histBaseNames):
 ##############################################################################
 
 
-# --- Generate and print the plots from the list 'plots' define above
+# --- Generate and print the plots from the list 'plots' defined above
 
 # --- Output files
 fileps = "allPlots_calc_dyJetsAndTTBarRescale_And_xsecFile.ps"
 
 # --- Generate and print the plots from the list 'plots' define above
-# c = TCanvas()
-# c.Print(fileps+"[")
-# print("INFO: plot names look like: (TTBar) ", [plot.name for plot in plotsTTBar], " and (DYJets) ", [plot.name for plot in plotsDYJets])
+nominalScaleFactors = {}
+nominalScaleFactorErrs = {}
+sfXValsForVar = {}
+sfXErrsForVar = {}
+sfYValsForVar = {}
+sfYErrsForVar = {}
+sfXValsForVar["DYJets"] = {}
+sfXErrsForVar["DYJets"] = {}
+sfYValsForVar["DYJets"] = {}
+sfYErrsForVar["DYJets"] = {}
+sfXValsForVar["TTBar"] = {}
+sfXErrsForVar["TTBar"] = {}
+sfYValsForVar["TTBar"] = {}
+sfYErrsForVar["TTBar"] = {}
 for idx, plot in enumerate(plotsTTBar):
-    print("plot:", plot.name, flush=True)
-    CalculateRescaleFactor(plot, plotsDYJets[idx], fileps)
-# c.Print(fileps+"]")
-# os.system('ps2pdf '+fileps)
+    # print("plot:", plot.name, flush=True)
+    dyjPlot = plotsDYJets[idx]
+    rDYJets, rDYJetsSigma, rTTBar, rTTBarSigma = CalculateRescaleFactor(plot, dyjPlot, fileps)
+    if dyjPlot.name == nominalBkgSFPlotNames[0]:
+        nominalScaleFactors["DYJets"] = rDYJets
+        nominalScaleFactorErrs["DYJets"] = rDYJetsSigma
+    if plot.name == nominalBkgSFPlotNames[1]:
+        nominalScaleFactors["TTBar"] = rTTBar
+        nominalScaleFactorErrs["TTBar"] = rTTBarSigma
+    if "Vs" in plot.name or "Vs" in dyjPlot.name:
+        var = histBaseName[histBaseName.find("Vs")+2:histBaseName.find("_", histBaseName.find("Vs"))]
+        xrange = plot.name.split("_")[-2]
+        # print("histBaseName={}, plot.name.split('_')={}".format(histBaseName, plot.name.split("_")), flush=True)
+        xmin = float(xrange.split("to")[0])
+        xmax = float(xrange.split("to")[1])
+        xwidth = xmax-xmin
+        xcenter = (xmax+xmin)/2
+        for bkgName in ["DYJets", "TTBar"]:
+            if var not in sfXValsForVar[bkgName]:
+                sfXValsForVar[bkgName][var] = []
+                sfXErrsForVar[bkgName][var] = []
+                sfYValsForVar[bkgName][var] = []
+                sfYErrsForVar[bkgName][var] = []
+            sfVal = rDYJets if bkgName == "DYJets" else rTTBar
+            sfErr = rDYJetsSigma if bkgName == "DYJets" else rTTBarSigma
+            sfXValsForVar[bkgName][var].append(xcenter)
+            sfXErrsForVar[bkgName][var].append(xwidth/2)
+            sfYValsForVar[bkgName][var].append(sfVal)
+            sfYErrsForVar[bkgName][var].append(sfErr)
+
+for bkgName in ["DYJets", "TTBar"]:
+    for var in sfXValsForVar[bkgName].keys():
+        xPoints = sfXValsForVar[bkgName][var]
+        xPointErrs = sfXErrsForVar[bkgName][var]
+        yPoints = sfYValsForVar[bkgName][var]
+        yPointErrs = sfYErrsForVar[bkgName][var]
+        sfNom = nominalScaleFactors[bkgName]
+        sfNomErr = nominalScaleFactorErrs[bkgName]
+        canvas = TCanvas()
+        canvas.cd()
+        canvas.SetGridy()
+        graph = TGraphErrors(len(xPoints),np.array(xPoints, dtype="f"),np.array(yPoints, dtype="f"),np.array(xPointErrs, dtype="f"),np.array(yPointErrs, dtype="f"))
+        graph.SetTitle('')
+        graph.SetMarkerColor(kBlue)
+        graph.SetLineColor(kBlue)
+        graph.Draw('ap0')
+        graph.GetXaxis().SetTitle(varToTitleDict[var])
+        graph.GetXaxis().SetTitleSize(0.05)
+        graph.GetXaxis().SetTitleOffset(0.8)
+        graph.GetYaxis().SetTitle("data/MC")
+        graph.GetYaxis().SetTitleSize(0.05)
+        graph.GetYaxis().SetTitleOffset(0.8)
+        graph.GetYaxis().SetRangeUser(0.5, 1.5)
+        uncertaintyXpoints = [xPoints[0]-xPointErrs[0],xPoints[-1]+xPointErrs[-1]]
+        uncertaintyYpoints = [sfNom,sfNom]
+        uncertaintyXpointsErrs = [0,0]
+        uncertaintyYpointsErrs = [sfNomErr,sfNomErr]
+        uncertaintyRegionGraph = TGraphErrors(len(uncertaintyXpoints),np.array(uncertaintyXpoints, dtype="f"),np.array(uncertaintyYpoints, dtype="f"),np.array(uncertaintyXpointsErrs, dtype="f"),np.array(uncertaintyYpointsErrs, dtype="f"))
+        uncertaintyRegionGraph.SetFillColor(15)
+        uncertaintyRegionGraph.SetFillStyle(3001)
+        uncertaintyRegionGraph.SetLineColor(1)
+        uncertaintyRegionGraph.Draw('3l')
+        upperLeftDYJ = [0.12,0.65,0.5,0.85]
+        leg = TLegend(*upperLeftDYJ)
+        leg.SetTextSize(0.027)
+        graph.GetYaxis().SetRangeUser(0.5, 4.0)
+        leg.AddEntry(graph,'{} scale factor variations'.format(bkgName),'lp')
+        leg.AddEntry(uncertaintyRegionGraph,'Nominal scale factor = '+str(round(sfNom,3))+' #pm '+str(round(sfNomErr,3)),'fl')
+        # leg.SetBorderSize(0)
+        leg.Draw()
+        graph.Draw('p0')
+        canvas.Modified()
+        baseName = bkgName+'_scaleFactorVariation_{}Bins'.format(var)
+        canvas.Print(baseName+'.png')
+        canvas.Print(baseName+'.pdf')
+
 
 print("INFO: year = {}".format(year))
 print("INFO: using file: " + File_preselection.GetName())
