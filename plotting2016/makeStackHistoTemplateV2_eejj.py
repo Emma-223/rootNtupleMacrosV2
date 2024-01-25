@@ -204,8 +204,9 @@ if do2016:
     elif do2016post:
         ilumi = "16.8"  # postVFP
     # nominal
-    # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
-    samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
+    samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
+    # samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
+    # samplesForStackHistos_ZJets = ["ZJet_powhegminnlo_Inc"]
     #samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_dibosonNLO_tribosonGJetsTTX"]  # old UL with single QCD fakes from MC
     samplesForStackHistos_other = ["OTHERBKG_dibosonNLO_singleTop"]  # UL with single/double QCD fakes from data
     #samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
@@ -234,8 +235,8 @@ if do2016:
         "t#bar{t} (powheg)",
         #"Z/#gamma* + jets (MG5_aMC Pt)",
         # "Z/#gamma* + jets (MG5_aMC Inc.)",
-        # "Z/#gamma* + jets (MG5_aMC Pt+IncStitch)",
-        "Z/#gamma* + jets (powheg MiNNLO)" if "ZJet_powhegminnlo" in samplesForStackHistos_ZJets else "Z/#gamma* + jets (MG5_aMC Pt)",
+        "Z/#gamma* + jets (MG5_aMC Pt+IncStitch)",
+        # "Z/#gamma* + jets (powheg MiNNLO)" if "ZJet_powhegminnlo" in samplesForStackHistos_ZJets[0] else "Z/#gamma* + jets (MG5_aMC Pt)",
     ])
 elif do2017:
     ilumi = "41.5"
@@ -244,7 +245,7 @@ elif do2017:
     # samplesForStackHistos_ZJets = ["ZToEE"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_jetBinned"]
     # samplesForStackHistos_ZJets = ["ZJet_jetAndPtBinned"]
-    # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
+    samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_other = [ "OTHERBKG_WJetPt" ]
     # samplesForStackHistos_other = ["OTHERBKG_WJetMGInc_DibosonPyth"]
     # samplesForStackHistos_other = ["OTHERBKG_WJetAMCJetBinned_DibosonPyth"]
@@ -254,7 +255,7 @@ elif do2017:
     # samplesForStackHistos_ttbar = ["TTbar_powheg"]
     # samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
     # samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
-    samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
+    # samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
     samplesForStackHistos_other = ["OTHERBKG_dibosonNLO_singleTop"]  # UL with single/double QCD fakes from data
     samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
     keysStack = ["QCD multijet (data)"] if doQCD else []
@@ -263,15 +264,15 @@ elif do2017:
         "Other backgrounds",
         "t#bar{t} (powheg)",
         # "Z/#gamma* + jets (MG5_aMC Inc.)",
-        # "Z/#gamma* + jets (MG5_aMC pt-binned stitch)",
+        "Z/#gamma* + jets (MG5_aMC Pt+IncStitch)",
         # "Z/#gamma* + jets (ZToEE)",
         # "Z/#gamma* + jets (MG5_aMC jet-binned)",
-        "Z/#gamma* + jets (MG5_aMC jet/pt-binned)",
+        # "Z/#gamma* + jets (MG5_aMC jet/pt-binned)",
     ])
 elif do2018:
     ilumi = "59.8"
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_Inc"]
-    # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
+    samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_jetBinned"]
     # samplesForStackHistos_ZJets = ["ZJet_jetAndPtBinned"]
     # samplesForStackHistos_ZJets = ["ZJet_amcatnlo_ptBinned_IncStitch"]
@@ -284,7 +285,7 @@ elif do2018:
     # samplesForStackHistos_ttbar = ["TTbar_powheg"]
     # samplesForStackHistos_ttbar = ["TTbar_powheg_all"]  # old UL with single QCD fakes from MC
     # samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
-    samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
+    # samplesForStackHistos_ZJets = ["ZJet_powhegminnlo"]
     samplesForStackHistos_other = ["OTHERBKG_dibosonNLO_singleTop"]  # UL with single/double QCD fakes from data
     samplesForStackHistos_ttbar = ["TTTo2L2Nu"]  # UL with single/double QCD fakes from data
     keysStack = ["QCD multijet (data)"] if doQCD else []
@@ -293,9 +294,9 @@ elif do2018:
         "Other backgrounds",
         "t#bar{t} (powheg)",
         # "Z/#gamma* + jets (MG5_aMC Inc.)",
-        # "Z/#gamma* + jets (MG5_aMC pt-binned stitch)",
+        "Z/#gamma* + jets (MG5_aMC Pt+IncStitch)",
         # "Z/#gamma* + jets (MG5_aMC jet-binned)",
-        "Z/#gamma* + jets (MG5_aMC jet/pt-binned)",
+        # "Z/#gamma* + jets (MG5_aMC jet/pt-binned)",
     ])
 
 #samplesForStackHistos_ZJets  = [ "TTbar_FromData", "ZJet_Madgraph" ]
@@ -706,15 +707,15 @@ if doPreselPlots:
     # plots[-1].ymin = 0.0
     # plots[-1].ymax = 8e4
 
-    plots.append(makeDefaultPlot("MTenu_PAS"))
-    plots[-1].xtit = "M_{T}(e_{1}m PFMET [Preselection]) (GeV)"
-    plots[-1].rebin = 1
-    # plots[-1].ymax = 300000
-    # plots[-1].ymin = 1e-1
-    plots[-1].xmax = 500
-    plots[-1].xmin = 0
-    plots[-1].rebin = 2
-    plots[-1].ylog = "yes"
+    # plots.append(makeDefaultPlot("MTenu_PAS"))
+    # plots[-1].xtit = "M_{T}(e_{1}m PFMET [Preselection]) (GeV)"
+    # plots[-1].rebin = 1
+    # # plots[-1].ymax = 300000
+    # # plots[-1].ymin = 1e-1
+    # plots[-1].xmax = 500
+    # plots[-1].xmin = 0
+    # plots[-1].rebin = 2
+    # plots[-1].ylog = "yes"
 
     plots.append(makeDefaultPlot("MET_PAS", systs=doSystematics))
     plots[-1].xtit = "PFMET (GeV) [Preselection]"
@@ -1163,6 +1164,46 @@ if doPreselPlots:
     plots[-1].xmin = 0.0
     plots[-1].xmax = 1000.0
     plots[-1].xtit = "M(ee) (preselection, EB-EE and EB-EB) (GeV)"
+
+    # plots.append(makeDefaultPlot("Mee_sT300To500_BkgControlRegion", systs=doSystematics))
+    # plots[-1].rebin = 1
+    # plots[-1].addOvfl = "no"
+    # plots[-1].ymin = 1e-1
+    # plots[-1].ymax = 1e6
+    # plots[-1].xmin = 70.0
+    # plots[-1].xmax = 110.0
+    # plots[-1].ylog = "yes"
+    # plots[-1].xtit = "M(ee) (GeV) [Bkg. Ctrl. Reg., sT 300 - 500 GeV]"
+
+    # plots.append(makeDefaultPlot("Mee_sT500To750_BkgControlRegion", systs=doSystematics))
+    # plots[-1].rebin = 1
+    # plots[-1].addOvfl = "no"
+    # plots[-1].ymin = 1e-1
+    # plots[-1].ymax = 1e6
+    # plots[-1].xmin = 70.0
+    # plots[-1].xmax = 110.0
+    # plots[-1].ylog = "yes"
+    # plots[-1].xtit = "M(ee) (GeV) [Bkg. Ctrl. Reg., sT 500 - 750 GeV]"
+
+    # plots.append(makeDefaultPlot("Mee_sT750To1250_BkgControlRegion", systs=doSystematics))
+    # plots[-1].rebin = 1
+    # plots[-1].addOvfl = "no"
+    # plots[-1].ymin = 1e-1
+    # plots[-1].ymax = 1e6
+    # plots[-1].xmin = 70.0
+    # plots[-1].xmax = 110.0
+    # plots[-1].ylog = "yes"
+    # plots[-1].xtit = "M(ee) (GeV) [Bkg. Ctrl. Reg., sT 750 - 1250 GeV]"
+
+    # plots.append(makeDefaultPlot("Mee_sT1250ToInf_BkgControlRegion", systs=doSystematics))
+    # plots[-1].rebin = 1
+    # plots[-1].addOvfl = "no"
+    # plots[-1].ymin = 1e-1
+    # plots[-1].ymax = 1e6
+    # plots[-1].xmin = 70.0
+    # plots[-1].xmax = 110.0
+    # plots[-1].ylog = "yes"
+    # plots[-1].xtit = "M(ee) (GeV) [Bkg. Ctrl. Reg., sT > 1250 GeV]"
 
     #plots.append(makeDefaultPlot("Mee_EBEB_80_100_PAS"))
     #plots[-1].rebin = 1
