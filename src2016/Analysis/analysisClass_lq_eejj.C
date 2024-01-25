@@ -9,6 +9,7 @@
 #include <TVector2.h>
 #include <TVector3.h>
 #include <TProfile.h>
+#include "DYJNJetCorrections.h"
 // for scale factors
 #include "ElectronScaleFactors.C"
 #include "MuonScaleFactors.C"
@@ -95,8 +96,8 @@ void analysisClass::Loop()
   // Any extra features
   //--------------------------------------------------------------------------
 
-  CreateUserTProfile("run_vs_nvtx_HLT", 164900, 160300, 325200);
-  CreateUserTProfile("run_vs_nvtx_PAS", 164900, 160300, 325200);
+  //CreateUserTProfile("run_vs_nvtx_HLT", 164900, 160300, 325200);
+  //CreateUserTProfile("run_vs_nvtx_PAS", 164900, 160300, 325200);
 
   //--------------------------------------------------------------------------
   // Get pre-cut values
@@ -151,32 +152,29 @@ void analysisClass::Loop()
   CreateUserHist( "sTfrac_Ele2_PAS"                 ,   100    ,  0.0    , 1.0      );
   CreateUserHist( "sTfrac_Jet_PAS"                  ,   100    ,  0.0    , 1.0      );
   CreateUserHist( "sTfrac_Ele_PAS"                  ,   100    ,  0.0    , 1.0      );
-  CreateUserHist( "sTfrac_Jet1_PASandMee100"        ,   100    ,  0.0    , 1.0      );
-  CreateUserHist( "sTfrac_Jet2_PASandMee100"        ,   100    ,  0.0    , 1.0      );
-  CreateUserHist( "sTfrac_Ele1_PASandMee100"        ,   100    ,  0.0    , 1.0      );
-  CreateUserHist( "sTfrac_Ele2_PASandMee100"        ,   100    ,  0.0    , 1.0      );
-  CreateUserHist( "sTfrac_Jet_PASandMee100"         ,   100    ,  0.0    , 1.0      );
-  CreateUserHist( "sTfrac_Ele_PASandMee100"         ,   100    ,  0.0    , 1.0      );
-  CreateUserHist( "Mej_selected_avg_PASandMee100"   ,    200   , 0       , 2000     );
+  //CreateUserHist( "sTfrac_Jet1_PASandMee100"        ,   100    ,  0.0    , 1.0      );
+  //CreateUserHist( "sTfrac_Jet2_PASandMee100"        ,   100    ,  0.0    , 1.0      );
+  //CreateUserHist( "sTfrac_Ele1_PASandMee100"        ,   100    ,  0.0    , 1.0      );
+  //CreateUserHist( "sTfrac_Ele2_PASandMee100"        ,   100    ,  0.0    , 1.0      );
+  //CreateUserHist( "sTfrac_Jet_PASandMee100"         ,   100    ,  0.0    , 1.0      );
+  //CreateUserHist( "sTfrac_Ele_PASandMee100"         ,   100    ,  0.0    , 1.0      );
+  //CreateUserHist( "Mej_selected_avg_PASandMee100"   ,    200   , 0       , 2000     );
   CreateUserHist( "EleChargeSum_PAS"                ,    3     , -2.5    , 2.5      );
-  CreateUserHist( "EleChargeSum_PASandMee100"       ,    3     , -2.5    , 2.5      );
-  //CreateUserHist( "ProcessID"                       ,    21    , -0.5    , 20.5     );
-  //CreateUserHist( "ProcessID_PAS"                   ,    21    , -0.5    , 20.5     );
-  //CreateUserHist( "ProcessID_ZWindow"               ,    21    , -0.5    , 20.5     );
+  //CreateUserHist( "EleChargeSum_PASandMee100"       ,    3     , -2.5    , 2.5      );
   CreateUserHistWithSysts( "nElectron_PAS"                   ,    5     , -0.5    , 4.5      );
   CreateUserHistWithSysts( "nMuon_PAS"                       ,    5     , -0.5    , 4.5      );
   CreateUserHistWithSysts( "nJet_PAS"                        ,    10    , -0.5    , 9.5      );
-  CreateUserHist( "nJet_PASandMee100"               ,    10    , -0.5    , 9.5      );
+  //CreateUserHist( "nJet_PASandMee100"               ,    10    , -0.5    , 9.5      );
   CreateUserHistWithSysts( "Pt1stEle_PAS"	             , 	100    , 0       , 1000     ); 
   //CreateUserHist( "PtHeep1stEle_PAS"	             , 	100    , 0       , 1000     ); 
-  CreateUserHist( "Pt1stEle_PASandMee100"           , 	100    , 0       , 1000     ); 
+  //CreateUserHist( "Pt1stEle_PASandMee100"           , 	100    , 0       , 1000     ); 
   CreateUserHistWithSysts( "Eta1stEle_PAS"	             , 	100    , -5      , 5	  ); 
   CreateUserHistWithSysts( "SCEta1stEle_PAS"	             , 	100    , -5      , 5	  ); 
   CreateUserHist( "DeltaEtaEleTrk1stEle_Presel", 400, -0.5,   0.5 );
   CreateUserHistWithSysts( "Phi1stEle_PAS"	             , 	60     , -3.1416 , +3.1416  ); 
   CreateUserHistWithSysts( "Pt2ndEle_PAS"	             , 	300    , 0       , 3000     ); 
   //CreateUserHist( "PtHeep2ndEle_PAS"	             , 	300    , 0       , 3000     ); 
-  CreateUserHist( "Pt2ndEle_PASandMee100"           , 	300    , 0       , 3000     ); 
+  //CreateUserHist( "Pt2ndEle_PASandMee100"           , 	300    , 0       , 3000     ); 
   CreateUserHistWithSysts( "Eta2ndEle_PAS"	             , 	100    , -5      , 5	  ); 
   CreateUserHistWithSysts( "SCEta2ndEle_PAS"	             , 	100    , -5      , 5	  ); 
   CreateUserHist( "DeltaEtaEleTrk2ndEle_Presel", 400, -0.5,   0.5 );
@@ -187,35 +185,35 @@ void analysisClass::Loop()
   CreateUserHistWithSysts( "METPhi_PAS"		             , 	60     , -3.1416 , +3.1416  ); 
   CreateUserHistWithSysts( "Pt1stJet_PAS"                    ,    200   , 0       , 2000	  ); 
   CreateUserHistWithSysts( "Pt2ndJet_PAS"                    ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Pt1stJet_PASandMee100"           ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Pt2ndJet_PASandMee100"           ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Pt1stJet_PASandMee100"           ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Pt2ndJet_PASandMee100"           ,    200   , 0       , 2000	  ); 
   CreateUserHistWithSysts( "Eta1stJet_PAS"                   ,    100   , -5      , 5	  ); 
   CreateUserHistWithSysts( "Eta2ndJet_PAS"                   ,    100   , -5      , 5	  ); 
   CreateUserHistWithSysts( "Phi1stJet_PAS"	             , 	 60    , -3.1416 , +3.1416  ); 
   CreateUserHistWithSysts( "Phi2ndJet_PAS"	             , 	 60    , -3.1416 , +3.1416  ); 
   CreateUserHistWithSysts( "sTlep_PAS"                       ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sTlep_PASandMee100"              ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sTlep_PASandMee100"              ,    200   , 0       , 2000	  ); 
   CreateUserHistWithSysts( "sTjet_PAS"                       ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sTjet_PASandMee100"              ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sTjet_PASandMee100"              ,    200   , 0       , 2000	  ); 
   CreateUserHistWithSysts( "sT_PAS"                          ,    300   , 0       , 3000	  ); 
   CreateUserHist( "sT_zjj_PAS"                      ,    300   , 0       , 3000	  ); 
-  CreateUserHist( "sT_zjj_PASandMee100"             ,    300   , 0       , 3000	  ); 
-  CreateUserHist( "sT_PASandMee100"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee110"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee120"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee130"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee140"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee150"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee160"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee170"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee180"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee190"                 ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "sT_PASandMee200"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_zjj_PASandMee100"             ,    300   , 0       , 3000	  ); 
+  //CreateUserHist( "sT_PASandMee100"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee110"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee120"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee130"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee140"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee150"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee160"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee170"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee180"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee190"                 ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "sT_PASandMee200"                 ,    200   , 0       , 2000	  ); 
   CreateUserHist( "Mjj_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mjj_PASandMee100"	             ,    200   , 0       , 2000	  ); 
-  CreateUserHistWithSysts( "Mee_PAS"		             ,    2000   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_PASandST445"                 ,    2000   , 0       , 2000	  ); 
-  CreateUserHist( "MTenu_PAS"                       ,    200   , 0       , 1000	  ); 
+  //CreateUserHist( "Mjj_PASandMee100"	             ,    200   , 0       , 2000	  ); 
+  CreateUserHistWithSysts( "Mee_PAS"		             ,    1000   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_PASandST445"                 ,    2000   , 0       , 2000	  ); 
+  //CreateUserHist( "MTenu_PAS"                       ,    200   , 0       , 1000	  ); 
   CreateUserHistWithSysts( "Me1j1_PAS"                       ,    200   , 0       , 2000	  ); 
   CreateUserHistWithSysts( "Me1j2_PAS"                       ,    200   , 0       , 2000	  ); 
   CreateUserHistWithSysts( "Me2j1_PAS"                       ,    200   , 0       , 2000	  ); 
@@ -230,8 +228,8 @@ void analysisClass::Loop()
   CreateUserHistWithSysts( "Meejj_PAS"                       ,    400   , 0       , 4000   );
   CreateUserHist( "Mejj_PAS"                        ,    400   , 0       , 4000   );
   CreateUserHist( "Meej_PAS"                        ,    400   , 0       , 4000   );
-  CreateUserHist( "run_PAS"                         ,    164900 , 160300  , 325200 );
-  CreateUserHist( "run_HLT"                         ,    164900 , 160300  , 325200 );
+  //CreateUserHist( "run_PAS"                         ,    164900 , 160300  , 325200 );
+  //CreateUserHist( "run_HLT"                         ,    164900 , 160300  , 325200 );
 
   CreateUserHist( "Ptj1j2j3_PAS"                    ,    400 , 0       , 4000     );
   CreateUserHist( "Ptj1j2_PAS"                      ,    400 , 0       , 4000     );
@@ -240,14 +238,14 @@ void analysisClass::Loop()
 
   CreateUserHist( "Ptee_Minus_Ptj1j2_PAS"           ,    200 , -500    , 500      );
   CreateUserHist( "Ptee_Minus_Ptj1j2j3_PAS"         ,    200 , -500    , 500      );
-  CreateUserHist( "Ptj1j2j3_PASandMee100"           ,    200 , 0       , 2000     );
-  CreateUserHist( "Ptj1j2_PASandMee100"             ,    200 , 0       , 2000     );
-  CreateUserHist( "Ptj2j3_PASandMee100"             ,    200 , 0       , 2000     );
-  CreateUserHist( "Ptj1j3_PASandMee100"             ,    200 , 0       , 2000     );
-  CreateUserHist( "Ptee_Minus_Ptj1j2_PASandMee100"  ,    200 , -500    , 500      );
-  CreateUserHist( "Ptee_Minus_Ptj1j2j3_PASandMee100",    200 , -500    , 500      );
+  //CreateUserHist( "Ptj1j2j3_PASandMee100"           ,    200 , 0       , 2000     );
+  //CreateUserHist( "Ptj1j2_PASandMee100"             ,    200 , 0       , 2000     );
+  //CreateUserHist( "Ptj2j3_PASandMee100"             ,    200 , 0       , 2000     );
+  //CreateUserHist( "Ptj1j3_PASandMee100"             ,    200 , 0       , 2000     );
+  //CreateUserHist( "Ptee_Minus_Ptj1j2_PASandMee100"  ,    200 , -500    , 500      );
+  //CreateUserHist( "Ptee_Minus_Ptj1j2j3_PASandMee100",    200 , -500    , 500      );
   CreateUserHistWithSysts( "Ptee_PAS"                        ,    200 , 0       , 2000     );
-  CreateUserHist( "Ptee_PASandMee100"               ,    200 , 0       , 2000     );
+  //CreateUserHist( "Ptee_PASandMee100"               ,    200 , 0       , 2000     );
 
   CreateUserHist( "M_j1j3_PAS"                      ,    200 , 0       , 2000	 );    
   CreateUserHist( "M_j2j3_PAS"                      ,    200 , 0       , 2000	 ); 
@@ -255,19 +253,19 @@ void analysisClass::Loop()
   CreateUserHist( "M_e2j3_PAS"                      ,    200 , 0       , 2000	 ); 
   CreateUserHist( "M_eejjj_PAS"                     ,    500 , 0       , 5000	 ); 
 
-  CreateUserHist( "Me1j1_PASandMee100"             ,    200 , 0       , 2000   );
-  CreateUserHist( "Me1j2_PASandMee100"             ,    200 , 0       , 2000   );
-  CreateUserHist( "Me2j1_PASandMee100"             ,    200 , 0       , 2000   );
-  CreateUserHist( "Me2j2_PASandMee100"             ,    200 , 0       , 2000   );
+  //CreateUserHist( "Me1j1_PASandMee100"             ,    200 , 0       , 2000   );
+  //CreateUserHist( "Me1j2_PASandMee100"             ,    200 , 0       , 2000   );
+  //CreateUserHist( "Me2j1_PASandMee100"             ,    200 , 0       , 2000   );
+  //CreateUserHist( "Me2j2_PASandMee100"             ,    200 , 0       , 2000   );
 
-  CreateUserHist( "M_j1j3_PASandMee100"             ,    200 , 0       , 2000	 );    
-  CreateUserHist( "M_j2j3_PASandMee100"             ,    200 , 0       , 2000	 ); 
-  CreateUserHist( "M_e1j3_PASandMee100"             ,    200 , 0       , 2000	 );    
-  CreateUserHist( "M_e2j3_PASandMee100"             ,    200 , 0       , 2000	 ); 
-  CreateUserHist( "M_eejjj_PASandMee100"            ,    500 , 0       , 5000	 ); 
+  //CreateUserHist( "M_j1j3_PASandMee100"             ,    200 , 0       , 2000	 );    
+  //CreateUserHist( "M_j2j3_PASandMee100"             ,    200 , 0       , 2000	 ); 
+  //CreateUserHist( "M_e1j3_PASandMee100"             ,    200 , 0       , 2000	 );    
+  //CreateUserHist( "M_e2j3_PASandMee100"             ,    200 , 0       , 2000	 ); 
+  //CreateUserHist( "M_eejjj_PASandMee100"            ,    500 , 0       , 5000	 ); 
 
   CreateUserHistWithSysts( "nVertex_PAS"                     ,    101   , -0.5   , 100.5	 ) ; 
-  CreateUserHist( "nVertex_PASandMee100"            ,    101   , -0.5   , 100.5	 ) ; 
+  //CreateUserHist( "nVertex_PASandMee100"            ,    101   , -0.5   , 100.5	 ) ; 
 
   CreateUserHistWithSysts( "DR_Ele1Jet1_PAS"	   , 	getHistoNBins("DR_Ele1Jet1"), getHistoMin("DR_Ele1Jet1"), getHistoMax("DR_Ele1Jet1")     ) ; 
   CreateUserHistWithSysts( "DR_Ele1Jet2_PAS"	   , 	getHistoNBins("DR_Ele1Jet2"), getHistoMin("DR_Ele1Jet2"), getHistoMax("DR_Ele1Jet2")     ) ; 
@@ -281,41 +279,35 @@ void analysisClass::Loop()
   CreateUserHist( "DR_ZJet1_PAS"        ,    getHistoNBins("DR_Jet1Jet2"), getHistoMin("DR_Jet1Jet2"), getHistoMax("DR_Jet1Jet2")     ) ; 
   CreateUserHist( "DR_ZJet2_PAS"        ,    getHistoNBins("DR_Jet1Jet2"), getHistoMin("DR_Jet1Jet2"), getHistoMax("DR_Jet1Jet2")     ) ; 
 
-  CreateUserTH2D( "MeeVsST_PAS"                 ,     400, 0, 4000, 400, 0, 4000) ;
-  CreateUserTH2D( "MeeVsST_PASandMee100"        ,     400, 0, 4000, 400, 0, 4000) ;
-  CreateUserTH2D( "MeeVsPtee_PAS"                 ,     400, 0, 4000, 400, 0, 4000) ;
+  CreateUserHist2D( "MeeVsST_PAS"                 ,     400, 0, 4000, 400, 0, 4000) ;
+  //CreateUserHist2D( "MeeVsST_PASandMee100"        ,     400, 0, 4000, 400, 0, 4000) ;
+  CreateUserHist2D( "MeeVsPtee_PAS"                 ,     400, 0, 4000, 400, 0, 4000) ;
 
-  CreateUserTH2D( "Me1jVsMe2j_selected",     200, 0, 2000, 200, 0, 2000) ;
-  CreateUserTH2D( "Me1jVsMe2j_rejected",     200, 0, 2000, 200, 0, 2000) ;
+  CreateUserHist2D( "Me1jVsMe2j_selected",     200, 0, 2000, 200, 0, 2000) ;
+  CreateUserHist2D( "Me1jVsMe2j_rejected",     200, 0, 2000, 200, 0, 2000) ;
 
   CreateUserHist( "MTeemunu_PAS"          ,    200 , 0       , 1000	 ); 
 
-  CreateUserHist( "Mee_80_100_Preselection", 200, 60, 120 );
-  CreateUserHist( "Mee_70_110_Preselection", 200, 60, 120 );
-  CreateUserHist( "Mee_70_110_ST600_Preselection", 200, 60, 120 );
+  //CreateUserHist( "Mee_80_100_Preselection", 200, 60, 120 );
+  //CreateUserHist( "Mee_70_110_Preselection", 200, 60, 120 );
+  //CreateUserHist( "Mee_70_110_ST600_Preselection", 200, 60, 120 );
 
-  CreateUserHist( "Mee_70_110_Preselection_Process0", 200, 60, 120 );
-  CreateUserHist( "Mee_70_110_Preselection_Process1", 200, 60, 120 );
-  CreateUserHist( "Mee_70_110_Preselection_Process2", 200, 60, 120 );
-  CreateUserHist( "Mee_70_110_Preselection_Process3", 200, 60, 120 );
-  CreateUserHist( "Mee_70_110_Preselection_Process4", 200, 60, 120 );
-
-  CreateUserHistWithSysts( "Mee_EBEB_PAS"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHistWithSysts( "Mee_EBEE_PAS"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHistWithSysts( "Mee_EEEE_PAS"		   ,    2000 , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_EBEB_PAS"		   ,    1000 , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_EBEE_PAS"		   ,    1000 , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_EEEE_PAS"		   ,    1000 , 0       , 2000	 ); 
   CreateUserHistWithSysts( "Mee_EB_PAS" 		   ,    60 , 60       , 120	 ); 
   CreateUserHistWithSysts( "Mee_End2End2_PAS" 		   ,    60 , 60       , 120	 ); 
 
-  CreateUserHist( "Mee_EBEB_80_100_PAS"	   ,    60 , 60       , 120	 ); 
-  CreateUserHist( "Mee_EBEE_80_100_PAS"	   ,    60 , 60       , 120	 ); 
-  CreateUserHist( "Mee_EEEE_80_100_PAS"	   ,    60 , 60       , 120	 ); 
-  CreateUserHist( "Mee_EB_80_100_PAS" 	     	   ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EBEB_80_100_PAS"	   ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EBEE_80_100_PAS"	   ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EEEE_80_100_PAS"	   ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EB_80_100_PAS" 	     	   ,    60 , 60       , 120	 ); 
 
-  CreateUserHist( "Mee_EBEB_70_110_PAS"	   ,    60 , 60       , 120	 ); 
-  CreateUserHist( "Mee_EBEE_70_110_PAS"	   ,    60 , 60       , 120	 ); 
-  CreateUserHist( "Mee_EEEE_70_110_PAS"	   ,    60 , 60       , 120	 ); 
-  CreateUserHist( "Mee_EB_70_110_PAS" 	     	   ,    60 , 60       , 120	 ); 
-  CreateUserHist( "Mee_EBEB_70_110_Uncorr_PAS"	 ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EBEB_70_110_PAS"	   ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EBEE_70_110_PAS"	   ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EEEE_70_110_PAS"	   ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EB_70_110_PAS" 	     	   ,    60 , 60       , 120	 ); 
+  //CreateUserHist( "Mee_EBEB_70_110_Uncorr_PAS"	 ,    60 , 60       , 120	 ); 
 
   CreateUserHist( "PileupWeight"   , 100, -10, 10 );
   CreateUserHist( "GeneratorWeight", 100, -2.0, 2.0);
@@ -345,19 +337,19 @@ void analysisClass::Loop()
   CreateUserHist( "ECorrEle1_PAS", 100, 0, 1);
   CreateUserHist( "ECorrEle2_PAS", 100, 0, 1);
 
-  CreateUserHist("CorrIsolation_1stEle_PASandMee100"        , 200,-25.0 ,  25.0  ); CreateUserHist("CorrIsolation_2ndEle_PASandMee100"        , 200,-25.0 ,  25.0  );
-  CreateUserHist("DeltaEtaTrkSC_1stEle_PASandMee100"        , 200, -0.01,   0.01 ); CreateUserHist("DeltaEtaTrkSC_2ndEle_PASandMee100"        , 200, -0.01,   0.01 );
-  CreateUserHist("EcalIsolation_1stEle_PASandMee100"        , 200,  0.0 ,  20.0  ); CreateUserHist("EcalIsolation_2ndEle_PASandMee100"        , 200,  0.0 ,  20.0  );
-  CreateUserHist("HcalIsolation_1stEle_PASandMee100"        , 200,  0.0 ,  20.0  ); CreateUserHist("HcalIsolation_2ndEle_PASandMee100"        , 200,  0.0 ,  20.0  );
-  CreateUserHist("TrkIsolation_1stEle_PASandMee100"         , 200,  0.0,    5.0  ); CreateUserHist("TrkIsolation_2ndEle_PASandMee100"         , 200,  0.0,    5.0  );
-  CreateUserHist("Energy_1stEle_PASandMee100"               , 200,  0.0 ,3000.0  ); CreateUserHist("Energy_2ndEle_PASandMee100"               , 200,  0.0 ,3000.0  );
-  CreateUserHist("HasMatchedPhot_1stEle_PASandMee100"       , 2,   -0.5 ,   1.5  ); CreateUserHist("HasMatchedPhot_2ndEle_PASandMee100"       , 2,   -0.5 ,   1.5  );
-  CreateUserHist("HoE_1stEle_PASandMee100"                  , 200,  0.0 ,   0.05 ); CreateUserHist("HoE_2ndEle_PASandMee100"                  , 200,  0.0 ,   0.05 );
-  CreateUserHist("LeadVtxDistXY_1stEle_PASandMee100"        , 200, -0.05,   0.05 ); CreateUserHist("LeadVtxDistXY_2ndEle_PASandMee100"        , 200, -0.05,   0.05 );
-  CreateUserHist("LeadVtxDistZ_1stEle_PASandMee100"         , 200, -0.2 ,   0.2  ); CreateUserHist("LeadVtxDistZ_2ndEle_PASandMee100"         , 200, -0.2 ,   0.2  );
-  CreateUserHist("MissingHits_1stEle_PASandMee100"          , 2  , -0.5,    1.5  ); CreateUserHist("MissingHits_2ndEle_PASandMee100"          , 2  , -0.5,    1.5  );
-  CreateUserHist("Full5x5SigmaIEtaIEta_Barrel_1stEle_PASandMee100" , 200,  0.0,    0.02 ); CreateUserHist("Full5x5SigmaIEtaIEta_Barrel_2ndEle_PASandMee100" , 200,  0.0,    0.02 );
-  CreateUserHist("Full5x5SigmaIEtaIEta_Endcap_1stEle_PASandMee100" , 200,  0.0,    0.1  ); CreateUserHist("Full5x5SigmaIEtaIEta_Endcap_2ndEle_PASandMee100" , 200,  0.0,    0.1  );
+  //CreateUserHist("CorrIsolation_1stEle_PASandMee100"        , 200,-25.0 ,  25.0  ); CreateUserHist("CorrIsolation_2ndEle_PASandMee100"        , 200,-25.0 ,  25.0  );
+  //CreateUserHist("DeltaEtaTrkSC_1stEle_PASandMee100"        , 200, -0.01,   0.01 ); CreateUserHist("DeltaEtaTrkSC_2ndEle_PASandMee100"        , 200, -0.01,   0.01 );
+  //CreateUserHist("EcalIsolation_1stEle_PASandMee100"        , 200,  0.0 ,  20.0  ); CreateUserHist("EcalIsolation_2ndEle_PASandMee100"        , 200,  0.0 ,  20.0  );
+  //CreateUserHist("HcalIsolation_1stEle_PASandMee100"        , 200,  0.0 ,  20.0  ); CreateUserHist("HcalIsolation_2ndEle_PASandMee100"        , 200,  0.0 ,  20.0  );
+  //CreateUserHist("TrkIsolation_1stEle_PASandMee100"         , 200,  0.0,    5.0  ); CreateUserHist("TrkIsolation_2ndEle_PASandMee100"         , 200,  0.0,    5.0  );
+  //CreateUserHist("Energy_1stEle_PASandMee100"               , 200,  0.0 ,3000.0  ); CreateUserHist("Energy_2ndEle_PASandMee100"               , 200,  0.0 ,3000.0  );
+  //CreateUserHist("HasMatchedPhot_1stEle_PASandMee100"       , 2,   -0.5 ,   1.5  ); CreateUserHist("HasMatchedPhot_2ndEle_PASandMee100"       , 2,   -0.5 ,   1.5  );
+  //CreateUserHist("HoE_1stEle_PASandMee100"                  , 200,  0.0 ,   0.05 ); CreateUserHist("HoE_2ndEle_PASandMee100"                  , 200,  0.0 ,   0.05 );
+  //CreateUserHist("LeadVtxDistXY_1stEle_PASandMee100"        , 200, -0.05,   0.05 ); CreateUserHist("LeadVtxDistXY_2ndEle_PASandMee100"        , 200, -0.05,   0.05 );
+  //CreateUserHist("LeadVtxDistZ_1stEle_PASandMee100"         , 200, -0.2 ,   0.2  ); CreateUserHist("LeadVtxDistZ_2ndEle_PASandMee100"         , 200, -0.2 ,   0.2  );
+  //CreateUserHist("MissingHits_1stEle_PASandMee100"          , 2  , -0.5,    1.5  ); CreateUserHist("MissingHits_2ndEle_PASandMee100"          , 2  , -0.5,    1.5  );
+  //CreateUserHist("Full5x5SigmaIEtaIEta_Barrel_1stEle_PASandMee100" , 200,  0.0,    0.02 ); CreateUserHist("Full5x5SigmaIEtaIEta_Barrel_2ndEle_PASandMee100" , 200,  0.0,    0.02 );
+  //CreateUserHist("Full5x5SigmaIEtaIEta_Endcap_1stEle_PASandMee100" , 200,  0.0,    0.1  ); CreateUserHist("Full5x5SigmaIEtaIEta_Endcap_2ndEle_PASandMee100" , 200,  0.0,    0.1  );
 
   if(do_roi_plots) {										     										 
     CreateUserHist( "EleChargeSum_ROI"                ,    3     , -2.5    , 2.5      );
@@ -411,7 +403,7 @@ void analysisClass::Loop()
     CreateUserHist( "minDR_ZJet_ROI"        ,    getHistoNBins("DR_Jet1Jet2"), getHistoMin("DR_Jet1Jet2"), getHistoMax("DR_Jet1Jet2")     ) ; 
     CreateUserHist( "DR_ZJet1_ROI"        ,    getHistoNBins("DR_Jet1Jet2"), getHistoMin("DR_Jet1Jet2"), getHistoMax("DR_Jet1Jet2")     ) ; 
     CreateUserHist( "DR_ZJet2_ROI"        ,    getHistoNBins("DR_Jet1Jet2"), getHistoMin("DR_Jet1Jet2"), getHistoMax("DR_Jet1Jet2")     ) ; 
-    CreateUserTH2D( "MeeVsST_ROI"                 ,     400, 0, 4000, 400, 0, 4000) ;
+    CreateUserHist2D( "MeeVsST_ROI"                 ,     400, 0, 4000, 400, 0, 4000) ;
     CreateUserHist("CorrIsolation_1stEle_ROI"                 , 200,-25.0 ,  25.0  ); CreateUserHist("CorrIsolation_2ndEle_ROI"                 , 200,-25.0 ,  25.0  );
     CreateUserHist("DeltaEtaTrkSC_1stEle_ROI"                 , 200, -0.01,   0.01 ); CreateUserHist("DeltaEtaTrkSC_2ndEle_ROI"                 , 200, -0.01,   0.01 );
     CreateUserHist("EcalIsolation_1stEle_ROI"                 , 200,  0.0 ,  20.0  ); CreateUserHist("EcalIsolation_2ndEle_ROI"                 , 200,  0.0 ,  20.0  );
@@ -428,76 +420,76 @@ void analysisClass::Loop()
   }
 
   // for scale factor dependence studies
-  CreateUserHist( "Mee_NJetEq2_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq3_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq4_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq5_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq6_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq7_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetGeq3_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetGeq4_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT300To500_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT500To750_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT750To1250_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1250ToInf_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin100To200_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin200To300_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin300To400_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin400To500_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin500To650_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin650ToInf_PAS"		             ,    200   , 0       , 2000	  ); 
-  // for Ptee bins
-  CreateUserHist( "Mee_Ptee0To100_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_Ptee100To150_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_Ptee150To200_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_Ptee200To250_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_Ptee250To300_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_Ptee300To350_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_Ptee350To400_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_Ptee400ToInf_PAS"		             ,    200   , 0       , 2000	  ); 
-  // more plots with sT cuts for final selection thresholds
-  CreateUserHist( "Mee_sT340_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT405_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT470_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT535_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT595_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT660_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT720_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT780_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT840_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT900_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT960_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1015_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1075_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1130_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1190_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1245_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1300_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1355_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1410_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1460_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1515_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1565_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1615_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1670_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1720_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1770_PAS"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1815_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_NJetEq2_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_NJetEq3_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_NJetEq4_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_NJetEq5_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_NJetEq6_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_NJetEq7_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_NJetGeq3_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_NJetGeq4_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT300To500_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT500To750_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT750To1250_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1250ToInf_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin100To200_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin200To300_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin300To400_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin400To500_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin500To650_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin650ToInf_PAS"		             ,    200   , 0       , 2000	  ); 
+  //// for Ptee bins
+  //CreateUserHist( "Mee_Ptee0To100_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_Ptee100To150_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_Ptee150To200_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_Ptee200To250_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_Ptee250To300_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_Ptee300To350_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_Ptee350To400_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_Ptee400ToInf_PAS"		             ,    200   , 0       , 2000	  ); 
+  //// more plots with sT cuts for final selection thresholds
+  //CreateUserHist( "Mee_sT340_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT405_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT470_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT535_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT595_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT660_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT720_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT780_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT840_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT900_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT960_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1015_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1075_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1130_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1190_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1245_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1300_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1355_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1410_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1460_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1515_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1565_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1615_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1670_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1720_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1770_PAS"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1815_PAS"		             ,    200   , 0       , 2000	  ); 
   // with zero B-tags
-  CreateUserHist( "Mee_PAS_noBtaggedJets"		       ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EBEB_PAS_noBtaggedJets"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EBEE_PAS_noBtaggedJets"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EEEE_PAS_noBtaggedJets"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_sT300To500_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT500To750_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT750To1250_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1250ToInf_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin100To200_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin200To300_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin300To400_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin400To500_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin500To650_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin650ToInf_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  CreateUserHist( "Mee_PAS_noBtaggedJets"		       ,      1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EBEB_PAS_noBtaggedJets"		   ,    1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EBEE_PAS_noBtaggedJets"		   ,    1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EEEE_PAS_noBtaggedJets"		   ,    1000 , 0       , 2000	 ); 
+  //CreateUserHist( "Mee_sT300To500_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT500To750_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT750To1250_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1250ToInf_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin100To200_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin200To300_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin300To400_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin400To500_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin500To650_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin650ToInf_PAS_noBtaggedJets"		             ,    200   , 0       , 2000	  ); 
   CreateUserHist( "nElectron_noBtaggedJets"         ,    5   , -0.5    , 4.5      );
   CreateUserHist( "nMuon_noBtaggedJets"             ,    5   , -0.5    , 4.5      );
   CreateUserHist( "nJet_noBtaggedJets"              ,    10  , -0.5    , 9.5      );
@@ -522,7 +514,7 @@ void analysisClass::Loop()
   CreateUserHist( "sT_noBtaggedJets"                ,    300   , 0       , 3000	 ); 
   CreateUserHist( "sT_zjj_noBtaggedJets"            ,    300   , 0       , 3000	  ); 
   CreateUserHist( "Mjj_noBtaggedJets"		   ,    200 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_noBtaggedJets"		   ,    2000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_noBtaggedJets"		   ,    1000 , 0       , 2000	 ); 
   CreateUserHist( "MTenu_noBtaggedJets"             ,    200 , 0       , 1000	 ); 
   CreateUserHist( "Me1j1_noBtaggedJets"             ,    200 , 0       , 2000	 ); 
   CreateUserHist( "Me1j2_noBtaggedJets"             ,    200 , 0       , 2000	 ); 
@@ -536,20 +528,20 @@ void analysisClass::Loop()
   CreateUserHist( "Meej_noBtaggedJets"              ,    400 , 0       , 4000     );
   CreateUserHist( "Meejj_noBtaggedJets"             ,    400 , 0       , 4000     );
   // with >= 1 B-tags
-  CreateUserHist( "Mee_PAS_gteOneBtaggedJet"		       ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EBEB_PAS_gteOneBtaggedJet"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EBEE_PAS_gteOneBtaggedJet"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EEEE_PAS_gteOneBtaggedJet"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_sT300To500_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT500To750_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT750To1250_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1250ToInf_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin100To200_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin200To300_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin300To400_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin400To500_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin500To650_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin650ToInf_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  CreateUserHist( "Mee_PAS_gteOneBtaggedJet"		       ,    1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EBEB_PAS_gteOneBtaggedJet"		   ,    1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EBEE_PAS_gteOneBtaggedJet"		   ,    1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EEEE_PAS_gteOneBtaggedJet"		   ,    1000 , 0       , 2000	 ); 
+  //CreateUserHist( "Mee_sT300To500_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT500To750_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT750To1250_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1250ToInf_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin100To200_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin200To300_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin300To400_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin400To500_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin500To650_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin650ToInf_PAS_gteOneBtaggedJet"		             ,    200   , 0       , 2000	  ); 
   CreateUserHist( "nElectron_gteOneBtaggedJet"         ,    5   , -0.5    , 4.5      );
   CreateUserHist( "nMuon_gteOneBtaggedJet"             ,    5   , -0.5    , 4.5      );
   CreateUserHist( "nJet_gteOneBtaggedJet"              ,    10  , -0.5    , 9.5      );
@@ -574,7 +566,7 @@ void analysisClass::Loop()
   CreateUserHist( "sT_gteOneBtaggedJet"                ,    300   , 0       , 3000	 ); 
   CreateUserHist( "sT_zjj_gteOneBtaggedJet"            ,    300   , 0       , 3000	  ); 
   CreateUserHist( "Mjj_gteOneBtaggedJet"		   ,    200 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_gteOneBtaggedJet"		   ,    2000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_gteOneBtaggedJet"		   ,     1000 , 0       , 2000	 ); 
   CreateUserHist( "MTenu_gteOneBtaggedJet"             ,    200 , 0       , 1000	 ); 
   CreateUserHist( "Me1j1_gteOneBtaggedJet"             ,    200 , 0       , 2000	 ); 
   CreateUserHist( "Me1j2_gteOneBtaggedJet"             ,    200 , 0       , 2000	 ); 
@@ -588,20 +580,20 @@ void analysisClass::Loop()
   CreateUserHist( "Meej_gteOneBtaggedJet"              ,    400 , 0       , 4000     );
   CreateUserHist( "Meejj_gteOneBtaggedJet"             ,    400 , 0       , 4000     );
   // with >= 2 B-tags
-  CreateUserHist( "Mee_PAS_gteTwoBtaggedJets"		       ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EBEB_PAS_gteTwoBtaggedJets"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EBEE_PAS_gteTwoBtaggedJets"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_EEEE_PAS_gteTwoBtaggedJets"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_sT300To500_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT500To750_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT750To1250_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1250ToInf_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin100To200_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin200To300_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin300To400_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin400To500_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin500To650_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin650ToInf_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  CreateUserHist( "Mee_PAS_gteTwoBtaggedJets"		       ,      1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EBEB_PAS_gteTwoBtaggedJets"		   ,    1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EBEE_PAS_gteTwoBtaggedJets"		   ,    1000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_EEEE_PAS_gteTwoBtaggedJets"		   ,    1000 , 0       , 2000	 ); 
+  //CreateUserHist( "Mee_sT300To500_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT500To750_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT750To1250_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_sT1250ToInf_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin100To200_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin200To300_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin300To400_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin400To500_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin500To650_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
+  //CreateUserHist( "Mee_MejMin650ToInf_PAS_gteTwoBtaggedJets"		             ,    200   , 0       , 2000	  ); 
   CreateUserHist( "nElectron_gteTwoBtaggedJets"         ,    5   , -0.5    , 4.5      );
   CreateUserHist( "nMuon_gteTwoBtaggedJets"             ,    5   , -0.5    , 4.5      );
   CreateUserHist( "nJet_gteTwoBtaggedJets"              ,    10  , -0.5    , 9.5      );
@@ -626,7 +618,7 @@ void analysisClass::Loop()
   CreateUserHist( "sT_gteTwoBtaggedJets"                ,    300   , 0       , 3000	 ); 
   CreateUserHist( "sT_zjj_gteTwoBtaggedJets"            ,    300   , 0       , 3000	  ); 
   CreateUserHist( "Mjj_gteTwoBtaggedJets"		   ,    200 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_gteTwoBtaggedJets"		   ,    2000 , 0       , 2000	 ); 
+  CreateUserHist( "Mee_gteTwoBtaggedJets"		   ,    1000 , 0       , 2000	 ); 
   CreateUserHist( "MTenu_gteTwoBtaggedJets"             ,    200 , 0       , 1000	 ); 
   CreateUserHist( "Me1j1_gteTwoBtaggedJets"             ,    200 , 0       , 2000	 ); 
   CreateUserHist( "Me1j2_gteTwoBtaggedJets"             ,    200 , 0       , 2000	 ); 
@@ -641,60 +633,92 @@ void analysisClass::Loop()
   CreateUserHist( "Meejj_gteTwoBtaggedJets"             ,    400 , 0       , 4000     );
 
   // bkg control region plots
-  CreateUserHistWithSysts( "Mee_BkgControlRegion"		            ,    2000   , 0       , 2000	  ); 
-  CreateUserHistWithSysts( "Mee_BkgControlRegion_gteOneBtaggedJet"		       ,    2000 , 0       , 2000	 ); 
-  CreateUserHistWithSysts( "Mee_BkgControlRegion_gteTwoBtaggedJets"		       ,    2000 , 0       , 2000	 ); 
-  CreateUserHistWithSysts( "Mee_EB_BkgControlRegion"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHistWithSysts( "Mee_EBEB_BkgControlRegion"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHistWithSysts( "Mee_EBEE_BkgControlRegion"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHistWithSysts( "Mee_EEEE_BkgControlRegion"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHistWithSysts( "Mee_End2End2_BkgControlRegion"		   ,    2000 , 0       , 2000	 ); 
-  CreateUserHist( "Mee_NJetEq2_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq3_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq4_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq5_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq6_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetEq7_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetGeq3_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_NJetGeq4_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT300To500_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT500To750_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT750To1250_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_sT1250ToInf_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin100To200_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin200To300_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin300To400_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin400To500_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin500To650_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
-  CreateUserHist( "Mee_MejMin650ToInf_BkgControlRegion"		             ,    200   , 0       , 2000	  ); 
+  CreateUserHistWithSysts( "Mee_BkgControlRegion"		                  ,    1000   , 0       , 2000	  ); 
+  CreateUserHistWithSysts( "Mee_BkgControlRegion_gteOneBtaggedJet"		,    1000 , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_BkgControlRegion_gteTwoBtaggedJets"		,    1000 , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_EB_BkgControlRegion"		         ,    1000 , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_EBEB_BkgControlRegion"		       ,    1000   , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_EBEE_BkgControlRegion"		       ,    1000   , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_EEEE_BkgControlRegion"		       ,    1000   , 0       , 2000	 ); 
+  CreateUserHistWithSysts( "Mee_End2End2_BkgControlRegion"		   ,    1000   , 0       , 2000	 ); 
+  CreateUserHist2D("MeeVsNJet_BkgControlRegion", 10, -0.5, 9.5, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsST_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsSTjet_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsSTlep_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMejMin_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMejMax_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMeejj_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe1j1_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe1j2_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe2j1_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe2j2_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsEle1Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  // >= 1 b-tag
+  CreateUserHist2D("MeeVsNJet_BkgControlRegion_gteOneBtaggedJet", 10, -0.5, 9.5, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsST_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsSTjet_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsSTlep_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMejMin_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMejMax_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMeejj_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe1j1_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe1j2_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe2j1_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe2j2_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsEle1Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  // >= 2 b-tags
+  CreateUserHist2D("MeeVsNJet_BkgControlRegion_gteTwoBtaggedJets", 10, -0.5, 9.5, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsST_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsSTjet_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsSTlep_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMejMin_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMejMax_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMeejj_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe1j1_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe1j2_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe2j1_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsMe2j2_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsEle1Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   //// test opt
   //CreateUserHist( "Mee_sT2000_PAS"		             ,    200   , 0       , 2000	  ); 
   //CreateUserHist( "OptBinLQ600", 200, 0, 2000);
   //CreateUserHist( "PtZforOptBin600",1000,0,2000);
   //CreateUserHist( "PtEEforOptBin600",1000,0,2000);
-  //CreateUserTH2D( "PtEEVsZPtForOptBin600",1000,0,2000,1000,0,2000);
+  //CreateUserHist2D( "PtEEVsZPtForOptBin600",1000,0,2000,1000,0,2000);
   //CreateUserHist( "OptBinLQ650", 200, 0, 2000);
   //CreateUserHist( "OptBinLQ700", 200, 0, 2000);
   //CreateUserHist( "OptBinLQ600_noWeight", 200, 0, 2000);
   //CreateUserHist( "OptBinLQ650_noWeight", 200, 0, 2000);
   //CreateUserHist( "OptBinLQ700_noWeight", 200, 0, 2000);
   // 3D opt cut space
-  CreateUserTH3D( "OptimizationCutSpace", 200, 0, 2000, 200, 0, 2000, 200, 0, 2000);
+  //CreateUserTH3D( "OptimizationCutSpace", 200, 0, 2000, 200, 0, 2000, 200, 0, 2000);
 
   //CreateUserHist( "WZ_system_Pt" , 200,0,2000);
   //CreateUserHist( "WZ_system_Pt_GenEle" , 200,0,2000);
   //CreateUserHist( "WZ_system_Pt_WZPtCut" , 200,0,2000);
   // checking electrons
-  CreateUserHist( "SCEta_1stEle_Presel",4000,0,10);
-  CreateUserHist( "EleEta_1stEle_Presel",4000,0,10);
-  CreateUserHist( "DeltaEtaTrkSC_1stEle_Presel",4000,0,10);
-  CreateUserHist( "SCEtaMinusEleEta_1stEle_Presel",4000,0,10);
-  CreateUserHist( "DeltaEtaTrkSC_Minus_SCEtaMinusEleEta_1stEle_Presel",4000,0,10);
-  CreateUserHist( "SCEta_2ndEle_Presel",4000,0,10);
-  CreateUserHist( "EleEta_2ndEle_Presel",4000,0,10);
-  CreateUserHist( "DeltaEtaTrkSC_2ndEle_Presel",4000,0,10);
-  CreateUserHist( "SCEtaMinusEleEta_2ndEle_Presel",4000,0,10);
-  CreateUserHist( "DeltaEtaTrkSC_Minus_SCEtaMinusEleEta_2ndEle_Presel",4000,0,10);
+  //CreateUserHist( "SCEta_1stEle_Presel",4000,0,10);
+  //CreateUserHist( "EleEta_1stEle_Presel",4000,0,10);
+  //CreateUserHist( "DeltaEtaTrkSC_1stEle_Presel",4000,0,10);
+  //CreateUserHist( "SCEtaMinusEleEta_1stEle_Presel",4000,0,10);
+  //CreateUserHist( "DeltaEtaTrkSC_Minus_SCEtaMinusEleEta_1stEle_Presel",4000,0,10);
+  //CreateUserHist( "SCEta_2ndEle_Presel",4000,0,10);
+  //CreateUserHist( "EleEta_2ndEle_Presel",4000,0,10);
+  //CreateUserHist( "DeltaEtaTrkSC_2ndEle_Presel",4000,0,10);
+  //CreateUserHist( "SCEtaMinusEleEta_2ndEle_Presel",4000,0,10);
+  //CreateUserHist( "DeltaEtaTrkSC_Minus_SCEtaMinusEleEta_2ndEle_Presel",4000,0,10);
 
   //--------------------------------------------------------------------------
   // Final selection plots
@@ -733,7 +757,7 @@ void analysisClass::Loop()
       sprintf(plot_name, "Mej_minmax_LQ%d"             , lq_mass ); CreateUserHist ( plot_name, 60  , 0 , 3000 );
       sprintf(plot_name, "sT_eejj_LQ%d"                , lq_mass ); CreateUserHist ( plot_name, 30  , 0 , 3000 );
       sprintf(plot_name, "Mee_LQ%d"                    , lq_mass ); CreateUserHist ( plot_name, 40  , 0 , 2000 );
-      sprintf(plot_name, "Mej_selected_min_vs_max_LQ%d", lq_mass ); CreateUserTH2D ( plot_name, 150  , 0 , 3000, 150  , 0 , 3000 );
+      sprintf(plot_name, "Mej_selected_min_vs_max_LQ%d", lq_mass ); CreateUserHist2D ( plot_name, 150  , 0 , 3000, 150  , 0 , 3000 );
       sprintf(plot_name, "DR_Ele1Jet1_LQ%d"            , lq_mass ); CreateUserHist ( plot_name, 
           getHistoNBins("DR_Ele1Jet1"), 
           getHistoMin  ("DR_Ele1Jet1"), 
@@ -815,7 +839,7 @@ void analysisClass::Loop()
       sprintf(plot_name, "M_e2j3_LQ%d"              , lq_mass ); CreateUserHist( plot_name ,    200 ,  0.0    , 2000     ); 
       sprintf(plot_name, "M_eejjj_LQ%d"             , lq_mass ); CreateUserHist( plot_name ,    500 ,  0.0    , 5000     ); 
       sprintf(plot_name, "nVertex_LQ%d"             , lq_mass ); CreateUserHist( plot_name ,    101 , -0.5    ,  100.5   ); 
-      sprintf(plot_name, "MeeVsST_LQ%d"             , lq_mass ); CreateUserTH2D( plot_name ,    200 ,  0.0, 2000, 200, 0, 2000) ;
+      sprintf(plot_name, "MeeVsST_LQ%d"             , lq_mass ); CreateUserHist2D( plot_name ,    200 ,  0.0, 2000, 200, 0, 2000) ;
       sprintf(plot_name, "minDR_ZJet_LQ%d"          , lq_mass ); CreateUserHist( plot_name ,    getHistoNBins("DR_Jet1Jet2"), getHistoMin("DR_Jet1Jet2"), getHistoMax("DR_Jet1Jet2")     ) ; 
       sprintf(plot_name, "DR_ZJet1_LQ%d"            , lq_mass ); CreateUserHist( plot_name ,    getHistoNBins("DR_Jet1Jet2"), getHistoMin("DR_Jet1Jet2"), getHistoMax("DR_Jet1Jet2")     ) ; 
       sprintf(plot_name, "DR_ZJet2_LQ%d"            , lq_mass ); CreateUserHist( plot_name ,    getHistoNBins("DR_Jet1Jet2"), getHistoMin("DR_Jet1Jet2"), getHistoMax("DR_Jet1Jet2")     ) ; 
@@ -943,6 +967,7 @@ void analysisClass::Loop()
 
     //std::cout << "prefire weight = " << prefire_weight << std::endl;
 
+    int nJet_ptCut = hasBranch("nJet_ptCut") ? readerTools_->ReadValueBranch<Int_t>("nJet_ptCut") : readerTools_->ReadValueBranch<Int_t>("nJet_store");
     // Electron scale factors for MC only
     if(!isData()) {
       float recoHeepSF = 1.0;
@@ -959,6 +984,28 @@ void analysisClass::Loop()
       float zVtxSF =  readerTools_->ReadValueBranch<Float_t>("ZVtxSF");
       gen_weight*=zVtxSF;
       gen_weight*=recoSFEle1*recoSFEle2*heepSFEle1*heepSFEle2;
+      // EWK NLO
+      if(current_file_name.find("DYJetsTo") != std::string::npos) {
+        gen_weight*=readerTools_->ReadValueBranch<Float_t>("EWKNLOCorrection");
+        // apply Njet corrections
+        if(current_file_name.find("amcatnloFXFX") != std::string::npos) {
+          float dyjSFNJetCorr = 1;
+          if(analysisYear==2016) {
+            if(current_file_name.find("APV") != std::string::npos) {
+              dyjSFNJetCorr = DYJNJetCorrections::LookupNJetCorrection("2016pre", nJet_ptCut);
+            }
+            else
+              dyjSFNJetCorr = DYJNJetCorrections::LookupNJetCorrection("2016post", nJet_ptCut);
+          }
+          else if(analysisYear==2017)
+            dyjSFNJetCorr = DYJNJetCorrections::LookupNJetCorrection("2017", nJet_ptCut);
+          else if(analysisYear==2018)
+            dyjSFNJetCorr = DYJNJetCorrections::LookupNJetCorrection("2018", nJet_ptCut);
+          else
+            throw std::runtime_error("Could not understand analysis year " + to_string(analysisYear));
+          gen_weight*=dyjSFNJetCorr;
+        }
+      }
     }
     else {
       // no syst for data since no scale factor applied
@@ -1085,10 +1132,16 @@ void analysisClass::Loop()
     //}
     // pt-binned sample stitching, Jul. 2022
     // see: https://cms-talk.web.cern.ch/t/bug-in-ul-pt-binned-dy-samples/11639
-    if(current_file_name.find("DYJetsToLL_M-50_TuneCP5") != std::string::npos) {
+    if(current_file_name.find("DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX") != std::string::npos) {
       passLHECuts = false;
       if(readerTools_->ReadValueBranch<Float_t>("LHE_Vpt") == 0)
         passLHECuts = true; // if Z/gamma Pt == 0 GeV, take it
+    }
+    // for stitching with MG LO HT-binned samples
+    if(current_file_name.find("DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM") != std::string::npos) {
+      passLHECuts = false;
+      if(readerTools_->ReadValueBranch<Float_t>("LHE_HTIncoming") < 70)
+        passLHECuts = true;
     }
     // for stitching with powhegMiNNLO mass-binned samples, Aug. 2023
     if(current_file_name.find("DYJetsToEE_M-50_massWgtFix_TuneCP5") != std::string::npos) {
@@ -1414,7 +1467,6 @@ void analysisClass::Loop()
     float Jet2_Pt_JES_Up = readerTools_->ReadValueBranch<Float_t>("Jet2_Pt_jesTotalup");
     float Jet2_Pt_JES_Dn = readerTools_->ReadValueBranch<Float_t>("Jet2_Pt_jesTotaldown");
 
-    int nJet_ptCut = hasBranch("nJet_ptCut") ? readerTools_->ReadValueBranch<Int_t>("nJet_ptCut") : readerTools_->ReadValueBranch<Int_t>("nJet_store");
     float DR_Jet1Jet2 = readerTools_->ReadValueBranch<Float_t>("DR_Jet1Jet2");
     // Jets								    
     fillVariableWithValue("nJet", nJet_ptCut, gen_weight * pileup_weight );
@@ -1705,10 +1757,10 @@ void analysisClass::Loop()
     //--------------------------------------------------------------------------
 
     int nVertex = readerTools_->ReadValueBranch<Int_t>("nVertex");
-    if ( passed_minimum && isData() ){ 
-      FillUserHist ("run_HLT", run );
-      FillUserTProfile("run_vs_nvtx_HLT", run, nVertex, 1);
-    }
+    //if ( passed_minimum && isData() ){ 
+    //  FillUserHist ("run_HLT", run );
+    //  FillUserTProfile("run_vs_nvtx_HLT", run, nVertex, 1);
+    //}
 
     //--------------------------------------------------------------------------
     // Print if desired
@@ -1768,10 +1820,44 @@ void analysisClass::Loop()
     //--------------------------------------------------------------------------
     if(bkgControlRegion) {
       FillUserHist("Mee_BkgControlRegion"	                ,    M_e1e2,    pileup_weight * gen_weight , "preselection");
-      if(nBJet_ptCut>=1)
+      if(nBJet_ptCut>=1) {
         FillUserHist( "Mee_BkgControlRegion_gteOneBtaggedJet"      , M_e1e2,  pileup_weight * gen_weight * weightAtLeastOneBJet, "preselection" ) ;
-      if(nBJet_ptCut>=2)
-        FillUserHist( "Mee_BkgControlRegion_gteTwoBtaggedJets"      , M_e1e2,  pileup_weight * gen_weight * weightAtLeastTwoBJets, "preselection" ) ;
+        FillUserHist2D("MeeVsNJet_BkgControlRegion_gteOneBtaggedJet", nJet_ptCut, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsST_BkgControlRegion_gteOneBtaggedJet", sT_eejj, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsSTjet_BkgControlRegion_gteOneBtaggedJet", Jet1_Pt + Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsSTlep_BkgControlRegion_gteOneBtaggedJet", Ele1_Pt + Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsMejMin_BkgControlRegion_gteOneBtaggedJet", M_ej_min, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsMejMax_BkgControlRegion_gteOneBtaggedJet", M_ej_max, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsMeejj_BkgControlRegion_gteOneBtaggedJet", M_eejj, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsMe1j1_BkgControlRegion_gteOneBtaggedJet", M_e1j1, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsMe1j2_BkgControlRegion_gteOneBtaggedJet", M_e1j2, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsMe2j1_BkgControlRegion_gteOneBtaggedJet", M_e2j1, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsMe2j2_BkgControlRegion_gteOneBtaggedJet", M_e2j2, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsEle1Pt_BkgControlRegion_gteOneBtaggedJet", Ele1_Pt, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteOneBtaggedJet", Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteOneBtaggedJet", Jet1_Pt, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteOneBtaggedJet", Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteOneBtaggedJet", PFMET_Type1_Pt, M_e1e2, pileup_weight * gen_weight);
+        if(nBJet_ptCut>=2) {
+          FillUserHist( "Mee_BkgControlRegion_gteTwoBtaggedJets"      , M_e1e2,  pileup_weight * gen_weight * weightAtLeastTwoBJets, "preselection" ) ;
+          FillUserHist2D("MeeVsNJet_BkgControlRegion_gteTwoBtaggedJets", nJet_ptCut, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsST_BkgControlRegion_gteTwoBtaggedJets", sT_eejj, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsSTjet_BkgControlRegion_gteTwoBtaggedJets", Jet1_Pt + Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsSTlep_BkgControlRegion_gteTwoBtaggedJets", Ele1_Pt + Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsMejMin_BkgControlRegion_gteTwoBtaggedJets", M_ej_min, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsMejMax_BkgControlRegion_gteTwoBtaggedJets", M_ej_max, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsMeejj_BkgControlRegion_gteTwoBtaggedJets", M_eejj, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsMe1j1_BkgControlRegion_gteTwoBtaggedJets", M_e1j1, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsMe1j2_BkgControlRegion_gteTwoBtaggedJets", M_e1j2, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsMe2j1_BkgControlRegion_gteTwoBtaggedJets", M_e2j1, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsMe2j2_BkgControlRegion_gteTwoBtaggedJets", M_e2j2, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsEle1Pt_BkgControlRegion_gteTwoBtaggedJets", Ele1_Pt, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteTwoBtaggedJets", Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteTwoBtaggedJets", Jet1_Pt, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteTwoBtaggedJets", Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteTwoBtaggedJets", PFMET_Type1_Pt, M_e1e2, pileup_weight * gen_weight);
+        }
+      }
       if      ( isEB   ) FillUserHist( "Mee_EB_BkgControlRegion"  , M_e1e2, pileup_weight * gen_weight, "preselection" ); 
       if      ( isEBEB ) FillUserHist( "Mee_EBEB_BkgControlRegion", M_e1e2, pileup_weight * gen_weight, "preselection" ); 
       else if ( isEBEE ) FillUserHist( "Mee_EBEE_BkgControlRegion", M_e1e2, pileup_weight * gen_weight, "preselection" ); 
@@ -1781,42 +1867,22 @@ void analysisClass::Loop()
         //std::cout << "For electron1 with eta=" << Ele1_Eta << ", pT=" << Ele1_Pt << ", and electron2 with eta=" << Ele2_Eta << "pT=" << Ele2_Pt << ", we passed the end2end selection; applied event trigger scale factor = " << trigSF << std::endl;
       }
       // scale factor dependence histos
-      if ( nJet_ptCut == 2 )
-        FillUserHist("Mee_NJetEq2_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 3 )
-        FillUserHist("Mee_NJetEq3_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 4 )
-        FillUserHist("Mee_NJetEq4_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 5 )
-        FillUserHist("Mee_NJetEq5_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 6 )
-        FillUserHist("Mee_NJetEq6_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 7 )
-        FillUserHist("Mee_NJetEq7_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      if ( nJet_ptCut >= 3 )
-        FillUserHist("Mee_NJetGeq3_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      if ( nJet_ptCut >= 4 )
-        FillUserHist("Mee_NJetGeq4_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      if (sT_eejj >= 300 && sT_eejj < 500)
-        FillUserHist("Mee_sT300To500_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if (sT_eejj >= 500 && sT_eejj < 750)
-        FillUserHist("Mee_sT500To750_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if (sT_eejj >= 750 && sT_eejj < 1250)
-        FillUserHist("Mee_sT750To1250_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if (sT_eejj >= 1250)
-        FillUserHist("Mee_sT1250ToInf_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      if (M_ej_min >= 100 && M_ej_min < 200)
-        FillUserHist("Mee_MejMin100To200_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 200 && M_ej_min < 300)
-        FillUserHist("Mee_MejMin200To300_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 300 && M_ej_min < 400)
-        FillUserHist("Mee_MejMin300To400_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 400 && M_ej_min < 500)
-        FillUserHist("Mee_MejMin400To500_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 500 && M_ej_min < 650)
-        FillUserHist("Mee_MejMin500To650_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 650)
-        FillUserHist("Mee_MejMin650ToInf_BkgControlRegion", M_e1e2                         , pileup_weight * gen_weight );
+      FillUserHist2D("MeeVsNJet_BkgControlRegion", nJet_ptCut, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsST_BkgControlRegion", sT_eejj, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsSTjet_BkgControlRegion", Jet1_Pt + Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsSTlep_BkgControlRegion", Ele1_Pt + Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsMejMin_BkgControlRegion", M_ej_min, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsMejMax_BkgControlRegion", M_ej_max, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsMeejj_BkgControlRegion", M_eejj, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsMe1j1_BkgControlRegion", M_e1j1, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsMe1j2_BkgControlRegion", M_e1j2, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsMe2j1_BkgControlRegion", M_e2j1, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsMe2j2_BkgControlRegion", M_e2j2, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsEle1Pt_BkgControlRegion", Ele1_Pt, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsEle2Pt_BkgControlRegion", Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsJet1Pt_BkgControlRegion", Jet1_Pt, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsJet2Pt_BkgControlRegion", Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion", PFMET_Type1_Pt, M_e1e2, pileup_weight * gen_weight);
     }
 
     //--------------------------------------------------------------------------
@@ -2003,7 +2069,6 @@ void analysisClass::Loop()
 
       FillUserHist( "Ptj1j2_PAS"           , Pt_j1j2                        , pileup_weight * gen_weight );
       FillUserHist( "Ptee_Minus_Ptj1j2_PAS", Pt_e1e2 - Pt_j1j2              , pileup_weight * gen_weight );
-      //FillUserHist("ProcessID_PAS"         , ProcessID                      , pileup_weight * gen_weight );
       FillUserHist("minDR_EleJet_PAS"      , min_DR_EleJet                  , pileup_weight * gen_weight );
       FillUserHist("DR_Ele1Ele2_PAS"	    , DR_Ele1Ele2                    , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("EleChargeSum_PAS"      , Ele1_Charge + Ele2_Charge      , pileup_weight * gen_weight );
@@ -2038,7 +2103,7 @@ void analysisClass::Loop()
       FillUserHist("sT_zjj_PAS"            , sT_zjj                         , pileup_weight * gen_weight );
       FillUserHist("Mjj_PAS"		    , M_j1j2                         , pileup_weight * gen_weight );
       FillUserHist("Mee_PAS"		    , M_e1e2                         , pileup_weight * gen_weight, preselectionCut );
-      FillUserHist( "MTenu_PAS"            , readerTools_->ReadValueBranch<Float_t>("MT_Ele1MET")                     , pileup_weight * gen_weight );
+      //FillUserHist( "MTenu_PAS"            , readerTools_->ReadValueBranch<Float_t>("MT_Ele1MET")                     , pileup_weight * gen_weight );
       FillUserHist("Me1j1_PAS"             , M_e1j1                         , pileup_weight * gen_weight, preselectionCut );
       // muon kinematics
       FillUserHist("Pt1stMuon_PAS"	      , Muon1_Pt                        , pileup_weight * gen_weight );
@@ -2048,86 +2113,86 @@ void analysisClass::Loop()
       FillUserHist("Eta2ndMuon_PAS"	    , Muon2_Eta                       , pileup_weight * gen_weight );
       FillUserHist("Phi2ndMuon_PAS"	    , Muon2_Phi                       , pileup_weight * gen_weight );
       // scale factor dependence histos
-      if ( nJet_ptCut == 2 )
-        FillUserHist("Mee_NJetEq2_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 3 )
-        FillUserHist("Mee_NJetEq3_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 4 )
-        FillUserHist("Mee_NJetEq4_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 5 )
-        FillUserHist("Mee_NJetEq5_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 6 )
-        FillUserHist("Mee_NJetEq6_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if( nJet_ptCut == 7 )
-        FillUserHist("Mee_NJetEq7_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      //
-      if ( nJet_ptCut >= 3 )
-        FillUserHist("Mee_NJetGeq3_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      if ( nJet_ptCut >= 4 )
-        FillUserHist("Mee_NJetGeq4_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      //
-      if (sT_eejj >= 300 && sT_eejj < 500)
-        FillUserHist("Mee_sT300To500_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if (sT_eejj >= 500 && sT_eejj < 750)
-        FillUserHist("Mee_sT500To750_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if (sT_eejj >= 750 && sT_eejj < 1250)
-        FillUserHist("Mee_sT750To1250_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if (sT_eejj >= 1250)
-        FillUserHist("Mee_sT1250ToInf_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      if (sT_eejj > 340)
-        FillUserHist( "Mee_sT340_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 405)
-        FillUserHist( "Mee_sT405_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 470)
-        FillUserHist( "Mee_sT470_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 535)
-        FillUserHist( "Mee_sT535_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 595)
-        FillUserHist( "Mee_sT595_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 660)
-        FillUserHist( "Mee_sT660_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 720)
-        FillUserHist( "Mee_sT720_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 780)
-        FillUserHist( "Mee_sT780_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 840)
-        FillUserHist( "Mee_sT840_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 900)
-        FillUserHist( "Mee_sT900_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 960)
-        FillUserHist( "Mee_sT960_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1015)
-        FillUserHist( "Mee_sT1015_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1075)
-        FillUserHist( "Mee_sT1075_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1130)
-        FillUserHist( "Mee_sT1130_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1190)
-        FillUserHist( "Mee_sT1190_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1245)
-        FillUserHist( "Mee_sT1245_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1300)
-        FillUserHist( "Mee_sT1300_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1355)
-        FillUserHist( "Mee_sT1355_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1410)
-        FillUserHist( "Mee_sT1410_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1460)
-        FillUserHist( "Mee_sT1460_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1515)
-        FillUserHist( "Mee_sT1515_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1565)
-        FillUserHist( "Mee_sT1565_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1615)
-        FillUserHist( "Mee_sT1615_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1670)
-        FillUserHist( "Mee_sT1670_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1720)
-        FillUserHist( "Mee_sT1720_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1770)
-        FillUserHist( "Mee_sT1770_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
-      if (sT_eejj > 1815)
-        FillUserHist( "Mee_sT1815_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if ( nJet_ptCut == 2 )
+      //  FillUserHist("Mee_NJetEq2_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if( nJet_ptCut == 3 )
+      //  FillUserHist("Mee_NJetEq3_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if( nJet_ptCut == 4 )
+      //  FillUserHist("Mee_NJetEq4_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if( nJet_ptCut == 5 )
+      //  FillUserHist("Mee_NJetEq5_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if( nJet_ptCut == 6 )
+      //  FillUserHist("Mee_NJetEq6_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if( nJet_ptCut == 7 )
+      //  FillUserHist("Mee_NJetEq7_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      ////
+      //if ( nJet_ptCut >= 3 )
+      //  FillUserHist("Mee_NJetGeq3_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //if ( nJet_ptCut >= 4 )
+      //  FillUserHist("Mee_NJetGeq4_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      ////
+      //if (sT_eejj >= 300 && sT_eejj < 500)
+      //  FillUserHist("Mee_sT300To500_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if (sT_eejj >= 500 && sT_eejj < 750)
+      //  FillUserHist("Mee_sT500To750_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if (sT_eejj >= 750 && sT_eejj < 1250)
+      //  FillUserHist("Mee_sT750To1250_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if (sT_eejj >= 1250)
+      //  FillUserHist("Mee_sT1250ToInf_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //if (sT_eejj > 340)
+      //  FillUserHist( "Mee_sT340_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 405)
+      //  FillUserHist( "Mee_sT405_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 470)
+      //  FillUserHist( "Mee_sT470_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 535)
+      //  FillUserHist( "Mee_sT535_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 595)
+      //  FillUserHist( "Mee_sT595_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 660)
+      //  FillUserHist( "Mee_sT660_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 720)
+      //  FillUserHist( "Mee_sT720_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 780)
+      //  FillUserHist( "Mee_sT780_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 840)
+      //  FillUserHist( "Mee_sT840_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 900)
+      //  FillUserHist( "Mee_sT900_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 960)
+      //  FillUserHist( "Mee_sT960_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1015)
+      //  FillUserHist( "Mee_sT1015_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1075)
+      //  FillUserHist( "Mee_sT1075_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1130)
+      //  FillUserHist( "Mee_sT1130_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1190)
+      //  FillUserHist( "Mee_sT1190_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1245)
+      //  FillUserHist( "Mee_sT1245_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1300)
+      //  FillUserHist( "Mee_sT1300_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1355)
+      //  FillUserHist( "Mee_sT1355_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1410)
+      //  FillUserHist( "Mee_sT1410_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1460)
+      //  FillUserHist( "Mee_sT1460_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1515)
+      //  FillUserHist( "Mee_sT1515_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1565)
+      //  FillUserHist( "Mee_sT1565_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1615)
+      //  FillUserHist( "Mee_sT1615_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1670)
+      //  FillUserHist( "Mee_sT1670_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1720)
+      //  FillUserHist( "Mee_sT1720_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1770)
+      //  FillUserHist( "Mee_sT1770_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
+      //if (sT_eejj > 1815)
+      //  FillUserHist( "Mee_sT1815_PAS"		             ,M_e1e2                         , pileup_weight * gen_weight ); 
       //-------------------------------------------------------------------------- 
       // no b tags
       //-------------------------------------------------------------------------- 
@@ -2176,27 +2241,27 @@ void analysisClass::Loop()
         else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_noBtaggedJets"		   , M_e1e2,  pileup_weight * gen_weight * weightZeroBJets ); 
         else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_noBtaggedJets"		   , M_e1e2,  pileup_weight * gen_weight * weightZeroBJets ); 
 
-        if (sT_eejj >= 300 && sT_eejj < 500)
-          FillUserHist("Mee_sT300To500_PAS_noBtaggedJets", M_e1e2      , pileup_weight * gen_weight * weightZeroBJets );
-        else if (sT_eejj >= 500 && sT_eejj < 750)
-          FillUserHist("Mee_sT500To750_PAS_noBtaggedJets", M_e1e2      , pileup_weight * gen_weight * weightZeroBJets );
-        else if (sT_eejj >= 750 && sT_eejj < 1250)
-          FillUserHist("Mee_sT750To1250_PAS_noBtaggedJets", M_e1e2     , pileup_weight * gen_weight * weightZeroBJets );
-        else if (sT_eejj >= 1250)
-          FillUserHist("Mee_sT1250ToInf_PAS_noBtaggedJets", M_e1e2     , pileup_weight * gen_weight * weightZeroBJets );
+        //if (sT_eejj >= 300 && sT_eejj < 500)
+        //  FillUserHist("Mee_sT300To500_PAS_noBtaggedJets", M_e1e2      , pileup_weight * gen_weight * weightZeroBJets );
+        //else if (sT_eejj >= 500 && sT_eejj < 750)
+        //  FillUserHist("Mee_sT500To750_PAS_noBtaggedJets", M_e1e2      , pileup_weight * gen_weight * weightZeroBJets );
+        //else if (sT_eejj >= 750 && sT_eejj < 1250)
+        //  FillUserHist("Mee_sT750To1250_PAS_noBtaggedJets", M_e1e2     , pileup_weight * gen_weight * weightZeroBJets );
+        //else if (sT_eejj >= 1250)
+        //  FillUserHist("Mee_sT1250ToInf_PAS_noBtaggedJets", M_e1e2     , pileup_weight * gen_weight * weightZeroBJets );
 
-        if (M_ej_min >= 100 && M_ej_min < 200)
-          FillUserHist("Mee_MejMin100To200_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
-        else if (M_ej_min >= 200 && M_ej_min < 300)
-          FillUserHist("Mee_MejMin200To300_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
-        else if (M_ej_min >= 300 && M_ej_min < 400)
-          FillUserHist("Mee_MejMin300To400_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
-        else if (M_ej_min >= 400 && M_ej_min < 500)
-          FillUserHist("Mee_MejMin400To500_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
-        else if (M_ej_min >= 500 && M_ej_min < 650)
-          FillUserHist("Mee_MejMin500To650_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
-        else if (M_ej_min >= 650)
-          FillUserHist("Mee_MejMin650ToInf_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
+        //if (M_ej_min >= 100 && M_ej_min < 200)
+        //  FillUserHist("Mee_MejMin100To200_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
+        //else if (M_ej_min >= 200 && M_ej_min < 300)
+        //  FillUserHist("Mee_MejMin200To300_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
+        //else if (M_ej_min >= 300 && M_ej_min < 400)
+        //  FillUserHist("Mee_MejMin300To400_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
+        //else if (M_ej_min >= 400 && M_ej_min < 500)
+        //  FillUserHist("Mee_MejMin400To500_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
+        //else if (M_ej_min >= 500 && M_ej_min < 650)
+        //  FillUserHist("Mee_MejMin500To650_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
+        //else if (M_ej_min >= 650)
+        //  FillUserHist("Mee_MejMin650ToInf_PAS_noBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightZeroBJets );
       }
       if(nBJet_ptCut>=1) {
         FillUserHist("nElectron_gteOneBtaggedJet"         , nEle_ptCut                     , pileup_weight * gen_weight );
@@ -2243,27 +2308,27 @@ void analysisClass::Loop()
         else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_gteOneBtaggedJet"		   , M_e1e2,  pileup_weight * gen_weight * weightAtLeastOneBJet ); 
         else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_gteOneBtaggedJet"		   , M_e1e2,  pileup_weight * gen_weight * weightAtLeastOneBJet ); 
 
-        if (sT_eejj >= 300 && sT_eejj < 500)
-          FillUserHist("Mee_sT300To500_PAS_gteOneBtaggedJet", M_e1e2      , pileup_weight * gen_weight * weightAtLeastOneBJet );
-        else if (sT_eejj >= 500 && sT_eejj < 750)
-          FillUserHist("Mee_sT500To750_PAS_gteOneBtaggedJet", M_e1e2      , pileup_weight * gen_weight * weightAtLeastOneBJet );
-        else if (sT_eejj >= 750 && sT_eejj < 1250)
-          FillUserHist("Mee_sT750To1250_PAS_gteOneBtaggedJet", M_e1e2     , pileup_weight * gen_weight * weightAtLeastOneBJet );
-        else if (sT_eejj >= 1250)
-          FillUserHist("Mee_sT1250ToInf_PAS_gteOneBtaggedJet", M_e1e2     , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //if (sT_eejj >= 300 && sT_eejj < 500)
+        //  FillUserHist("Mee_sT300To500_PAS_gteOneBtaggedJet", M_e1e2      , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //else if (sT_eejj >= 500 && sT_eejj < 750)
+        //  FillUserHist("Mee_sT500To750_PAS_gteOneBtaggedJet", M_e1e2      , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //else if (sT_eejj >= 750 && sT_eejj < 1250)
+        //  FillUserHist("Mee_sT750To1250_PAS_gteOneBtaggedJet", M_e1e2     , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //else if (sT_eejj >= 1250)
+        //  FillUserHist("Mee_sT1250ToInf_PAS_gteOneBtaggedJet", M_e1e2     , pileup_weight * gen_weight * weightAtLeastOneBJet );
 
-        if (M_ej_min >= 100 && M_ej_min < 200)
-          FillUserHist("Mee_MejMin100To200_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
-        else if (M_ej_min >= 200 && M_ej_min < 300)
-          FillUserHist("Mee_MejMin200To300_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
-        else if (M_ej_min >= 300 && M_ej_min < 400)
-          FillUserHist("Mee_MejMin300To400_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
-        else if (M_ej_min >= 400 && M_ej_min < 500)
-          FillUserHist("Mee_MejMin400To500_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
-        else if (M_ej_min >= 500 && M_ej_min < 650)
-          FillUserHist("Mee_MejMin500To650_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
-        else if (M_ej_min >= 650)
-          FillUserHist("Mee_MejMin650ToInf_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //if (M_ej_min >= 100 && M_ej_min < 200)
+        //  FillUserHist("Mee_MejMin100To200_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //else if (M_ej_min >= 200 && M_ej_min < 300)
+        //  FillUserHist("Mee_MejMin200To300_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //else if (M_ej_min >= 300 && M_ej_min < 400)
+        //  FillUserHist("Mee_MejMin300To400_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //else if (M_ej_min >= 400 && M_ej_min < 500)
+        //  FillUserHist("Mee_MejMin400To500_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //else if (M_ej_min >= 500 && M_ej_min < 650)
+        //  FillUserHist("Mee_MejMin500To650_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
+        //else if (M_ej_min >= 650)
+        //  FillUserHist("Mee_MejMin650ToInf_PAS_gteOneBtaggedJet", M_e1e2  , pileup_weight * gen_weight * weightAtLeastOneBJet );
       }
       if(nBJet_ptCut>=2) {
         FillUserHist("nElectron_gteTwoBtaggedJets"         , nEle_ptCut                     , pileup_weight * gen_weight );
@@ -2310,27 +2375,27 @@ void analysisClass::Loop()
         else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_gteTwoBtaggedJets"		   , M_e1e2,  pileup_weight * gen_weight * weightAtLeastTwoBJets ); 
         else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_gteTwoBtaggedJets"		   , M_e1e2,  pileup_weight * gen_weight * weightAtLeastTwoBJets ); 
 
-        if (sT_eejj >= 300 && sT_eejj < 500)
-          FillUserHist("Mee_sT300To500_PAS_gteTwoBtaggedJets", M_e1e2      , pileup_weight * gen_weight * weightAtLeastTwoBJets );
-        else if (sT_eejj >= 500 && sT_eejj < 750)
-          FillUserHist("Mee_sT500To750_PAS_gteTwoBtaggedJets", M_e1e2      , pileup_weight * gen_weight * weightAtLeastTwoBJets );
-        else if (sT_eejj >= 750 && sT_eejj < 1250)
-          FillUserHist("Mee_sT750To1250_PAS_gteTwoBtaggedJets", M_e1e2     , pileup_weight * gen_weight * weightAtLeastTwoBJets );
-        else if (sT_eejj >= 1250)
-          FillUserHist("Mee_sT1250ToInf_PAS_gteTwoBtaggedJets", M_e1e2     , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //if (sT_eejj >= 300 && sT_eejj < 500)
+        //  FillUserHist("Mee_sT300To500_PAS_gteTwoBtaggedJets", M_e1e2      , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //else if (sT_eejj >= 500 && sT_eejj < 750)
+        //  FillUserHist("Mee_sT500To750_PAS_gteTwoBtaggedJets", M_e1e2      , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //else if (sT_eejj >= 750 && sT_eejj < 1250)
+        //  FillUserHist("Mee_sT750To1250_PAS_gteTwoBtaggedJets", M_e1e2     , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //else if (sT_eejj >= 1250)
+        //  FillUserHist("Mee_sT1250ToInf_PAS_gteTwoBtaggedJets", M_e1e2     , pileup_weight * gen_weight * weightAtLeastTwoBJets );
 
-        if (M_ej_min >= 100 && M_ej_min < 200)
-          FillUserHist("Mee_MejMin100To200_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
-        else if (M_ej_min >= 200 && M_ej_min < 300)
-          FillUserHist("Mee_MejMin200To300_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
-        else if (M_ej_min >= 300 && M_ej_min < 400)
-          FillUserHist("Mee_MejMin300To400_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
-        else if (M_ej_min >= 400 && M_ej_min < 500)
-          FillUserHist("Mee_MejMin400To500_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
-        else if (M_ej_min >= 500 && M_ej_min < 650)
-          FillUserHist("Mee_MejMin500To650_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
-        else if (M_ej_min >= 650)
-          FillUserHist("Mee_MejMin650ToInf_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //if (M_ej_min >= 100 && M_ej_min < 200)
+        //  FillUserHist("Mee_MejMin100To200_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //else if (M_ej_min >= 200 && M_ej_min < 300)
+        //  FillUserHist("Mee_MejMin200To300_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //else if (M_ej_min >= 300 && M_ej_min < 400)
+        //  FillUserHist("Mee_MejMin300To400_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //else if (M_ej_min >= 400 && M_ej_min < 500)
+        //  FillUserHist("Mee_MejMin400To500_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //else if (M_ej_min >= 500 && M_ej_min < 650)
+        //  FillUserHist("Mee_MejMin500To650_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
+        //else if (M_ej_min >= 650)
+        //  FillUserHist("Mee_MejMin650ToInf_PAS_gteTwoBtaggedJets", M_e1e2  , pileup_weight * gen_weight * weightAtLeastTwoBJets );
       }
       ////
       //if (sT_eejj>2000)
@@ -2340,7 +2405,7 @@ void analysisClass::Loop()
       //  FillUserHist("PtZforOptBin600",GenZGamma1_Pt, pileup_weight*gen_weight);
       //  FillUserHist("PtEEforOptBin600",Pt_e1e2, pileup_weight*gen_weight);
       //  FillUserHist("OptBinLQ600_noWeight", M_e1e2, pileup_weight*gen_weight);
-      //  FillUserTH2D("PtEEVsZPtForOptBin600", Pt_e1e2, GenZGamma1_Pt, pileup_weight*gen_weight);
+      //  FillUserHist2D("PtEEVsZPtForOptBin600", Pt_e1e2, GenZGamma1_Pt, pileup_weight*gen_weight);
       //  //// printing
       //  //std::cout.precision(0);
       //  //std::cout << fixed <<  "Run = " << run << ", event = " << event << ", ls = " << ls << std::endl;
@@ -2363,36 +2428,36 @@ void analysisClass::Loop()
       //  FillUserHist("OptBinLQ700_noWeight", M_e1e2);
       //}
       //
-      FillUserTH3D("OptimizationCutSpace",sT_eejj,M_ej_min,M_e1e2, pileup_weight*gen_weight);
-      if (M_ej_min >= 100 && M_ej_min < 200)
-        FillUserHist("Mee_MejMin100To200_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 200 && M_ej_min < 300)
-        FillUserHist("Mee_MejMin200To300_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 300 && M_ej_min < 400)
-        FillUserHist("Mee_MejMin300To400_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 400 && M_ej_min < 500)
-        FillUserHist("Mee_MejMin400To500_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 500 && M_ej_min < 650)
-        FillUserHist("Mee_MejMin500To650_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      else if (M_ej_min >= 650)
-        FillUserHist("Mee_MejMin650ToInf_PAS", M_e1e2                         , pileup_weight * gen_weight );
-      //
-      if (Pt_e1e2 < 100)
-        FillUserHist( "Mee_Ptee0To100_PAS"		               ,  Pt_e1e2 , pileup_weight * gen_weight ); 
-      else if(Pt_e1e2 < 150 && Pt_e1e2 >= 100)
-        FillUserHist( "Mee_Ptee100To150_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
-      else if(Pt_e1e2 < 200 && Pt_e1e2 >= 150)
-        FillUserHist( "Mee_Ptee150To200_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
-      else if(Pt_e1e2 < 250 && Pt_e1e2 >= 200)
-        FillUserHist( "Mee_Ptee200To250_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
-      else if(Pt_e1e2 < 300 && Pt_e1e2 >= 250)
-        FillUserHist( "Mee_Ptee250To300_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
-      else if(Pt_e1e2 < 350 && Pt_e1e2 >= 300)
-        FillUserHist( "Mee_Ptee300To350_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
-      else if(Pt_e1e2 < 400 && Pt_e1e2 >= 350)
-        FillUserHist( "Mee_Ptee350To400_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
-      else
-        FillUserHist( "Mee_Ptee400ToInf_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
+      //FillUserTH3D("OptimizationCutSpace",sT_eejj,M_ej_min,M_e1e2, pileup_weight*gen_weight);
+      //if (M_ej_min >= 100 && M_ej_min < 200)
+      //  FillUserHist("Mee_MejMin100To200_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if (M_ej_min >= 200 && M_ej_min < 300)
+      //  FillUserHist("Mee_MejMin200To300_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if (M_ej_min >= 300 && M_ej_min < 400)
+      //  FillUserHist("Mee_MejMin300To400_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if (M_ej_min >= 400 && M_ej_min < 500)
+      //  FillUserHist("Mee_MejMin400To500_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if (M_ej_min >= 500 && M_ej_min < 650)
+      //  FillUserHist("Mee_MejMin500To650_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      //else if (M_ej_min >= 650)
+      //  FillUserHist("Mee_MejMin650ToInf_PAS", M_e1e2                         , pileup_weight * gen_weight );
+      ////
+      //if (Pt_e1e2 < 100)
+      //  FillUserHist( "Mee_Ptee0To100_PAS"		               ,  Pt_e1e2 , pileup_weight * gen_weight ); 
+      //else if(Pt_e1e2 < 150 && Pt_e1e2 >= 100)
+      //  FillUserHist( "Mee_Ptee100To150_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
+      //else if(Pt_e1e2 < 200 && Pt_e1e2 >= 150)
+      //  FillUserHist( "Mee_Ptee150To200_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
+      //else if(Pt_e1e2 < 250 && Pt_e1e2 >= 200)
+      //  FillUserHist( "Mee_Ptee200To250_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
+      //else if(Pt_e1e2 < 300 && Pt_e1e2 >= 250)
+      //  FillUserHist( "Mee_Ptee250To300_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
+      //else if(Pt_e1e2 < 350 && Pt_e1e2 >= 300)
+      //  FillUserHist( "Mee_Ptee300To350_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
+      //else if(Pt_e1e2 < 400 && Pt_e1e2 >= 350)
+      //  FillUserHist( "Mee_Ptee350To400_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
+      //else
+      //  FillUserHist( "Mee_Ptee400ToInf_PAS"		             ,  Pt_e1e2 , pileup_weight * gen_weight ); 
       FillUserHist("Me1j2_PAS"             , M_e1j2                         , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("Me2j1_PAS"             , M_e2j1                         , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("Me2j2_PAS"             , M_e2j2                         , pileup_weight * gen_weight, preselectionCut );
@@ -2422,20 +2487,20 @@ void analysisClass::Loop()
       FillUserHist("Mej_minmax_PAS"        , M_ej_max                       , pileup_weight * gen_weight, preselectionCut );	   
       FillUserHist("Mej_asym_PAS"        , M_ej_asym                        , pileup_weight * gen_weight, preselectionCut );	   
 
-      FillUserTH2D("MeeVsST_PAS" , M_e1e2, sT_eejj, pileup_weight * gen_weight );	   
-      FillUserTH2D("MeeVsPtee_PAS" , M_e1e2, Pt_e1e2, pileup_weight * gen_weight );	   
+      FillUserHist2D("MeeVsST_PAS" , M_e1e2, sT_eejj, pileup_weight * gen_weight );	   
+      FillUserHist2D("MeeVsPtee_PAS" , M_e1e2, Pt_e1e2, pileup_weight * gen_weight );	   
 
       // checking electrons
-      FillUserHist( "SCEta_1stEle_Presel",Ele1_SCEta, pileup_weight*gen_weight);
-      FillUserHist( "EleEta_1stEle_Presel",Ele1_Eta,pileup_weight*gen_weight);
-      FillUserHist( "DeltaEtaTrkSC_1stEle_Presel",Ele1_DeltaEtaTrkSC,pileup_weight*gen_weight);
-      FillUserHist( "SCEtaMinusEleEta_1stEle_Presel",Ele1_SCEta-Ele1_Eta,pileup_weight*gen_weight);
-      FillUserHist( "DeltaEtaTrkSC_Minus_SCEtaMinusEleEta_1stEle_Presel",Ele1_DeltaEtaTrkSC-(Ele1_SCEta-Ele1_Eta),pileup_weight*gen_weight);
-      FillUserHist( "SCEta_2ndEle_Presel",Ele2_SCEta, pileup_weight*gen_weight);
-      FillUserHist( "EleEta_2ndEle_Presel",Ele2_Eta,pileup_weight*gen_weight);
-      FillUserHist( "DeltaEtaTrkSC_2ndEle_Presel",Ele2_DeltaEtaTrkSC,pileup_weight*gen_weight);
-      FillUserHist( "SCEtaMinusEleEta_2ndEle_Presel",Ele2_SCEta-Ele2_Eta,pileup_weight*gen_weight);
-      FillUserHist( "DeltaEtaTrkSC_Minus_SCEtaMinusEleEta_2ndEle_Presel",Ele2_DeltaEtaTrkSC-(Ele2_SCEta-Ele2_Eta),pileup_weight*gen_weight);
+      //FillUserHist( "SCEta_1stEle_Presel",Ele1_SCEta, pileup_weight*gen_weight);
+      //FillUserHist( "EleEta_1stEle_Presel",Ele1_Eta,pileup_weight*gen_weight);
+      //FillUserHist( "DeltaEtaTrkSC_1stEle_Presel",Ele1_DeltaEtaTrkSC,pileup_weight*gen_weight);
+      //FillUserHist( "SCEtaMinusEleEta_1stEle_Presel",Ele1_SCEta-Ele1_Eta,pileup_weight*gen_weight);
+      //FillUserHist( "DeltaEtaTrkSC_Minus_SCEtaMinusEleEta_1stEle_Presel",Ele1_DeltaEtaTrkSC-(Ele1_SCEta-Ele1_Eta),pileup_weight*gen_weight);
+      //FillUserHist( "SCEta_2ndEle_Presel",Ele2_SCEta, pileup_weight*gen_weight);
+      //FillUserHist( "EleEta_2ndEle_Presel",Ele2_Eta,pileup_weight*gen_weight);
+      //FillUserHist( "DeltaEtaTrkSC_2ndEle_Presel",Ele2_DeltaEtaTrkSC,pileup_weight*gen_weight);
+      //FillUserHist( "SCEtaMinusEleEta_2ndEle_Presel",Ele2_SCEta-Ele2_Eta,pileup_weight*gen_weight);
+      //FillUserHist( "DeltaEtaTrkSC_Minus_SCEtaMinusEleEta_2ndEle_Presel",Ele2_DeltaEtaTrkSC-(Ele2_SCEta-Ele2_Eta),pileup_weight*gen_weight);
       //--------------------------------------------------------------------------
       // Mass-pairing histograms at preselection
       //--------------------------------------------------------------------------
@@ -2443,24 +2508,24 @@ void analysisClass::Loop()
       if ( fabs(M_e1j1-M_e2j2) < fabs(M_e1j2-M_e2j1) ) {
         FillUserHist("Me1j_selected_PAS"   , M_e1j1          , pileup_weight * gen_weight, preselectionCut);	   
         FillUserHist("Me2j_selected_PAS"   , M_e2j2          , pileup_weight * gen_weight, preselectionCut);	   
-        FillUserTH2D("Me1jVsMe2j_selected" , M_e1j1  , M_e2j2, pileup_weight * gen_weight);
-        FillUserTH2D("Me1jVsMe2j_rejected" , M_e1j2  , M_e2j1, pileup_weight * gen_weight);
+        FillUserHist2D("Me1jVsMe2j_selected" , M_e1j1  , M_e2j2, pileup_weight * gen_weight);
+        FillUserHist2D("Me1jVsMe2j_rejected" , M_e1j2  , M_e2j1, pileup_weight * gen_weight);
       }
       else {
         FillUserHist("Me1j_selected_PAS"   , M_e1j2          , pileup_weight * gen_weight, preselectionCut);	   
         FillUserHist("Me2j_selected_PAS"   , M_e2j1          , pileup_weight * gen_weight, preselectionCut);	   
-        FillUserTH2D("Me1jVsMe2j_selected" , M_e1j2  , M_e2j1, pileup_weight * gen_weight);
-        FillUserTH2D("Me1jVsMe2j_rejected" , M_e1j1  , M_e2j2, pileup_weight * gen_weight);
+        FillUserHist2D("Me1jVsMe2j_selected" , M_e1j2  , M_e2j1, pileup_weight * gen_weight);
+        FillUserHist2D("Me1jVsMe2j_rejected" , M_e1j1  , M_e2j2, pileup_weight * gen_weight);
       }
 
       //--------------------------------------------------------------------------
       // Preselection + data-only
       //--------------------------------------------------------------------------
 
-      if ( isData() ) { 
-        FillUserHist("run_PAS"  , run );
-        FillUserTProfile("run_vs_nvtx_PAS", run, nVertex, 1);
-      }
+      //if ( isData() ) { 
+      //  FillUserHist("run_PAS"  , run );
+      //  FillUserTProfile("run_vs_nvtx_PAS", run, nVertex, 1);
+      //}
 
       //--------------------------------------------------------------------------
       // Preselection + N(Jet) > 2 
@@ -2493,97 +2558,97 @@ void analysisClass::Loop()
       // Preselection + high ST plot
       //--------------------------------------------------------------------------
 
-      if ( sT_eejj > 445. ) FillUserHist("Mee_PASandST445"   , M_e1e2  , pileup_weight * gen_weight ) ;
+      //if ( sT_eejj > 445. ) FillUserHist("Mee_PASandST445"   , M_e1e2  , pileup_weight * gen_weight ) ;
 
       //--------------------------------------------------------------------------
       // High M(ee) plots
       //--------------------------------------------------------------------------
 
-      if ( M_e1e2  > 100. ) FillUserHist("sT_PASandMee100"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 110. ) FillUserHist("sT_PASandMee110"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 120. ) FillUserHist("sT_PASandMee120"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 130. ) FillUserHist("sT_PASandMee130"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 140. ) FillUserHist("sT_PASandMee140"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 150. ) FillUserHist("sT_PASandMee150"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 160. ) FillUserHist("sT_PASandMee160"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 170. ) FillUserHist("sT_PASandMee170"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 180. ) FillUserHist("sT_PASandMee180"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 190. ) FillUserHist("sT_PASandMee190"   , sT_eejj , pileup_weight * gen_weight ) ;
-      if ( M_e1e2  > 200. ) FillUserHist("sT_PASandMee200"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 100. ) FillUserHist("sT_PASandMee100"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 110. ) FillUserHist("sT_PASandMee110"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 120. ) FillUserHist("sT_PASandMee120"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 130. ) FillUserHist("sT_PASandMee130"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 140. ) FillUserHist("sT_PASandMee140"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 150. ) FillUserHist("sT_PASandMee150"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 160. ) FillUserHist("sT_PASandMee160"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 170. ) FillUserHist("sT_PASandMee170"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 180. ) FillUserHist("sT_PASandMee180"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 190. ) FillUserHist("sT_PASandMee190"   , sT_eejj , pileup_weight * gen_weight ) ;
+      //if ( M_e1e2  > 200. ) FillUserHist("sT_PASandMee200"   , sT_eejj , pileup_weight * gen_weight ) ;
 
       if ( M_e1e2 > 100. ) { 
 
-        FillUserHist("CorrIsolation_1stEle_PASandMee100"         , Ele1_CorrIsolation                  , pileup_weight * gen_weight    ); 
-        FillUserHist("DeltaEtaTrkSC_1stEle_PASandMee100"         , Ele1_DeltaEtaTrkSC                  , pileup_weight * gen_weight    ); 
-        FillUserHist("EcalIsolation_1stEle_PASandMee100"         , Ele1_EcalIsolation                  , pileup_weight * gen_weight    ); 
-        FillUserHist("HcalIsolation_1stEle_PASandMee100"         , Ele1_HcalIsolation                  , pileup_weight * gen_weight    ); 
-        FillUserHist("TrkIsolation_1stEle_PASandMee100"          , Ele1_TrkIsolation                   , pileup_weight * gen_weight    ); 
-        FillUserHist("HasMatchedPhot_1stEle_PASandMee100"        , Ele1_HasMatchedPhot                 , pileup_weight * gen_weight    ); 
-        FillUserHist("HoE_1stEle_PASandMee100"                   , Ele1_HoE                            , pileup_weight * gen_weight    ); 
-        FillUserHist("LeadVtxDistXY_1stEle_PASandMee100"         , Ele1_LeadVtxDistXY                  , pileup_weight * gen_weight    ); 
-        FillUserHist("LeadVtxDistZ_1stEle_PASandMee100"          , Ele1_LeadVtxDistZ                   , pileup_weight * gen_weight    ); 
-        FillUserHist("MissingHits_1stEle_PASandMee100"           , Ele1_MissingHits                    , pileup_weight * gen_weight    ); 
+        //FillUserHist("CorrIsolation_1stEle_PASandMee100"         , Ele1_CorrIsolation                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("DeltaEtaTrkSC_1stEle_PASandMee100"         , Ele1_DeltaEtaTrkSC                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("EcalIsolation_1stEle_PASandMee100"         , Ele1_EcalIsolation                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("HcalIsolation_1stEle_PASandMee100"         , Ele1_HcalIsolation                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("TrkIsolation_1stEle_PASandMee100"          , Ele1_TrkIsolation                   , pileup_weight * gen_weight    ); 
+        //FillUserHist("HasMatchedPhot_1stEle_PASandMee100"        , Ele1_HasMatchedPhot                 , pileup_weight * gen_weight    ); 
+        //FillUserHist("HoE_1stEle_PASandMee100"                   , Ele1_HoE                            , pileup_weight * gen_weight    ); 
+        //FillUserHist("LeadVtxDistXY_1stEle_PASandMee100"         , Ele1_LeadVtxDistXY                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("LeadVtxDistZ_1stEle_PASandMee100"          , Ele1_LeadVtxDistZ                   , pileup_weight * gen_weight    ); 
+        //FillUserHist("MissingHits_1stEle_PASandMee100"           , Ele1_MissingHits                    , pileup_weight * gen_weight    ); 
         if ( fabs(Ele1_Eta) < eleEta_bar ) { 
-          FillUserHist("Full5x5SigmaIEtaIEta_Barrel_1stEle_PASandMee100", Ele1_Full5x5SigmaIEtaIEta                  , pileup_weight * gen_weight    ); 
+          //FillUserHist("Full5x5SigmaIEtaIEta_Barrel_1stEle_PASandMee100", Ele1_Full5x5SigmaIEtaIEta                  , pileup_weight * gen_weight    ); 
         }
         else if ( fabs(Ele1_Eta) > eleEta_end1_min && fabs(Ele2_Eta) < eleEta_end2_max ){
-          FillUserHist("Full5x5SigmaIEtaIEta_Endcap_1stEle_PASandMee100", Ele1_Full5x5SigmaIEtaIEta                  , pileup_weight * gen_weight    ); 
+          //FillUserHist("Full5x5SigmaIEtaIEta_Endcap_1stEle_PASandMee100", Ele1_Full5x5SigmaIEtaIEta                  , pileup_weight * gen_weight    ); 
         }
 
-        FillUserHist("CorrIsolation_2ndEle_PASandMee100"         , Ele2_CorrIsolation                  , pileup_weight * gen_weight    ); 
-        FillUserHist("DeltaEtaTrkSC_2ndEle_PASandMee100"         , Ele2_DeltaEtaTrkSC                  , pileup_weight * gen_weight    ); 
-        FillUserHist("EcalIsolation_2ndEle_PASandMee100"         , Ele2_EcalIsolation                  , pileup_weight * gen_weight    ); 
-        FillUserHist("HcalIsolation_2ndEle_PASandMee100"         , Ele2_HcalIsolation                  , pileup_weight * gen_weight    ); 
-        FillUserHist("TrkIsolation_2ndEle_PASandMee100"          , Ele2_TrkIsolation                   , pileup_weight * gen_weight    ); 
-        FillUserHist("HasMatchedPhot_2ndEle_PASandMee100"        , Ele2_HasMatchedPhot                 , pileup_weight * gen_weight    ); 
-        FillUserHist("HoE_2ndEle_PASandMee100"                   , Ele2_HoE                            , pileup_weight * gen_weight    ); 
-        FillUserHist("LeadVtxDistXY_2ndEle_PASandMee100"         , Ele2_LeadVtxDistXY                  , pileup_weight * gen_weight    ); 
-        FillUserHist("LeadVtxDistZ_2ndEle_PASandMee100"          , Ele2_LeadVtxDistZ                   , pileup_weight * gen_weight    ); 
-        FillUserHist("MissingHits_2ndEle_PASandMee100"           , Ele2_MissingHits                    , pileup_weight * gen_weight    ); 
+        //FillUserHist("CorrIsolation_2ndEle_PASandMee100"         , Ele2_CorrIsolation                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("DeltaEtaTrkSC_2ndEle_PASandMee100"         , Ele2_DeltaEtaTrkSC                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("EcalIsolation_2ndEle_PASandMee100"         , Ele2_EcalIsolation                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("HcalIsolation_2ndEle_PASandMee100"         , Ele2_HcalIsolation                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("TrkIsolation_2ndEle_PASandMee100"          , Ele2_TrkIsolation                   , pileup_weight * gen_weight    ); 
+        //FillUserHist("HasMatchedPhot_2ndEle_PASandMee100"        , Ele2_HasMatchedPhot                 , pileup_weight * gen_weight    ); 
+        //FillUserHist("HoE_2ndEle_PASandMee100"                   , Ele2_HoE                            , pileup_weight * gen_weight    ); 
+        //FillUserHist("LeadVtxDistXY_2ndEle_PASandMee100"         , Ele2_LeadVtxDistXY                  , pileup_weight * gen_weight    ); 
+        //FillUserHist("LeadVtxDistZ_2ndEle_PASandMee100"          , Ele2_LeadVtxDistZ                   , pileup_weight * gen_weight    ); 
+        //FillUserHist("MissingHits_2ndEle_PASandMee100"           , Ele2_MissingHits                    , pileup_weight * gen_weight    ); 
         if ( fabs(Ele2_Eta) < eleEta_bar ) { 
-          FillUserHist("Full5x5SigmaIEtaIEta_Barrel_2ndEle_PASandMee100", Ele2_Full5x5SigmaIEtaIEta                  , pileup_weight * gen_weight    ); 
+          //FillUserHist("Full5x5SigmaIEtaIEta_Barrel_2ndEle_PASandMee100", Ele2_Full5x5SigmaIEtaIEta                  , pileup_weight * gen_weight    ); 
         }
         else if ( fabs(Ele2_Eta) > eleEta_end1_min && fabs(Ele2_Eta) < eleEta_end2_max ){
-          FillUserHist("Full5x5SigmaIEtaIEta_Endcap_2ndEle_PASandMee100", Ele2_Full5x5SigmaIEtaIEta                  , pileup_weight * gen_weight    ); 
+          //FillUserHist("Full5x5SigmaIEtaIEta_Endcap_2ndEle_PASandMee100", Ele2_Full5x5SigmaIEtaIEta                  , pileup_weight * gen_weight    ); 
         }
 
-        FillUserHist("Ptee_PASandMee100"              , Pt_e1e2                        , pileup_weight * gen_weight );
-        FillUserTH2D("MeeVsST_PASandMee100" , M_e1e2, sT_eejj, pileup_weight * gen_weight );	   
-        FillUserHist("sT_zjj_PASandMee100"            , sT_zjj                         , pileup_weight * gen_weight );
-        FillUserHist("nVertex_PASandMee100"           , nVertex                        , pileup_weight * gen_weight );
-        FillUserHist("EleChargeSum_PASandMee100"      , Ele1_Charge + Ele2_Charge      , pileup_weight * gen_weight ) ;
-        FillUserHist("nJet_PASandMee100"              , nJet_ptCut                     , pileup_weight * gen_weight ) ;
-        FillUserHist("sTlep_PASandMee100"             , Ele1_Pt + Ele2_Pt              , pileup_weight * gen_weight ) ;
-        FillUserHist("sTjet_PASandMee100"             , Jet1_Pt + Jet2_Pt              , pileup_weight * gen_weight ) ;
-        FillUserHist("Mjj_PASandMee100"               , M_j1j2                         , pileup_weight * gen_weight ) ;
-        FillUserHist("Me1j1_PASandMee100"             , M_e1j1                         , pileup_weight * gen_weight ) ;
-        FillUserHist("Me1j2_PASandMee100"             , M_e1j2                         , pileup_weight * gen_weight ) ;
-        FillUserHist("Me2j1_PASandMee100"             , M_e1j1                         , pileup_weight * gen_weight ) ;
-        FillUserHist("Me2j2_PASandMee100"             , M_e1j2                         , pileup_weight * gen_weight ) ;
-        FillUserHist("Pt1stEle_PASandMee100"          , Ele1_Pt                        , pileup_weight * gen_weight ) ;
-        FillUserHist("Pt2ndEle_PASandMee100"          , Ele2_Pt                        , pileup_weight * gen_weight ) ;
-        FillUserHist("Pt1stJet_PASandMee100"          , Jet1_Pt                        , pileup_weight * gen_weight ) ;
-        FillUserHist("Pt2ndJet_PASandMee100"          , Jet2_Pt                        , pileup_weight * gen_weight ) ;
-        FillUserHist("Mej_selected_avg_PASandMee100"  , M_ej_avg                       , pileup_weight * gen_weight ) ;
-        FillUserHist("sTfrac_Jet1_PASandMee100"       , Jet1_Pt / sT_eejj              , pileup_weight * gen_weight ) ;
-        FillUserHist("sTfrac_Jet2_PASandMee100"       , Jet2_Pt / sT_eejj              , pileup_weight * gen_weight ) ;
-        FillUserHist("sTfrac_Ele1_PASandMee100"       , Ele1_Pt / sT_eejj              , pileup_weight * gen_weight ) ;
-        FillUserHist("sTfrac_Ele2_PASandMee100"       , Ele2_Pt / sT_eejj              , pileup_weight * gen_weight ) ;
-        FillUserHist("sTfrac_Jet_PASandMee100"        , ( Jet1_Pt + Jet2_Pt ) / sT_eejj, pileup_weight * gen_weight ) ;
-        FillUserHist("sTfrac_Ele_PASandMee100"        , ( Ele1_Pt + Ele2_Pt ) / sT_eejj, pileup_weight * gen_weight ) ;
-        FillUserHist("Ptj1j2_PASandMee100"            , Pt_j1j2                        , pileup_weight * gen_weight ) ;
-        FillUserHist("Ptee_Minus_Ptj1j2_PASandMee100" , Pt_e1e2 - Pt_j1j2              , pileup_weight * gen_weight ) ;
+        //FillUserHist("Ptee_PASandMee100"              , Pt_e1e2                        , pileup_weight * gen_weight );
+        //FillUserHist2D("MeeVsST_PASandMee100" , M_e1e2, sT_eejj, pileup_weight * gen_weight );	   
+        //FillUserHist("sT_zjj_PASandMee100"            , sT_zjj                         , pileup_weight * gen_weight );
+        //FillUserHist("nVertex_PASandMee100"           , nVertex                        , pileup_weight * gen_weight );
+        //FillUserHist("EleChargeSum_PASandMee100"      , Ele1_Charge + Ele2_Charge      , pileup_weight * gen_weight ) ;
+        //FillUserHist("nJet_PASandMee100"              , nJet_ptCut                     , pileup_weight * gen_weight ) ;
+        //FillUserHist("sTlep_PASandMee100"             , Ele1_Pt + Ele2_Pt              , pileup_weight * gen_weight ) ;
+        //FillUserHist("sTjet_PASandMee100"             , Jet1_Pt + Jet2_Pt              , pileup_weight * gen_weight ) ;
+        //FillUserHist("Mjj_PASandMee100"               , M_j1j2                         , pileup_weight * gen_weight ) ;
+        //FillUserHist("Me1j1_PASandMee100"             , M_e1j1                         , pileup_weight * gen_weight ) ;
+        //FillUserHist("Me1j2_PASandMee100"             , M_e1j2                         , pileup_weight * gen_weight ) ;
+        //FillUserHist("Me2j1_PASandMee100"             , M_e1j1                         , pileup_weight * gen_weight ) ;
+        //FillUserHist("Me2j2_PASandMee100"             , M_e1j2                         , pileup_weight * gen_weight ) ;
+        //FillUserHist("Pt1stEle_PASandMee100"          , Ele1_Pt                        , pileup_weight * gen_weight ) ;
+        //FillUserHist("Pt2ndEle_PASandMee100"          , Ele2_Pt                        , pileup_weight * gen_weight ) ;
+        //FillUserHist("Pt1stJet_PASandMee100"          , Jet1_Pt                        , pileup_weight * gen_weight ) ;
+        //FillUserHist("Pt2ndJet_PASandMee100"          , Jet2_Pt                        , pileup_weight * gen_weight ) ;
+        //FillUserHist("Mej_selected_avg_PASandMee100"  , M_ej_avg                       , pileup_weight * gen_weight ) ;
+        //FillUserHist("sTfrac_Jet1_PASandMee100"       , Jet1_Pt / sT_eejj              , pileup_weight * gen_weight ) ;
+        //FillUserHist("sTfrac_Jet2_PASandMee100"       , Jet2_Pt / sT_eejj              , pileup_weight * gen_weight ) ;
+        //FillUserHist("sTfrac_Ele1_PASandMee100"       , Ele1_Pt / sT_eejj              , pileup_weight * gen_weight ) ;
+        //FillUserHist("sTfrac_Ele2_PASandMee100"       , Ele2_Pt / sT_eejj              , pileup_weight * gen_weight ) ;
+        //FillUserHist("sTfrac_Jet_PASandMee100"        , ( Jet1_Pt + Jet2_Pt ) / sT_eejj, pileup_weight * gen_weight ) ;
+        //FillUserHist("sTfrac_Ele_PASandMee100"        , ( Ele1_Pt + Ele2_Pt ) / sT_eejj, pileup_weight * gen_weight ) ;
+        //FillUserHist("Ptj1j2_PASandMee100"            , Pt_j1j2                        , pileup_weight * gen_weight ) ;
+        //FillUserHist("Ptee_Minus_Ptj1j2_PASandMee100" , Pt_e1e2 - Pt_j1j2              , pileup_weight * gen_weight ) ;
 
         if ( nJet_ptCut > 2 ) { 
-          FillUserHist( "M_e1j3_PASandMee100" , M_e1j3, pileup_weight * gen_weight ) ;
-          FillUserHist( "M_e2j3_PASandMee100" , M_e2j3, pileup_weight * gen_weight ) ;
-          FillUserHist( "M_j1j3_PASandMee100" , M_j1j3, pileup_weight * gen_weight ) ;
-          FillUserHist( "M_j2j3_PASandMee100" , M_j2j3, pileup_weight * gen_weight ) ;
-          FillUserHist( "M_eejjj_PASandMee100", M_eejjj,pileup_weight * gen_weight ) ;
-          FillUserHist( "Ptj1j2j3_PASandMee100"            , Pt_j1j2j3           , pileup_weight * gen_weight );
-          FillUserHist( "Ptj2j3_PASandMee100"              , Pt_j2j3             , pileup_weight * gen_weight );
-          FillUserHist( "Ptj1j3_PASandMee100"              , Pt_j1j3             , pileup_weight * gen_weight );
-          FillUserHist( "Ptee_Minus_Ptj1j2j3_PASandMee100" , Pt_e1e2 - Pt_j1j2j3 , pileup_weight * gen_weight ); 
+          //FillUserHist( "M_e1j3_PASandMee100" , M_e1j3, pileup_weight * gen_weight ) ;
+          //FillUserHist( "M_e2j3_PASandMee100" , M_e2j3, pileup_weight * gen_weight ) ;
+          //FillUserHist( "M_j1j3_PASandMee100" , M_j1j3, pileup_weight * gen_weight ) ;
+          //FillUserHist( "M_j2j3_PASandMee100" , M_j2j3, pileup_weight * gen_weight ) ;
+          //FillUserHist( "M_eejjj_PASandMee100", M_eejjj,pileup_weight * gen_weight ) ;
+          //FillUserHist( "Ptj1j2j3_PASandMee100"            , Pt_j1j2j3           , pileup_weight * gen_weight );
+          //FillUserHist( "Ptj2j3_PASandMee100"              , Pt_j2j3             , pileup_weight * gen_weight );
+          //FillUserHist( "Ptj1j3_PASandMee100"              , Pt_j1j3             , pileup_weight * gen_weight );
+          //FillUserHist( "Ptee_Minus_Ptj1j2j3_PASandMee100" , Pt_e1e2 - Pt_j1j2j3 , pileup_weight * gen_weight ); 
         }
       }
 
@@ -2591,32 +2656,26 @@ void analysisClass::Loop()
       // Preselection + M(ee) normalization region plots
       //--------------------------------------------------------------------------
 
-      if ( M_e1e2 > 80.0 && M_e1e2 < 100.0 ){
-        FillUserHist("Mee_80_100_Preselection", M_e1e2, pileup_weight * gen_weight ) ;
-        if      ( isEBEB ) FillUserHist( "Mee_EBEB_80_100_PAS", M_e1e2, pileup_weight * gen_weight ); 
-        else if ( isEBEE ) FillUserHist( "Mee_EBEE_80_100_PAS", M_e1e2, pileup_weight * gen_weight ); 
-        else if ( isEEEE ) FillUserHist( "Mee_EEEE_80_100_PAS", M_e1e2, pileup_weight * gen_weight ); 
-        if      ( isEB   ) FillUserHist( "Mee_EB_80_100_PAS"  , M_e1e2, pileup_weight * gen_weight ); 
-      } 
+      //if ( M_e1e2 > 80.0 && M_e1e2 < 100.0 ){
+      //  FillUserHist("Mee_80_100_Preselection", M_e1e2, pileup_weight * gen_weight ) ;
+      //  if      ( isEBEB ) FillUserHist( "Mee_EBEB_80_100_PAS", M_e1e2, pileup_weight * gen_weight ); 
+      //  else if ( isEBEE ) FillUserHist( "Mee_EBEE_80_100_PAS", M_e1e2, pileup_weight * gen_weight ); 
+      //  else if ( isEEEE ) FillUserHist( "Mee_EEEE_80_100_PAS", M_e1e2, pileup_weight * gen_weight ); 
+      //  if      ( isEB   ) FillUserHist( "Mee_EB_80_100_PAS"  , M_e1e2, pileup_weight * gen_weight ); 
+      //} 
 
-      if ( M_e1e2 > 70.0 && M_e1e2 < 110.0 ){
-        FillUserHist("Mee_70_110_Preselection", M_e1e2, pileup_weight * gen_weight ) ;
-        if ( sT_eejj > 600 ) FillUserHist("Mee_70_110_ST600_Preselection", M_e1e2, pileup_weight * gen_weight ) ;
-        if      ( isEBEB ) {
-          FillUserHist( "Mee_EBEB_70_110_PAS", M_e1e2, pileup_weight * gen_weight );
-          FillUserHist( "Mee_EBEB_70_110_Uncorr_PAS", M_e1e2Uncorr, pileup_weight * gen_weight );
-        }
-        else if ( isEBEE ) FillUserHist( "Mee_EBEE_70_110_PAS", M_e1e2, pileup_weight * gen_weight ); 
-        else if ( isEEEE ) FillUserHist( "Mee_EEEE_70_110_PAS", M_e1e2, pileup_weight * gen_weight ); 
-        if      ( isEB   ) FillUserHist( "Mee_EB_70_110_PAS"  , M_e1e2, pileup_weight * gen_weight ); 
+      //if ( M_e1e2 > 70.0 && M_e1e2 < 110.0 ){
+      //  FillUserHist("Mee_70_110_Preselection", M_e1e2, pileup_weight * gen_weight ) ;
+      //  if ( sT_eejj > 600 ) FillUserHist("Mee_70_110_ST600_Preselection", M_e1e2, pileup_weight * gen_weight ) ;
+      //  if      ( isEBEB ) {
+      //    FillUserHist( "Mee_EBEB_70_110_PAS", M_e1e2, pileup_weight * gen_weight );
+      //    FillUserHist( "Mee_EBEB_70_110_Uncorr_PAS", M_e1e2Uncorr, pileup_weight * gen_weight );
+      //  }
+      //  else if ( isEBEE ) FillUserHist( "Mee_EBEE_70_110_PAS", M_e1e2, pileup_weight * gen_weight ); 
+      //  else if ( isEEEE ) FillUserHist( "Mee_EEEE_70_110_PAS", M_e1e2, pileup_weight * gen_weight ); 
+      //  if      ( isEB   ) FillUserHist( "Mee_EB_70_110_PAS"  , M_e1e2, pileup_weight * gen_weight ); 
 
-        //FillUserHist( "ProcessID_ZWindow", ProcessID, pileup_weight * gen_weight );
-        //if ( ProcessID == 0 ) FillUserHist ( "Mee_70_110_Preselection_Process0", M_e1e2, pileup_weight * gen_weight );
-        //if ( ProcessID == 1 ) FillUserHist ( "Mee_70_110_Preselection_Process1", M_e1e2, pileup_weight * gen_weight );
-        //if ( ProcessID == 2 ) FillUserHist ( "Mee_70_110_Preselection_Process2", M_e1e2, pileup_weight * gen_weight );
-        //if ( ProcessID == 3 ) FillUserHist ( "Mee_70_110_Preselection_Process3", M_e1e2, pileup_weight * gen_weight );
-        //if ( ProcessID == 4 ) FillUserHist ( "Mee_70_110_Preselection_Process4", M_e1e2, pileup_weight * gen_weight );
-      }
+      //}
 
       //--------------------------------------------------------------------------
       // BDT preselection plots
@@ -2688,7 +2747,7 @@ void analysisClass::Loop()
         FillUserHist("Phi2ndJet_ROI"       , Jet2_Phi                       , pileup_weight * gen_weight );
         FillUserHist("Phi1stEle_ROI"	    , Ele1_Phi                       , pileup_weight * gen_weight );
         FillUserHist("Phi2ndEle_ROI"	    , Ele2_Phi                       , pileup_weight * gen_weight );
-        FillUserTH2D("MeeVsST_ROI" , M_e1e2, sT_eejj, pileup_weight * gen_weight );	   
+        FillUserHist2D("MeeVsST_ROI" , M_e1e2, sT_eejj, pileup_weight * gen_weight );	   
         FillUserHist("Mee_ROI"		    , M_e1e2                         , pileup_weight * gen_weight );
         FillUserHist("sT_zjj_ROI"          , sT_zjj                         , pileup_weight * gen_weight );
         FillUserHist("nVertex_ROI"         , nVertex                        , pileup_weight * gen_weight );
@@ -2753,7 +2812,7 @@ void analysisClass::Loop()
           sprintf(plot_name, "sT_eejj_LQ%d"                , lq_mass ); FillUserHist ( plot_name, sT_eejj           , pileup_weight * gen_weight );
           sprintf(plot_name, "Mee_LQ%d"                    , lq_mass ); FillUserHist ( plot_name, M_e1e2            , pileup_weight * gen_weight );
           sprintf(plot_name, "DR_Ele1Jet1_LQ%d"            , lq_mass ); FillUserHist ( plot_name, DR_Ele1Jet1       , pileup_weight * gen_weight );
-          sprintf(plot_name, "Mej_selected_min_vs_max_LQ%d", lq_mass ); FillUserTH2D ( plot_name, M_ej_min, M_ej_max, pileup_weight * gen_weight );
+          sprintf(plot_name, "Mej_selected_min_vs_max_LQ%d", lq_mass ); FillUserHist2D ( plot_name, M_ej_min, M_ej_max, pileup_weight * gen_weight );
 
 
           sprintf(plot_name, "CorrIsolation_1stEle_LQ%d"      , lq_mass );   FillUserHist(plot_name,  Ele1_CorrIsolation             , pileup_weight * gen_weight ); 
@@ -2805,7 +2864,7 @@ void analysisClass::Loop()
           sprintf(plot_name, "Phi2ndJet_LQ%d"         , lq_mass ); FillUserHist( plot_name , Jet2_Phi                       , pileup_weight * gen_weight );
           sprintf(plot_name, "Phi1stEle_LQ%d"         , lq_mass ); FillUserHist( plot_name , Ele1_Phi                       , pileup_weight * gen_weight );
           sprintf(plot_name, "Phi2ndEle_LQ%d"         , lq_mass ); FillUserHist( plot_name , Ele2_Phi                       , pileup_weight * gen_weight );
-          sprintf(plot_name, "MeeVsST_LQ%d"           , lq_mass ); FillUserTH2D( plot_name , M_e1e2, sT_eejj                , pileup_weight * gen_weight );	   
+          sprintf(plot_name, "MeeVsST_LQ%d"           , lq_mass ); FillUserHist2D( plot_name , M_e1e2, sT_eejj                , pileup_weight * gen_weight );	   
           sprintf(plot_name, "sT_zjj_LQ%d"            , lq_mass ); FillUserHist( plot_name , sT_zjj                         , pileup_weight * gen_weight );
           sprintf(plot_name, "nVertex_LQ%d"           , lq_mass ); FillUserHist( plot_name , nVertex                        , pileup_weight * gen_weight );
           sprintf(plot_name, "nJet_LQ%d"              , lq_mass ); FillUserHist( plot_name , nJet_ptCut                     , pileup_weight * gen_weight );
