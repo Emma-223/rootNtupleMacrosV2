@@ -897,7 +897,8 @@ PtBins = [50, 100, 200, "Inf"]
 Pt2Bins = [50, 100, "Inf"]
 METBins =  [0, 50, 100, 200, "Inf"]
 binsForVarDict = {}
-binsForVarDict["NJet"] = [1.5, 2.5, 3.5, 4.5, 5.5, "Inf"]
+#binsForVarDict["NJet"] = [1.5, 2.5, 3.5, 4.5, 5.5, "Inf"]
+binsForVarDict["NJet"] = [1.5, 2.5, 3.5, 4.5, "Inf"]
 binsForVarDict["ST"] = STBins
 binsForVarDict["STjet"] = STBins
 binsForVarDict["STlep"] = STLepBins
@@ -1134,8 +1135,10 @@ for bkgName in ["DYJets", "TTBar"]:
         canvas.Print(baseName+'.pdf')
         ROOT.gErrorIgnoreLevel = prevLevel
         if var == "NJet":
-            titlesText = ["year", "R_Z", "jets"]
-            titlesLatex = ["year", "$R_{Z}$", "jets"]
+            ratioSub = "R_Z" if bkgName == "DYJets" else "R_ttbar"
+            ratioSubLtx = "$R_{Z}$" if bkgName == "DYJets" else "$R_{t\\bar{t}}$"
+            titlesText = ["year", ratioSub, "jets"]
+            titlesLatex = ["year", ratioSubLtx, "jets"]
             tableText = []
             tableLatex = []
             for idx, jetBin in enumerate(xPoints):
