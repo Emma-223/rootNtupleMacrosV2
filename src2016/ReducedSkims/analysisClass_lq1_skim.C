@@ -184,7 +184,7 @@ void analysisClass::Loop()
     STDOUT("electronIDType=" << electronIDType << " is unknown! Please implement it in the analysisClass code. Exiting.");
     exit(-5);
   }
-  if(muonIDType != "HighPtTrkRelIso03" && muonIDType != "Tight" && muonIDType != "Loose") {
+  if(muonIDType != "HighPtTrkRelIso03" && muonIDType != "Tight" && muonIDType != "LoosePFRelIsoLoose") {
     STDOUT("muonIDType=" << muonIDType << " is unknown! Please implement it in the analysisClass code. Exiting.");
     exit(-5);
   }
@@ -486,19 +486,21 @@ void analysisClass::Loop()
     CollectionPtr c_muon_final;
 
     CollectionPtr c_muon_eta               = c_muon_all       -> SkimByEtaRange<Muon> ( -muon_EtaCut, muon_EtaCut );
-    CollectionPtr c_muon_eta_IDLoose       = c_muon_eta       -> SkimByID      <Muon> ( MUON_LOOSE);
+    CollectionPtr c_muon_eta_IDLoose       = c_muon_eta       -> SkimByID      <Muon> ( MUON_LOOSE_PFISO04LOOSE);
     CollectionPtr c_muon_eta_IDHighPt      = c_muon_eta       -> SkimByID      <Muon> ( MUON_HIGH_PT_TRKRELISO03);
     if(muonIDType == "HighPtTrkRelIso03") {
+      throw std::runtime_error("Need to fix SkimByMinPt to use correct TuneP pT assignment in the case of high pT muon IO");
       c_muon_final             = c_muon_eta_IDHighPt;
     }
     else if(muonIDType == "Tight") {
       CollectionPtr c_muon_eta_IDTight       = c_muon_eta       -> SkimByID      <Muon> ( MUON_TIGHT_PFISO04TIGHT );
       c_muon_final             = c_muon_eta_IDTight;
     }
-    else if(muonIDType == "Loose") {
+    else if(muonIDType == "LoosePFRelIsoLoose") {
       c_muon_final             = c_muon_eta_IDLoose;
     }
     //CollectionPtr c_muon_final             = c_muon_eta_IDLoose;
+    //FIXME: in case of using HighPT ID: need to modify this so that we can skim using the TuneP pT
     CollectionPtr c_muon_final_ptCut       = c_muon_final     -> SkimByMinPt   <Muon> ( muon_PtCut );
     //c_muon_all->examine<Muon>("c_muon_all");
     //c_muon_final->examine<Muon>("c_muon_final");
@@ -930,42 +932,36 @@ void analysisClass::Loop()
     //-----------------------------------------------------------------
 
     fillVariableWithValue ("nMuon_ptCut", n_muon_ptCut);
-    fillVariableWithValue ("nMuon_LooseId", n_muonLoose);
+    fillVariableWithValue ("nMuon_LooseIdPFRelIsoLoose", n_muonLoose);
     fillVariableWithValue ("nMuon_HighPtId", n_muonHighPt);
     fillVariableWithValue ("nMuon_store", min(n_muon_store,3));
 
     if ( n_muon_store >= 1 ){ 
 
       Muon muon1 = c_muon_final -> GetConstituent<Muon>(0);
-      //double hltSingleMuon1Pt = triggerMatchPt<HLTriggerObject, Muon>(c_hltMuon_SingleMu_all, muon1, muon_hltMatch_DeltaRCut);
       fillVariableWithValue ("Muon1_Pt"             , muon1.Pt      ());
       fillVariableWithValue ("Muon1_Eta"            , muon1.Eta     ());
       fillVariableWithValue ("Muon1_Phi"            , muon1.Phi     ());
       fillVariableWithValue ("Muon1_PtError"        , muon1.PtError ());
       fillVariableWithValue ("Muon1_Charge"         , muon1.Charge  ());
-      //fillVariableWithValue ("Muon1_hltSingleMuonPt", hltSingleMuon1Pt);
 
       if ( n_muon_store >= 2 ){ 
 
         Muon muon2 = c_muon_final -> GetConstituent<Muon>(1);
-        //double hltSingleMuon2Pt = triggerMatchPt<HLTriggerObject, Muon>(c_hltMuon_SingleMu_all, muon2, muon_hltMatch_DeltaRCut);
         fillVariableWithValue ("Muon2_Pt"             , muon2.Pt      ());
         fillVariableWithValue ("Muon2_Eta"            , muon2.Eta     ());
         fillVariableWithValue ("Muon2_Phi"            , muon2.Phi     ());
         fillVariableWithValue ("Muon2_PtError"        , muon2.PtError ());
         fillVariableWithValue ("Muon2_Charge"         , muon2.Charge  ());
-        //fillVariableWithValue ("Muon2_hltSingleMuonPt", hltSingleMuon2Pt);
 
         if ( n_muon_store >= 3 ){ 
 
           Muon muon3 = c_muon_final -> GetConstituent<Muon>(2);
-          //double hltSingleMuon3Pt = triggerMatchPt<HLTriggerObject, Muon>(c_hltMuon_SingleMu_all, muon3, muon_hltMatch_DeltaRCut);
           fillVariableWithValue ("Muon3_Pt"             , muon3.Pt      ());
           fillVariableWithValue ("Muon3_Eta"            , muon3.Eta     ());
           fillVariableWithValue ("Muon3_Phi"            , muon3.Phi     ());
           fillVariableWithValue ("Muon3_PtError"        , muon3.PtError ());
           fillVariableWithValue ("Muon3_Charge"         , muon3.Charge  ());
-          //fillVariableWithValue ("Muon3_hltSingleMuonPt", hltSingleMuon3Pt);
         }
       }
     }
