@@ -9,7 +9,6 @@
 #include <TVector2.h>
 #include <TVector3.h>
 #include <TProfile.h>
-#include "DYJNJetCorrections.h"
 // for scale factors
 #include "ElectronScaleFactors.C"
 #include "MuonScaleFactors.C"
@@ -967,7 +966,6 @@ void analysisClass::Loop()
 
     //std::cout << "prefire weight = " << prefire_weight << std::endl;
 
-    int nJet_ptCut = hasBranch("nJet_ptCut") ? readerTools_->ReadValueBranch<Int_t>("nJet_ptCut") : readerTools_->ReadValueBranch<Int_t>("nJet_store");
     // Electron scale factors for MC only
     if(!isData()) {
       float recoHeepSF = 1.0;
@@ -987,24 +985,6 @@ void analysisClass::Loop()
       // EWK NLO
       if(current_file_name.find("DYJetsTo") != std::string::npos) {
         gen_weight*=readerTools_->ReadValueBranch<Float_t>("EWKNLOCorrection");
-        // apply Njet corrections
-        if(current_file_name.find("amcatnloFXFX") != std::string::npos) {
-          float dyjSFNJetCorr = 1;
-          if(analysisYear==2016) {
-            if(current_file_name.find("APV") != std::string::npos) {
-              dyjSFNJetCorr = DYJNJetCorrections::LookupNJetCorrection("2016pre", nJet_ptCut);
-            }
-            else
-              dyjSFNJetCorr = DYJNJetCorrections::LookupNJetCorrection("2016post", nJet_ptCut);
-          }
-          else if(analysisYear==2017)
-            dyjSFNJetCorr = DYJNJetCorrections::LookupNJetCorrection("2017", nJet_ptCut);
-          else if(analysisYear==2018)
-            dyjSFNJetCorr = DYJNJetCorrections::LookupNJetCorrection("2018", nJet_ptCut);
-          else
-            throw std::runtime_error("Could not understand analysis year " + to_string(analysisYear));
-          gen_weight*=dyjSFNJetCorr;
-        }
       }
     }
     else {
@@ -1267,6 +1247,7 @@ void analysisClass::Loop()
     double M_ej_avg_EES_Dn = 0, M_ej_min_EES_Dn = 0, M_ej_max_EES_Dn = 0, M_ej_asym_EES_Dn = 0;
 
     int nEle_store = readerTools_->ReadValueBranch<Int_t>("nEle_store");
+    int nJet_ptCut = readerTools_->ReadValueBranch<Int_t>("nJet_store");
     int nJet_store = readerTools_->ReadValueBranch<Int_t>("nJet_store");
     float M_e1j1 = readerTools_->ReadValueBranch<Float_t>("M_e1j1");
     float M_e1j2 = readerTools_->ReadValueBranch<Float_t>("M_e1j2");

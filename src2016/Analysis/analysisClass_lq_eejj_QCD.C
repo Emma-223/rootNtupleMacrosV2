@@ -112,7 +112,9 @@ void analysisClass::Loop()
   //--------------------------------------------------------------------------
   std::string qcdFileName = getPreCutString1("QCDFakeRateFilename");
   std::vector<std::string> regionVec;
-  if(analysisYearInt < 2018)
+  if(analysisYearInt == 2016)
+    regionVec = {"2Jet"};
+  else if(analysisYearInt == 2017)
     regionVec = {"2Jet_TrkIsoHEEP7vsHLTPt_PAS"};
   else
     regionVec = {
@@ -920,6 +922,10 @@ void analysisClass::Loop()
       float zVtxSF =  readerTools_->ReadValueBranch<Float_t>("ZVtxSF");
       gen_weight*=zVtxSF;
       gen_weight*=recoSFEle1*recoSFEle2*heepSFEle1*heepSFEle2;
+      // EWK NLO
+      if(current_file_name.find("DYJetsTo") != std::string::npos) {
+        gen_weight*=readerTools_->ReadValueBranch<Float_t>("EWKNLOCorrection");
+      }
     }
 
     // run ls event
@@ -1064,10 +1070,16 @@ void analysisClass::Loop()
         l1Prescale = 1;
         hltPrescale = 1;
       }
-      if(l1Prescale <= 0 || hltPrescale <= 0)
+      if(l1Prescale <= 0 || hltPrescale <= 0) {
+        const RunInfo* runInfo = psProv.getRunInfo(run);
+        auto psCol = runInfo ? to_string(runInfo->psColumn(ls)) : "unknown";
+        auto l1Menu = runInfo ? runInfo->l1Menu() : "unknown";
+        auto hltMenu = runInfo ? runInfo->hltMenu() : "unknown";
+        auto trigMode = runInfo ? runInfo->triggerMode() : "unknown";
         std::cout << "WARN: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << "; hlt prescale = " << hltPrescale << 
-          "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
-          "; hlt menu=" << psProv.getRunInfo(run)->hltMenu() << "; trig mode=" << psProv.getRunInfo(run)->triggerMode() << std::endl;
+          "; run = " << run << " ls = " << ls << "; psColumn = " << psCol << "; l1 menu=" << l1Menu <<
+          "; hlt menu=" << hltMenu << "; trig mode=" << trigMode << std::endl;
+      }
       assert(l1Prescale > 0);
       assert(hltPrescale > 0);
       min_prescale = l1Prescale * hltPrescale;
