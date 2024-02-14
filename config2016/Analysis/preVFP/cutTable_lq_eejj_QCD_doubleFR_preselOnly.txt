@@ -24,6 +24,7 @@ eleEta_end2           2.000            2.5              -               -       
 #-----------------------------------------------------------------------------------------------------------------------------
 QCDFakeRateFilename	   /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/ultralegacy/fakeRate/2016preVFP/fr2DpreVFP.root - - - -1
 QCDCalcType            double   -   -   -   -1
+PrescaleProviderInfo   /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/ul-analysis-inputs/prescales/2016/triggerData2016 - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Analysis year
 #-----------------------------------------------------------------------------------------------------------------------------
