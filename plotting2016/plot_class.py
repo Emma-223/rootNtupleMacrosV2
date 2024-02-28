@@ -149,7 +149,7 @@ def GetFile(filename):
         filename = "root://eoscms/" + filename
     elif filename.startswith("/eos/user"):
         filename = "root://eosuser/" + filename
-    print("GetFile("+filename+")", flush=True)
+    # print("GetFile("+filename+")", flush=True)
     tfile = TFile.Open(filename)
     if not tfile or tfile.IsZombie():
         raise RuntimeError("ERROR: file " + filename + " not found")
