@@ -729,9 +729,9 @@ void analysisClass::Loop()
     //TODO FIXME; hack for now
     //sprintf(cut_name, "min_M_ej_LQ%d"   , lq_mass );
     sprintf(cut_name, "BDTOutput_TrainRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1);
+    CreateUserHist(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_noWeight_TrainRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1);
+    CreateUserHist(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_LQ%d"   , lq_mass );
     if(hasCut(cut_name))
       doFinalSelections = true;
@@ -1247,7 +1247,7 @@ void analysisClass::Loop()
     double M_ej_avg_EES_Dn = 0, M_ej_min_EES_Dn = 0, M_ej_max_EES_Dn = 0, M_ej_asym_EES_Dn = 0;
 
     int nEle_store = readerTools_->ReadValueBranch<Int_t>("nEle_store");
-    int nJet_ptCut = readerTools_->ReadValueBranch<Int_t>("nJet_store");
+    int nJet_ptCut = readerTools_->ReadValueBranch<Int_t>("nJet_ptCut");
     int nJet_store = readerTools_->ReadValueBranch<Int_t>("nJet_store");
     float M_e1j1 = readerTools_->ReadValueBranch<Float_t>("M_e1j1");
     float M_e1j2 = readerTools_->ReadValueBranch<Float_t>("M_e1j2");
