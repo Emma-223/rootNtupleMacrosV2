@@ -30,61 +30,61 @@ QCDCalcType            double   -   -   -   -1
 #BDTWeightFileName   /afs/cern.ch/user/s/scooper/work/private/LQNanoAODAttempt/Leptoquarks/analyzer/rootNtupleAnalyzerV2/versionsOfAnalysis/2016preVFP/eejj/eejj_4oct2023_heep_preselOnly/scaled/dataset/weights/TMVAClassification_BDTG.weights.xml  - - - -1
 #BDTWeightFileName   /afs/cern.ch/user/s/scooper/work/private/LQNanoAODAttempt/Leptoquarks/analyzer/rootNtupleAnalyzerV2/versionsOfAnalysis/2016preVFP/eejj/eejj_4oct2023_heep_preselOnly/scaled/expandTrainingMassRange/lqm_1kto3k/dataset/weights/TMVAClassification_BDTG.weights.xml  - - - -1
 
-BDTWeightFileLQM300   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-300_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM300   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-300_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM400   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-400_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM400   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-400_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM500   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-500_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM500   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-500_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM600   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-600_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM600   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-600_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM700   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-700_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM700   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-700_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM800   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-800_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM800   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-800_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM900   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-900_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM900   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-900_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1000   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1000_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1000   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1000_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1100   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1100_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1100   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1100_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1200   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1200_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1200   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1200_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1300   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1300_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1300   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1300_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1400   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1400_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1400   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1400_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1500   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1500_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1500   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1500_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1600   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1600_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1600   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1600_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1700   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1700_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1700   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1700_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1800   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1800_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1800   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1800_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM1900   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1900_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1900   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-1900_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2000   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2000_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2000   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2000_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2100   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2100_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2100   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2100_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2200   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2200_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2200   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2200_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2300   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2300_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2300   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2300_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2400   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2400_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2400   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2400_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2500   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2500_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2500   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2500_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2600   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2600_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2600   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2600_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2700   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2700_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2700   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2700_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2800   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2800_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2800   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2800_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM2900   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2900_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2900   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-2900_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
-BDTWeightFileLQM3000   $LQINPUTS/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-3000_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
+BDTWeightFileLQM3000   ${LQINPUTS}/BDT/2016preVFP/weights/TMVAClassification_LQToDEle_M-3000_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV_BDTG.weights.xml - - - -1
 
 #-----------------------------------------------------------------------------------------------------------------------------
 # Analysis year
