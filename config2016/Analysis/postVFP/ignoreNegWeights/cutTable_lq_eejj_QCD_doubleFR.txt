@@ -27,7 +27,8 @@ QCDCalcType            double   -   -   -   -1
 PrescaleProviderInfo       ${LQINPUTS}/prescales/2016/triggerData2016    - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # BDT
-#-----------------------------------------------------------------------------------------------------------------------------BDTWeightFileLQM300   /eos/user/e/eipearso/LQ_BDTWeightFiles/2016postVFP/amcatnloIgnore_17apr24/weights/TMVAClassification_LQToDEle_M-300_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+#-----------------------------------------------------------------------------------------------------------------------------
+BDTWeightFileLQM300   /eos/user/e/eipearso/LQ_BDTWeightFiles/2016postVFP/amcatnloIgnore_17apr24/weights/TMVAClassification_LQToDEle_M-300_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
 
 BDTWeightFileLQM400   /eos/user/e/eipearso/LQ_BDTWeightFiles/2016postVFP/amcatnloIgnore_17apr24/weights/TMVAClassification_LQToDEle_M-400_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
 
