@@ -158,6 +158,7 @@ PassHBHENoiseIsoFilter             0              1              -           -  
 PassBadEESupercrystalFilter        0              1              -           -           0           2             -0.5           1.5
 PassEcalDeadCellTrigPrim           0              1              -           -           0           2             -0.5           1.5
 PassBadPFMuonFilter                0              1              -           -           0           2             -0.5           1.5
+PassBadPFMuonDzFilter              0              1              -           -           0           2             -0.5           1.5
 PassEcalBadCalibFilter             0              1              -           -           0           2             -0.5           1.5
 PassNEle                           0              1              -           -           0           11            -0.5           10.5
 PassNMuon                          0              1              -           -           0           16            -0.5           15.5
