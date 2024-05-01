@@ -38,34 +38,22 @@ void analysisClass::Loop()
   //--------------------------------------------------------------------------
   // Final selection mass points
   //--------------------------------------------------------------------------
-  const int n_lq_mass = 11;
-  int LQ_MASS[n_lq_mass] = {
-    1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000
-  };
-  ////const int n_lq_mass = 30; // 2017
-  //const int n_lq_mass = 29; // 2016
-  //int LQ_MASS[n_lq_mass] = { 
-  //  300,  400,  500,  600,
-  //  700,  800,  900,  1000,
-  //  1100, 1200, 1300, 1400,
-  //  1500, 1600, 1700, 1800,
-  //  //1900, 2000, // up to 2000 only for 2018
-  //  1900, 2000, 2100, 2200, // 2017-2018
-  //  2300, 2400, //2500, // 2500 for 2016 missing, FIXME
-  //  //2300, 2400, 2500, // 2017
-  //  2600, 2700, 2800, 2900,
-  //  3000,
-  //  3500, 4000
+  //const int n_lq_mass = 11;
+  //int LQ_MASS[n_lq_mass] = {
+  //  1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000
   //};
 
-  //const int n_lq_mass = 18; // 2018
-  //int LQ_MASS[n_lq_mass] = { 
-  //  300,  400,  500,  600,
-  //  700,  800,  900,  1000,
-  //  1100, 1200, 1300, 1400,
-  //  1500, 1600, 1700, 1800,
-  //  1900, 2000
-  //};
+  const int n_lq_mass = 28;
+  int LQ_MASS[n_lq_mass] = { 
+    300,  400,  500,  600,
+    700,  800,  900,  1000,
+    1100, 1200, 1300, 1400,
+    1500, 1600, 1700, 1800,
+    1900, 2000, 2100, 2200,
+    2300, 2400, 2500, 2600,
+    2700, 2800, 2900, 3000,
+    //3500, 4000
+  };
 
   //// SIC only look at LQ650 selection for now
   //// LQ650 only 2012
@@ -133,6 +121,9 @@ void analysisClass::Loop()
   bool evaluateBDT = false;
   if(hasPreCut("BDTWeightFileName")) {
     bdtWeightFileName = getPreCutString1("BDTWeightFileName");
+    evaluateBDT = true;
+  }
+  else if(hasPreCutMatch("BDTWeightFile")) {
     evaluateBDT = true;
   }
   else if(hasPreCut("EvaluateBDT")) {
@@ -1156,20 +1147,17 @@ void analysisClass::Loop()
     fillVariableWithValue("PassGoodVertices"                   , readerTools_->ReadValueBranch<Bool_t>("PassGoodVertices")                       , gen_weight * pileup_weight);
     fillVariableWithValue("PassHBHENoiseFilter"                , readerTools_->ReadValueBranch<Bool_t>("PassHBHENoiseFilter")                    , gen_weight * pileup_weight);
     fillVariableWithValue("PassHBHENoiseIsoFilter"             , readerTools_->ReadValueBranch<Bool_t>("PassHBHENoiseIsoFilter")                 , gen_weight * pileup_weight);
-    // eBadScFilter not suggested for MC
-    if(isData())
-      fillVariableWithValue("PassBadEESupercrystalFilter"      , readerTools_->ReadValueBranch<Bool_t>("PassBadEESupercrystalFilter")            , gen_weight * pileup_weight);
-    else
-      fillVariableWithValue("PassBadEESupercrystalFilter"      , 1                                                                                , gen_weight * pileup_weight);
+    fillVariableWithValue("PassBadEESupercrystalFilter"        , readerTools_->ReadValueBranch<Bool_t>("PassBadEESupercrystalFilter")            , gen_weight * pileup_weight);
     fillVariableWithValue("PassEcalDeadCellTrigPrim"           , readerTools_->ReadValueBranch<Bool_t>("PassEcalDeadCellTrigPrim")               , gen_weight * pileup_weight);
     // not recommended
     //fillVariableWithValue("PassChargedCandidateFilter"         , int(readerTools_->ReadValueB<Float_t>("PassChargedCandidateFilter")            == 1), gen_weight * pileup_weight);
     fillVariableWithValue("PassBadPFMuonFilter"                , readerTools_->ReadValueBranch<Bool_t>("PassBadPFMuonFilter")                    , gen_weight * pileup_weight);
+    fillVariableWithValue("PassBadPFMuonDzFilter"              , readerTools_->ReadValueBranch<Bool_t>("PassBadPFMuonDzFilter")                  , gen_weight * pileup_weight);
     // EcalBadCalibV2 for 2017, 2018
     if(analysisYear > 2016)
       fillVariableWithValue("PassEcalBadCalibFilter"         , readerTools_->ReadValueBranch<Bool_t>("PassEcalBadCalibFilter")               , gen_weight * pileup_weight);
     else
-      fillVariableWithValue("PassEcalBadCalibFilter"         , 1                                                                                , gen_weight * pileup_weight);
+      fillVariableWithValue("PassEcalBadCalibFilter"         , 1                                                                             , gen_weight * pileup_weight);
 
     //--------------------------------------------------------------------------
     // Pass number of muons & electrons 
@@ -1919,9 +1907,9 @@ void analysisClass::Loop()
       eeUncorr = e1Uncorr + e2Uncorr;
       double M_e1e2Uncorr = eeUncorr.M();
 
-      double min_DR_EleJet;
-      double DR_Ele1Jet3;
-      double DR_Ele2Jet3;
+      double min_DR_EleJet = 1000;
+      double DR_Ele1Jet3 = 0;
+      double DR_Ele2Jet3 = 0;
       double DR_Ele1Ele2 = e1.DeltaR( e2 );
 
       double M_eejj = eejj.M();

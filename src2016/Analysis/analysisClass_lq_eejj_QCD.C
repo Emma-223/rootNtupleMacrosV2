@@ -26,33 +26,22 @@ void analysisClass::Loop()
   //--------------------------------------------------------------------------
   // Final selection mass points
   //--------------------------------------------------------------------------
-  const int n_lq_mass = 11;
-  int LQ_MASS[n_lq_mass] = {
-    1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000
-  };
-  ////const int n_lq_mass = 30; // 2017
-  //const int n_lq_mass = 29; // 2016
-  //int LQ_MASS[n_lq_mass] = { 
-  //  300,  400,  500,  600,
-  //  700,  800,  900,  1000,
-  //  1100, 1200, 1300, 1400,
-  //  1500, 1600, 1700, 1800,
-  //  //1900, 2000, // up to 2000 only for 2018
-  //  1900, 2000, 2100, 2200, // 2017-2018
-  //  2300, 2400, //2500, // 2500 for 2016 missing, FIXME
-  //  2600, 2700, 2800, 2900,
-  //  3000,
-  //  3500, 4000
+  //const int n_lq_mass = 11;
+  //int LQ_MASS[n_lq_mass] = {
+  //  1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000
   //};
 
-  //const int n_lq_mass = 18; // 2018
-  //int LQ_MASS[n_lq_mass] = { 
-  //  300,  400,  500,  600,
-  //  700,  800,  900,  1000,
-  //  1100, 1200, 1300, 1400,
-  //  1500, 1600, 1700, 1800,
-  //  1900, 2000
-  //};
+  const int n_lq_mass = 28;
+  int LQ_MASS[n_lq_mass] = { 
+    300,  400,  500,  600,
+    700,  800,  900,  1000,
+    1100, 1200, 1300, 1400,
+    1500, 1600, 1700, 1800,
+    1900, 2000, 2100, 2200,
+    2300, 2400, 2500, 2600,
+    2700, 2800, 2900, 3000,
+    //3500, 4000
+  };
 
   // LQ650 only 2012
   //const int n_lq_mass = 1;
@@ -112,9 +101,7 @@ void analysisClass::Loop()
   //--------------------------------------------------------------------------
   std::string qcdFileName = getPreCutString1("QCDFakeRateFilename");
   std::vector<std::string> regionVec;
-  if(analysisYearInt == 2016)
-    regionVec = {"2Jet"};
-  else if(analysisYearInt == 2017)
+  if(analysisYearInt < 2018)
     regionVec = {"2Jet_TrkIsoHEEP7vsHLTPt_PAS"};
   else
     regionVec = {
@@ -144,6 +131,9 @@ void analysisClass::Loop()
   bool evaluateBDT = false;
   if(hasPreCut("BDTWeightFileName")) {
     bdtWeightFileName = getPreCutString1("BDTWeightFileName");
+    evaluateBDT = true;
+  }
+  else if(hasPreCutMatch("BDTWeightFile")) {
     evaluateBDT = true;
   }
   else if(hasPreCut("EvaluateBDT")) {
@@ -1433,15 +1423,12 @@ void analysisClass::Loop()
     fillVariableWithValue("PassGoodVertices"                   , readerTools_->ReadValueBranch<Bool_t>("PassGoodVertices")                       , fakeRateEffective * min_prescale * gen_weight);
     fillVariableWithValue("PassHBHENoiseFilter"                , readerTools_->ReadValueBranch<Bool_t>("PassHBHENoiseFilter")                    , fakeRateEffective * min_prescale * gen_weight);
     fillVariableWithValue("PassHBHENoiseIsoFilter"             , readerTools_->ReadValueBranch<Bool_t>("PassHBHENoiseIsoFilter")                 , fakeRateEffective * min_prescale * gen_weight);
-    // eBadScFilter not suggested for MC
-    if(isData())
-      fillVariableWithValue("PassBadEESupercrystalFilter"      , readerTools_->ReadValueBranch<Bool_t>("PassBadEESupercrystalFilter")            , fakeRateEffective * min_prescale * gen_weight);
-    else
-      fillVariableWithValue("PassBadEESupercrystalFilter"      , 1                                                                                , fakeRateEffective * min_prescale * gen_weight);
+    fillVariableWithValue("PassBadEESupercrystalFilter"        , readerTools_->ReadValueBranch<Bool_t>("PassBadEESupercrystalFilter")            , fakeRateEffective * min_prescale * gen_weight);
     fillVariableWithValue("PassEcalDeadCellTrigPrim"           , readerTools_->ReadValueBranch<Bool_t>("PassEcalDeadCellTrigPrim")               , fakeRateEffective * min_prescale * gen_weight);
     // not recommended
     //fillVariableWithValue("PassChargedCandidateFilter"         , int(readerTools_->ReadValueB<Float_t>("PassChargedCandidateFilter")            == 1), fakeRateEffective * min_prescale * gen_weight);
     fillVariableWithValue("PassBadPFMuonFilter"                , readerTools_->ReadValueBranch<Bool_t>("PassBadPFMuonFilter")                    , fakeRateEffective * min_prescale * gen_weight);
+    fillVariableWithValue("PassBadPFMuonDzFilter"              , readerTools_->ReadValueBranch<Bool_t>("PassBadPFMuonDzFilter")                  , fakeRateEffective * min_prescale * gen_weight);
     // EcalBadCalibV2 for 2017, 2018
     if(analysisYearInt > 2016)
       fillVariableWithValue("PassEcalBadCalibFilter"         , readerTools_->ReadValueBranch<Bool_t>("PassEcalBadCalibFilter")               , fakeRateEffective * min_prescale * gen_weight);
@@ -1507,6 +1494,8 @@ void analysisClass::Loop()
       fillVariableWithValue( "Jet1_Eta"                      , Jet1_Eta        , fakeRateEffective * min_prescale * gen_weight ) ;
       fillVariableWithValue( "Jet1_Phi"                      , Jet1_Phi        , fakeRateEffective * min_prescale * gen_weight ) ;
     }
+    else
+      fillVariableWithValue( "Jet1_Pt"                       , -1.0         , fakeRateEffective * min_prescale * gen_weight ) ;
 
     //--------------------------------------------------------------------------
     // Recalculate some variables
@@ -1537,9 +1526,9 @@ void analysisClass::Loop()
     e2j1  = e2 + j1;
     e2j2  = e2 + j2;
 
-    double min_DR_EleJet;
-    double DR_Ele1Jet3;
-    double DR_Ele2Jet3;
+    double min_DR_EleJet = 1000;
+    double DR_Ele1Jet3 = 0;
+    double DR_Ele2Jet3 = 0;
     double DR_Ele1Ele2 = e1.DeltaR( e2 );
 
     double M_eejj = eejj.M();
@@ -1671,6 +1660,8 @@ void analysisClass::Loop()
         M_ej_asym = (M_ej_max - M_ej_min)/(M_ej_max + M_ej_min);
       }
     }
+    else
+      fillVariableWithValue( "Jet2_Pt"                       , -1.0         , fakeRateEffective * min_prescale * gen_weight ) ;
 
     fillVariableWithValue( "Jet3_Pt"    , Jet3_Pt     , fakeRateEffective * min_prescale * gen_weight  ) ;
     fillVariableWithValue( "Jet3_Eta"   , Jet3_Eta    , fakeRateEffective * min_prescale * gen_weight  ) ;
