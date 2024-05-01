@@ -46,15 +46,17 @@ SYST      JERDown           regex=".+jerdown.*"                                 
 SYST      JERUp             regex=".+jerup.*"                                           sT_eejj,Jet2_Pt,Jet1_Pt,Jet3_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,PFMET_Type1_Pt,PFMET_Type1_Phi,Masym,MejMin,MejMax,Meejj
 SYST      JESDown           regex=".+jesTotaldown.*"                                    sT_eejj,Jet2_Pt,Jet1_Pt,Jet3_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,PFMET_Type1_Pt,PFMET_Type1_Phi,Masym,MejMin,MejMax,Meejj
 SYST      JESUp             regex=".+jesTotalup.*"                                      sT_eejj,Jet2_Pt,Jet1_Pt,Jet3_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,PFMET_Type1_Pt,PFMET_Type1_Phi,Masym,MejMin,MejMax,Meejj
+SYST      UnclusteredEneUp   regex=".+unclustEnup.*"                                     PFMET_Type1_Pt,PFMET_Type1_Phi
+SYST      UnclusteredEneDown regex=".+unclustEndown.*"                                   PFMET_Type1_Pt,PFMET_Type1_Phi
 #FIXME: EER/EES effect on MET?
 SYST      EERDown           regex=".+EER_Dn.*"                                           sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,Pt_e1e2,Masym,MejMin,MejMax,Meejj
 SYST      EERUp             regex=".+EER_Up.*"                                           sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,Pt_e1e2,Masym,MejMin,MejMax,Meejj
 SYST      EESDown           regex=".+EES_Dn.*"                                           sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,Pt_e1e2,Masym,MejMin,MejMax,Meejj
 SYST      EESUp             regex=".+EES_Up.*"                                           sT_eejj,M_e1e2,Ele1_Pt,Ele2_Pt,M_e1j1,M_e1j2,M_e2j1,M_e2j2,Pt_e1e2,Masym,MejMin,MejMax,Meejj
-SYST      EleRecoSFUp       Ele1_RecoSF_Up/Ele1_RecoSF
-SYST      EleRecoSFDown     Ele1_RecoSF_Dn/Ele1_RecoSF
-SYST      EleIDSFUp         Ele1_EGMLooseIDSF_Up/Ele1_EGMLooseIDSF
-SYST      EleIDSFDown       Ele1_EGMLooseIDSF_Dn/Ele1_EGMLooseIDSF
+SYST      EleRecoSFUp       (Ele1_RecoSF_Up/Ele1_RecoSF)*(Ele2_RecoSF_Up/Ele2_RecoSF)
+SYST      EleRecoSFDown     (Ele1_RecoSF_Dn/Ele1_RecoSF)*(Ele2_RecoSF_Dn/Ele2_RecoSF)
+SYST      EleIDSFUp         ((Ele1_HEEPSF+Ele1_HEEPSF_Err)/Ele1_HEEPSF)*((Ele2_HEEPSF+Ele2_HEEPSF_Err)/Ele2_HEEPSF)
+SYST      EleIDSFDown       ((Ele1_HEEPSF-Ele1_HEEPSF_Err)/Ele1_HEEPSF)*((Ele2_HEEPSF-Ele2_HEEPSF_Err)/Ele2_HEEPSF)
 SYST      EleTrigSFUp       
 SYST      EleTrigSFDown     
 SYST      PileupUp          puWeight_Up/puWeight
@@ -97,6 +99,7 @@ PassHBHENoiseIsoFilter             0              1              -           -  
 PassBadEESupercrystalFilter        0              1              -           -           0           2             -0.5           1.5
 PassEcalDeadCellTrigPrim           0              1              -           -           0           2             -0.5           1.5
 PassBadPFMuonFilter                0              1              -           -           0           2             -0.5           1.5
+PassBadPFMuonDzFilter              0              1              -           -           0           2             -0.5           1.5
 PassEcalBadCalibFilter             0              1              -           -           0           2             -0.5           1.5
 PassNEle                           0              1              -           -           0           11            -0.5           10.5
 PassNMuon                          0              1              -           -           0           16            -0.5           15.5
