@@ -10,14 +10,14 @@ from plot_class import GetFile, GetHisto
 gROOT.SetBatch()
 
 
-def plotSignalEfficiencyTimesAcceptance(filePath):
+def plotSignalEfficiencyTimesAcceptance(filePath, signalNameTemplate, mass_points):
     doPDFReweight = False
     # LQToDEle
-    signalNameTemplate = "LQToDEle_M-{}_pair"
+    # signalNameTemplate = "LQToDEle_M-{}_pair"
     # signalNameTemplate = "LQToDEle_M-{}_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8"
     #mass_points = [i for i in range(300, 3100, 100)]  # go from 300-3000 in 100 GeV steps
     #mass_points.extend([3500, 4000])
-    mass_points = [i for i in range(1000, 2100, 100)]
+    # mass_points = [i for i in range(1000, 2100, 100)]
     # if "2016preVFP" in filePath:
     #     signalNameTemplate = "LQToDEle_M-{}_pair_bMassZero_TuneCP2_13TeV-madgraph-pythia8_APV"
     # filePath += signalNameTemplate + "/" + signalNameTemplate + "_0.root"
@@ -37,6 +37,8 @@ def plotSignalEfficiencyTimesAcceptance(filePath):
         signalNameShort = "eeuu"
     elif "DEle" in signalNameTemplate:
         signalNameShort = "eedd"
+    elif "BEle" in signalNameTemplate:
+        signalNameShort = "eebb"
     
     histNameBase = "profile1D__{}__EventsPassingCuts"
     # histName = "EventsPassingCuts"
@@ -117,11 +119,14 @@ def plotSignalEfficiencyTimesAcceptance(filePath):
             effAcc = eventsAtFinalSel/total
         except ZeroDivisionError as e:
             raise RuntimeError("Got ZeroDivisionError for mass={}; eventsAtFinalSel={} / total={}".format(mass, eventsAtFinalSel, total))
-        row = [mass, eventsAtFinalSel, total, effAcc*100.0]
+        finalSelYield = format(eventsAtFinalSel, ".2f") if eventsAtFinalSel > 1e-2 else format(eventsAtFinalSel, ".2E")
+        totalYield = format(total, ".2f") if total > 1e-2 else format(total, ".2E")
+        row = [mass, finalSelYield, totalYield, format(effAcc*100.0, ".2f")]
         table.append(row)
     
-    print()
-    print(tabulate(table, headers=["Mass", "Passing", "Total", "eff*acc [%]"], tablefmt="github", floatfmt=".2f"))
+    print("Signal acceptance x efficiency")
+    # print(tabulate(table, headers=["Mass", "Passing", "Total", "eff*acc [%]"], tablefmt="github", floatfmt=".2f"))
+    print(tabulate(table, headers=["Mass", "Passing", "Total", "eff*acc [%]"], tablefmt="fancy_grid", disable_numparse=True))
     print()
     
     # tcan2 = TCanvas()
@@ -135,7 +140,8 @@ def plotSignalEfficiencyTimesAcceptance(filePath):
     tcan = TCanvas()
     tcan.cd()
     graph = TGraphAsymmErrors()
-    graph.Divide(histPass, histTotal, "cl=0.683 b(1,1) modev")
+    # graph.Divide(histPass, histTotal, "cl=0.683 b(1,1) modev")
+    graph.Divide(histPass, histTotal, "cl=0.683 b(1,1) mode")
     # graph.Divide(histPass, histTotal, "cp")
     graph.Draw("ap")
     graph.GetYaxis().SetRangeUser(0, 0.7)
@@ -199,4 +205,5 @@ if __name__ == "__main__":
         print("WARNING: you will likely need to modify the code to change the names of histograms, etc., to work with unscaled input plot files.")
         filePath += "/"
     
-    plotSignalEfficiencyTimesAcceptance(filePath)
+    mass_points = range(300, 3100, 100)
+    plotSignalEfficiencyTimesAcceptance(filePath, mass_points)
