@@ -188,6 +188,7 @@ def plotSignalEfficiencyTimesAcceptance(filePath, signalNameTemplate, mass_point
     )
     tcan.Update()
     tcan.Print("accTimesEff.pdf")
+    tcan.Print("accTimesEff.png")
     
     outFile = TFile("accTimesEff.root", "recreate")
     tcan.Write()
