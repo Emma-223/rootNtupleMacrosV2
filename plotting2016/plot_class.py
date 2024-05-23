@@ -179,13 +179,19 @@ def GetHisto(histoName, file, scale=1):
     return new
 
 
-def generateHistoList(histoBaseName, samples, variableName, fileName, scale=1):
+def generateHistoList(histoBaseName, samples, variableName, fileName, scale=1, sumSamples=False, sumSampleName=""):
     histolist = []
-    for sample in samples:
+    for idx, sample in enumerate(samples):
         hname = (histoBaseName.replace("SAMPLE", sample)).replace(
             "VARIABLE", variableName
         )
-        histolist.append(GetHisto(hname, fileName, scale))
+        if not sumSamples:
+            histolist.append(GetHisto(hname, fileName, scale))
+        else:
+            if idx == 0:
+                histolist.append(copy.deepcopy(GetHisto(hname, fileName, scale).Clone(sumSampleName)))
+            else:
+                histolist[0].Add(GetHisto(hname, fileName, scale))
     return histolist
 
 
