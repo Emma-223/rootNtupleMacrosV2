@@ -108,11 +108,6 @@ def SetupPlots(thisHistName, histBaseName, bins=[]):
             isDYJ = False
         print("INFO: For {}, using plotBaseName: {}".format(sampleName, plotBaseName))
         histDict = {}
-        histDict[allBkg] = GetHisto(
-            thisHistName.replace("SAMPLE", allBkg)
-            + plotBaseName,
-            File_preselection,
-        )
         histDict[ttbar] = GetHisto(
             thisHistName.replace("SAMPLE", ttbar) + plotBaseName, File_preselection
         )
@@ -127,6 +122,10 @@ def SetupPlots(thisHistName, histBaseName, bins=[]):
             thisHistName.replace("SAMPLE", diboson) + plotBaseName,
             File_preselection,
         )
+        histDict[allBkg] = copy.deepcopy(histDict[diboson].Clone(allBkg))
+        histDict[allBkg].Add(histDict[ttbar])
+        histDict[allBkg].Add(histDict[zjet])
+        histDict[allBkg].Add(histDict[singletop])
         histDict["DATA"] = GetHisto(
             thisHistName.replace("SAMPLE", "DATA") + plotBaseName, File_preselection
             )
@@ -776,12 +775,14 @@ def CalculateRescaleFactor(plotObjTTBar, plotObjDYJets, fileps):
 
 # ############ DON'T NEED TO MODIFY ANYTHING HERE - END #######################
 ##############################################################################
+zjetSamples = ["ZJet_amcatnlo_ptBinned_IncStitch", "ZJet_madgraphLO_HT", "ZJet_powhegminnlo", "ZJet_amcatnlo_Inc"]
 
 
 ##############################################################################
 # ############ USER CODE - BEGIN ##############################################
-doQCD = False
+doQCD = True
 useSingleFakeMC = False
+digitsForTable = 3
 if not doQCD:
     print("INFO: ignoring QCD")
 if useSingleFakeMC and doQCD:
@@ -790,7 +791,7 @@ if len(sys.argv) < 4:
     print("ERROR: did not find MC/data combined plot file or QCD plot file or year")
     print("Usage: python calc_DYJetsAndTTBarRescale_And_xsecFile.py combinedQCDPlotFile.root combinedDataMCPlotFile.root year")
     exit(-1)
-if len(sys.argv) > 4:
+if len(sys.argv) > 5:
     print("ERROR: found extra arguments")
     print("Usage: python calc_DYJetsAndTTBarRescale_And_xsecFile.py combinedQCDPlotFile.root combinedDataMCPlotFile.root year")
     exit(-1)
@@ -798,6 +799,17 @@ if len(sys.argv) > 4:
 qcdFile = sys.argv[1]
 mcFile = sys.argv[2]
 year = sys.argv[3]
+if len(sys.argv) > 4:
+    zjet = sys.argv[4]
+    if not any(sample in zjet for sample in zjetSamples):
+        raise RuntimeError("zjet sample '{}' found as command-line argument is not known by the script. Possibilities are: {}.".format(zjet, zjetSamples))
+else:
+    zjet = "ZJet_amcatnlo_ptBinned_IncStitch"
+    # zjet = "ZJet_madgraphLO_HT"
+    # zjet = "ZJet_powhegminnlo"
+    #zjet = "ZJet_amcatnlo_Inc"
+    print("INFO: defaulting to zjet sample '{}' as none was given as a command-line argument".format(zjet))
+zjetDatasetName = "DYJetsToEE.+" if zjet == "ZJet_powhegminnlo" else "DYJetsToLL.+"
 
 # --- Input files
 if doQCD:
@@ -816,25 +828,7 @@ histNameAllPrevCuts = "histo1D__SAMPLE__cutHisto_allPreviousCuts________"
 # wjet = "WJet_amcatnlo_ptBinned"
 wjet = "WJet_amcatnlo_jetBinned"
 # wjet = "WJet_amcatnlo_ptBinned"
-zjet = "ZJet_amcatnlo_ptBinned_IncStitch"
-# zjet = "ZJet_madgraphLO_HT"
-# zjet = "ZJet_powhegminnlo"
-zjetDatasetName = "DYJetsToEE.+" if zjet == "ZJet_powhegminnlo" else "DYJetsToLL.+"
-#zjet = "ZJet_amcatnlo_ptBinned"
-#zjet = "ZJet_amcatnlo_Inc"
-# allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_DibosonPyth"
-# allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetInc_NLODiboson_triboson"
-# allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCPtBinned_NLODiboson"
-#allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson"
-#allBkg = "ALLBKG_powhegTTBar_ZJetAMCJetPtBinnedWJetAMCJetBinned_NLODiboson_triboson"
-#allBkg = "ALLBKG_powhegTTBar_ZJetPtWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-#
-if not doQCD and useSingleFakeMC:
-    # allBkg = "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-    allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLOWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX" if zjet == "ZJet_powhegminnlo" else "ALLBKG_powhegTTBar_ZJetPtIncStitchWJetAMCJetBinned_NLODiboson_tribosonGJetsTTX"
-else:
-    allBkg = "ALLBKG_powhegTTBar_ZJetPowhegMiNNLO_NLODiboson" if zjet == "ZJet_powhegminnlo" else "ALLBKG_powhegTTBar_ZJetPtIncStitch_NLODiboson"
-    # allBkg = "ALLBKG_powhegTTBar_ZJetMadgraphLOHT_NLODiboson"
+allBkg = "allBkg"
 data = "DATA"
 if not doQCD and useSingleFakeMC:
     ttbar = "TTbar_powheg_all"
@@ -1150,6 +1144,10 @@ for bkgName in ["DYJets", "TTBar"]:
             print(tabulate(tableLatex, headers=titlesLatex, tablefmt="latex_raw"))
             print("-"*50)
 
+print("For latex scale factor table:")
+tableLineStr = "{:12} & {}~$\pm$~{} & {}~$\pm$~{}\\".format(year, round(nominalScaleFactors["DYJets"], digitsForTable), round(nominalScaleFactorErrs["DYJets"], digitsForTable), round(nominalScaleFactors["TTBar"], digitsForTable), round(nominalScaleFactorErrs["TTBar"], digitsForTable))
+print(tableLineStr)
+print()
 
 if len(plotsNotFound):
     print("WARN: plots not found:", plotsNotFound, file=sys.stderr)
@@ -1162,7 +1160,6 @@ if doQCD:
     print("INFO: using QCD file: " + File_QCD_preselection.GetName())
 print("INFO: using samples:")
 print("\t DATA ------>", data)
-print("\t allBkg ------>", allBkg)
 print("\t DY ---------->", zjet, "; datasetname =", zjetDatasetName)
 if not doQCD:
     print("\t W ----------->", wjet)
