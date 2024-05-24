@@ -972,6 +972,7 @@ void analysisClass::Loop()
     if(isData() && passTrigger) {
       //min_prescale = run2PhotonTriggerPrescales.LookupPrescale(analysisYear,triggerName);
       int hltPrescale = psProv.hltPrescale("HLT_"+triggerName+"_v", run, ls);
+      //std::cout << "INFO: Found HLT prescale = " << hltPrescale << " for trigger " << triggerName << endl;
       int l1Prescale = 1;
       std::string l1Seed = "";
       if(triggerName == "Photon22") {
@@ -1073,6 +1074,7 @@ void analysisClass::Loop()
       assert(l1Prescale > 0);
       assert(hltPrescale > 0);
       min_prescale = l1Prescale * hltPrescale;
+      //std::cout << "INFO: Found L1 prescale = " << l1Prescale << " for L1 seed " << l1Seed << endl;
       //if(hltPhotonPt < 100)
       //  std::cout << "INFO: found prescale " << min_prescale << " for trigger name " << triggerName << " with hltPhotonPt = " << hltPhotonPt << ", for year: " << analysisYear << std::endl;
       //if(min_prescale <= 0)
@@ -1098,16 +1100,21 @@ void analysisClass::Loop()
     //min_prescale=1.0;
 
     //// test output
-    //std::cout << "Ele1_hltPhotonPt: " << Ele1_hltPhotonPt << std::endl;
-    //std::cout << "Ele2_hltPhotonPt: " << readerTools_->ReadValueBranch<Float_t>("Ele2_hltPhotonPt") << std::endl;
-    //std::cout << "PassTrigger? " << passTrigger << "; prescale of H_Photon22 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon22")  << "; min_prescale=" << min_prescale << std::endl;
-    //std::cout << "PassTrigger? " << passTrigger << "; prescale of H_Photon30 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon30")  << "; min_prescale=" << min_prescale << std::endl;
-    //std::cout << "PassTrigger? " << passTrigger << "; prescale of H_Photon36 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon36")  << "; min_prescale=" << min_prescale << std::endl;
-    //std::cout << "PassTrigger? " << passTrigger << "; prescale of H_Photon50 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon50")  << "; min_prescale=" << min_prescale << std::endl;
-    //std::cout << "PassTrigger? " << passTrigger << "; prescale of H_Photon75 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon75")  << "; min_prescale=" << min_prescale << std::endl;
-    //std::cout << "PassTrigger? " << passTrigger << "; prescale of H_Photon90 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon90")  << "; min_prescale=" << min_prescale << std::endl;
-    //std::cout << "PassTrigger? " << passTrigger << "; prescale of H_Photon120= " << readerTools_->ReadValueBranch<Float_t>("H_Photon120") << "; min_prescale=" << min_prescale << std::endl;
-    //std::cout << "PassTrigger? " << passTrigger << "; prescale of H_Photon175= " << readerTools_->ReadValueBranch<Float_t>("H_Photon175") << "; min_prescale=" << min_prescale << std::endl;
+    //std::cout << "Ele1_hltPhotonPt: " << hltPhoton1Pt << std::endl;
+    //std::cout << "Ele2_hltPhotonPt: " << hltPhoton2Pt << std::endl;
+    //std::cout << "Ele_hltPhotonPt: " << hltPhotonPt << std::endl;
+    //std::cout << "PassTrigger? " << passTrigger << "; trigger=" << triggerName << "; min_prescale=" << min_prescale << std::endl;
+    //std::cout << "Passed Photon22 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon22")  > 0.1) << std::endl;
+    //std::cout << "Passed Photon22 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon25")  > 0.1) << std::endl;
+    //std::cout << "Passed Photon30 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon30")  > 0.1) << std::endl;
+    //std::cout << "Passed Photon33 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon33")  > 0.1) << std::endl;
+    //std::cout << "Passed Photon36 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon36")  > 0.1) << std::endl;
+    //std::cout << "Passed Photon50 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon50")  > 0.1) << std::endl;
+    //std::cout << "Passed Photon75 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon75")  > 0.1) << std::endl;
+    //std::cout << "Passed Photon90 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon90")  > 0.1) << std::endl;
+    //std::cout << "Passed Photon120 ? " << (readerTools_->ReadValueBranch<Float_t>("H_Photon120") > 0.1) << std::endl;
+    //std::cout << "Passed Photon175 ? " << (readerTools_->ReadValueBranch<Float_t>("H_Photon175") > 0.1) << std::endl;
+    //std::cout << "Passed Photon200 ? " << (readerTools_->ReadValueBranch<Float_t>("H_Photon200") > 0.1) << std::endl;
     //// test output
     //--------------------------------------------------------------------------
     // Fill HLT -- analysis trigger
