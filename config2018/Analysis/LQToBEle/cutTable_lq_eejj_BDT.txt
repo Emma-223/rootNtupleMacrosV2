@@ -49,6 +49,7 @@ BDTWeightFileLQM500   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/2018/HTLO-
 BDTWeightFileLQM600   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/2018/HTLO-amcatnlo_23may24/weights/TMVAClassification_LQToBEle_M-600_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
 BDTWeightFileLQM700   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/2018/HTLO-amcatnlo_23may24/weights/TMVAClassification_LQToBEle_M-700_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
 BDTWeightFileLQM800   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/2018/HTLO-amcatnlo_23may24/weights/TMVAClassification_LQToBEle_M-800_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM900   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/2018/HTLO-amcatnlo_23may24/weights/TMVAClassification_LQToBEle_M-900_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Analysis year
 #-----------------------------------------------------------------------------------------------------------------------------
