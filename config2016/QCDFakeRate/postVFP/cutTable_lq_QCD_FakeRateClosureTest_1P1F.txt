@@ -32,7 +32,7 @@ RecoSFFileName  /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/egammaRecoSF
 #-----------------------------------------------------------------------------------------------------------------------------
 # Fake rates
 #-----------------------------------------------------------------------------------------------------------------------------
-QCDFakeRateFileName		$LQINPUTS/fakeRate/2016preVFP/fr2DpreVFP.root	- - - -1
+QCDFakeRateFileName		$LQINPUTS/fakeRate/2016postVFP/fr2DpostVFP.root	- - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Do override FR for 1-pass-1-fail region
 #-----------------------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ fakeRate_override	1.0	     -			  -		  -		  -1
 #---------------------------------------------------------------------------------------------------------------
 # Analysis year
 #---------------------------------------------------------------------------------------------------------------
-AnalysisYear   2016preVFP  - - - -1
+AnalysisYear   2016postVFP  - - - -1
 #---------------------------------------------------------------------------------------------------------------
 # The cut variable names, cut boundaries and histogram binnings are provided here by the user.
 # In the event loop of the analysisClass_template.C, the user have to fill each variable with its value using

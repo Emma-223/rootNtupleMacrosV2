@@ -32,16 +32,16 @@ RecoSFFileName  /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/egammaRecoSF
 #-----------------------------------------------------------------------------------------------------------------------------
 # Fake rates
 #-----------------------------------------------------------------------------------------------------------------------------
-QCDFakeRateFileName		$LQINPUTS/fakeRate/2016preVFP/fr2DpreVFP.root	- - - -1
+QCDFakeRateFileName		$LQINPUTS/fakeRate/2016postVFP/fr2DpostVFP.root	- - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
-# Do override FR for 1-pass-1-fail region
+# Do NOT override FR for 2-fail region
 #-----------------------------------------------------------------------------------------------------------------------------
-fakeRate_override	1.0	     -			  -		  -		  -1
+fakeRate_override	-1.0	     -			  -		  -		  -1
 #--------------------------------- Cuts (level 0,1,2,3 ... n) below --------------------------------------------
 #---------------------------------------------------------------------------------------------------------------
 # Analysis year
 #---------------------------------------------------------------------------------------------------------------
-AnalysisYear   2016preVFP  - - - -1
+AnalysisYear   2016postVFP  - - - -1
 #---------------------------------------------------------------------------------------------------------------
 # The cut variable names, cut boundaries and histogram binnings are provided here by the user.
 # In the event loop of the analysisClass_template.C, the user have to fill each variable with its value using
@@ -74,7 +74,7 @@ PassEcalBadCalibV2Filter        0            1                  -               
 PFMET				-inf	     100.		-		-		1	200 0 2000        
 nMuon				-inf         0			-               -               1       16 -0.5 15.5          
 nEleLoose 			1            2			-               -               1       11 -0.5 10.5	      
-nEleTight 			0            1			-               -               1       11 -0.5 10.5	      
+nEleTight 			-inf         0  		-               -               1       11 -0.5 10.5	      
 Ele1_Pt				50	     +inf		-		-		1	200 0 2000	      
 Ele1_Eta 			-2.5         +2.5		-               -               1       100 -5 5	      
 Ele2_Pt				50	     +inf		-		-		1	200 0 2000	      

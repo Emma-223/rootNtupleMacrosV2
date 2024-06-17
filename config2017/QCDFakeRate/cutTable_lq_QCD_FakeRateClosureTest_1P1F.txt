@@ -28,11 +28,11 @@ eleEta_end2            	2.000        2.5                  -               -     
 #-----------------------------------------------------------------------------------------------------------------------------
 # Reco scale factors
 #-----------------------------------------------------------------------------------------------------------------------------
-RecoSFFileName  /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/egammaRecoSF/2016/EGM2D_BtoH_GT20GeV_RecoSF_Legacy2016.root  - - - -1
+RecoSFFileName /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/egammaRecoSF/2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Fake rates
 #-----------------------------------------------------------------------------------------------------------------------------
-QCDFakeRateFileName		$LQINPUTS/fakeRate/2016preVFP/fr2DpreVFP.root	- - - -1
+QCDFakeRateFileName		$LQINPUTS/fakeRate/2017/fr2D2017.root	- - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Do override FR for 1-pass-1-fail region
 #-----------------------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ fakeRate_override	1.0	     -			  -		  -		  -1
 #---------------------------------------------------------------------------------------------------------------
 # Analysis year
 #---------------------------------------------------------------------------------------------------------------
-AnalysisYear   2016preVFP  - - - -1
+AnalysisYear   2017a  - - - -1
 #---------------------------------------------------------------------------------------------------------------
 # The cut variable names, cut boundaries and histogram binnings are provided here by the user.
 # In the event loop of the analysisClass_template.C, the user have to fill each variable with its value using
@@ -71,7 +71,6 @@ PassBadEESupercrystalFilter     0	     1			-		-		0	2 -0.5 1.5
 PassEcalDeadCellTrigPrim        0	     1			-		-		0	2 -0.5 1.5
 PassBadPFMuonFilter             0	     1			-		-		0	2 -0.5 1.5
 PassEcalBadCalibV2Filter        0            1                  -               -               0       2 -0.5  1.5
-PFMET				-inf	     100.		-		-		1	200 0 2000        
 nMuon				-inf         0			-               -               1       16 -0.5 15.5          
 nEleLoose 			1            2			-               -               1       11 -0.5 10.5	      
 nEleTight 			0            1			-               -               1       11 -0.5 10.5	      
@@ -85,6 +84,7 @@ Jet1_Pt				50	     +inf		-		-		1	200 0 2000
 Jet1_Eta			-2.4         2.4		-               -               1       100 -5 5	      
 DR_Ele1Jet1			0.7	     +inf		-		-		1	100 0 10              
 DR_Ele2Jet1			0.7	     +inf		-		-		1	100 0 10              
+PFMET                           -inf         100.0000           -               -               1       200 0 2000
 closureTestControlReg           -inf         +inf               -               -               1       2 -0.5 1.5
 M_e1e2                          110          +inf               -               -               1       200 0 2000
 sT_eej_200   	       		200	     +inf               -               -               1       200 0 2000	      		 

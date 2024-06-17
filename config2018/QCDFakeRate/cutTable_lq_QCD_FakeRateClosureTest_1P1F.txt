@@ -28,11 +28,11 @@ eleEta_end2            	2.000        2.5                  -               -     
 #-----------------------------------------------------------------------------------------------------------------------------
 # Reco scale factors
 #-----------------------------------------------------------------------------------------------------------------------------
-RecoSFFileName  /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/egammaRecoSF/2016/EGM2D_BtoH_GT20GeV_RecoSF_Legacy2016.root  - - - -1
+RecoSFFileName /afs/cern.ch/user/s/scooper/work/public/Leptoquarks/egammaRecoSF/2018/egammaEffi.txt_EGM2D_updatedAll.root - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Fake rates
 #-----------------------------------------------------------------------------------------------------------------------------
-QCDFakeRateFileName		$LQINPUTS/fakeRate/2016preVFP/fr2DpreVFP.root	- - - -1
+QCDFakeRateFileName		$LQINPUTS/fakeRate/2018/fr2D2018.root	- - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Do override FR for 1-pass-1-fail region
 #-----------------------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ fakeRate_override	1.0	     -			  -		  -		  -1
 #---------------------------------------------------------------------------------------------------------------
 # Analysis year
 #---------------------------------------------------------------------------------------------------------------
-AnalysisYear   2016preVFP  - - - -1
+AnalysisYear   2018a  - - - -1
 #---------------------------------------------------------------------------------------------------------------
 # The cut variable names, cut boundaries and histogram binnings are provided here by the user.
 # In the event loop of the analysisClass_template.C, the user have to fill each variable with its value using

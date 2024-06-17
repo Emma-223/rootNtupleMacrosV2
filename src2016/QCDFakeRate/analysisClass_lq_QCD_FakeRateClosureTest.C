@@ -21,8 +21,8 @@
 #include "TriggerEfficiency2016.h"
 // for prescales
 #include "Run2PhotonTriggerPrescales.h"
-#include "HistoReader.h"
-
+//#include "HistoReader.h"
+#include "QCDFakeRate.h"
 
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){}
@@ -65,20 +65,9 @@ void analysisClass::Loop()
    bool override_fakeRate = ( fakeRate_override > 0.0 );
 
    //--------------------------------------------------------------------------
-   // QCD Fake Rate loading part
-   //--------------------------------------------------------------------------
-   std::string qcdFileName = getPreCutString1("QCDFakeRateFileName");
-   HistoReader qcdFakeRateReader(qcdFileName,"fr2D_lte1Jet_","fr2D_lte1Jet_",true,false);
-   //can run with >= 1Jet instead to compare with old analysis results
-   //HistoReader qcdFakeRateReader(qcdFileName,"fr2D_1Jet","fr2D_1Jet",true,false);
-   // prescales
-   Run2PhotonTriggerPrescales run2PhotonTriggerPrescales;
-
-   //--------------------------------------------------------------------------
-   // Analysis year
+   // Analysis Year
    //--------------------------------------------------------------------------
    std::string getAnalysisYear = getPreCutString1("AnalysisYear");
-   //std::cout<<"analysis year: "<<getAnalysisYear<<std::endl;
    int analysisYear;
    std::string analysisYearStr;
    if (getAnalysisYear.find("pre") != string::npos ){
@@ -92,14 +81,34 @@ void analysisClass::Loop()
    else if (getAnalysisYear.find("17") != string::npos){
      analysisYear = 2017;
      analysisYearStr = "2017";
-   } 
+   }
    else if (getAnalysisYear.find("18") != string::npos){
      analysisYear = 2018;
-     analysisYearStr = "2018"; 
+     analysisYearStr = "2018";
    }
    else{
      std::cout<<"ERROR: cannot determine analysis year from cutfile"<<std::endl;
    }
+
+   //--------------------------------------------------------------------------
+   // QCD Fake Rate loading part
+   //--------------------------------------------------------------------------
+   std::string qcdFileName = getPreCutString1("QCDFakeRateFileName");
+   std::vector<std::string> regionVec;
+   if (analysisYear != 2018){ regionVec = {"TrkIsoHEEP7vsHLTPt_PAS"}; }
+   else {
+     regionVec = {
+       "TrkIsoHEEP7vsHLTPt_pre319077",
+       "TrkIsoHEEP7vsHLTPt_noHEM_post319077",
+       "TrkIsoHEEP7vsHLTPt_HEMonly_post319077"
+     };
+   }
+   QCDFakeRate qcdFakeRateReader(qcdFileName,"fr2D_1Jet_", regionVec, true);
+   //can run with >= 1Jet instead to compare with old analysis results
+   //HistoReader qcdFakeRateReader(qcdFileName,"fr2D_1Jet","fr2D_1Jet",true,false);
+   // prescales
+   Run2PhotonTriggerPrescales run2PhotonTriggerPrescales;
+
    //--------------------------------------------------------------------------
    // reco scale factors
    //--------------------------------------------------------------------------
@@ -136,17 +145,17 @@ void analysisClass::Loop()
      CreateUserTH1D( "Eta1stJet_PAS"+region          ,    100 , -5      , 5	   ); 
      CreateUserTH1D( "Phi1stJet_PAS"+region	     , 	  60  , -3.1416 , +3.1416  ); 
      CreateUserTH1D( "sT_PAS"+region                 ,    200 , 0       , 2000	   ); 
-     CreateUserTH1D( "Mee_PAS"+region		     ,    2000, 0       , 2000	   ); 
+     CreateUserTH1D( "Mee_PAS"+region		     ,    200 , 0       , 2000	   ); 
      CreateUserTH1D( "Me1j1_PAS"+region		     ,    200 , 0       , 2000	   ); 
      CreateUserTH1D( "Me2j1_PAS"+region		     ,    200 , 0       , 2000	   ); 
-     CreateUserTH1D( "Meejj_PAS"+region              ,    200 , 0       , 2000     );
      CreateUserTH1D( "Ptee_PAS"+region               ,    200 , 0       , 2000     );
-   		                           
 		                           
      CreateUserTH1D( "nVertex_PAS"+region           ,    31   , -0.5   , 30.5	 ) ; 
 		                           
      CreateUserTH1D( "DR_Ele1Jet1_PAS"+region	   , 	getHistoNBins("DR_Ele1Jet1"), getHistoMin("DR_Ele1Jet1"), getHistoMax("DR_Ele1Jet1")     ) ; 
      CreateUserTH1D( "DR_Ele2Jet1_PAS"+region	   , 	getHistoNBins("DR_Ele2Jet1"), getHistoMin("DR_Ele2Jet1"), getHistoMax("DR_Ele2Jet1")     ) ; 
+
+     CreateUserTH1D( "Mee_ControlRegion"+region       ,  200 , 0       , 2000      );
    }
    //--------------------------------------------------------------------------
    // Tell the user how many entries we'll look at
@@ -164,7 +173,7 @@ void analysisClass::Loop()
      // Print progress
      //-----------------------------------------------------------------
      if(jentry < 10 || jentry%5000 == 0) std::cout << "analysisClass:Loop(): jentry = " << jentry << "/" << nentries << std::endl;
-     //if (jentry==10) break; //run over just a few events for troubleshooting
+     //if (jentry==100000) break; //run over just a few events for troubleshooting
      //// run ls event
      //std::cout << static_cast<unsigned int>(run) << " " << static_cast<unsigned int>(ls) << " " << static_cast<unsigned int>(event) << std::endl;
 
@@ -191,6 +200,14 @@ void analysisClass::Loop()
      if ( isData() ) pileup_weight = 1.0;
      
      //--------------------------------------------------------------------------
+     //prefire reweighting
+     //--------------------------------------------------------------------------
+     float prefire_weight = 1.0;
+     if(analysisYear < 2018 && hasBranch("PrefireWeight") && !isData()){
+       prefire_weight = readerTools_->ReadValueBranch<Float_t>("PrefireWeight");}
+
+     pileup_weight*=prefire_weight;
+     //--------------------------------------------------------------------------
      // Get information about gen-level reweighting (should be for Sherpa only)
      //--------------------------------------------------------------------------
 
@@ -206,7 +223,7 @@ void analysisClass::Loop()
      // std::cout << "Gen weight = " << int ( 1.0 / gen_weight ) << std::endl;
      //std::cout << "Gen weight = " << gen_weight << "; isData? " << isData() << std::endl;
 
-     std::string current_file_name ( readerTools_->GetTree()->GetCurrentFile()->GetName());
+     std::string current_file_name = ( readerTools_->GetTree()->GetCurrentFile()->GetName());
 
      // SIC remove March 2018
      //// TopPt reweight
@@ -229,34 +246,40 @@ void analysisClass::Loop()
        float recoHeepSF = 1.0;
        float heepSFEle1 = 1.0;
        float heepSFEle2 = 1.0;
+       float zVtxSF = 1.0;
        bool verbose = false;
-
-       if(analysisYear==2016) {
+      // if(analysisYear==2016) {
          float recoSFEle1 = readerTools_->ReadValueBranch<Float_t>("Ele1_RecoSF");
          float recoSFEle2 = readerTools_->ReadValueBranch<Float_t>("Ele2_RecoSF");
          if(readerTools_->ReadValueBranch<Bool_t>("Ele1_PassHEEPID") == true){
-           float heepSFEle1 = readerTools_->ReadValueBranch<Float_t>("Ele1_HEEPSF");
+           heepSFEle1 = readerTools_->ReadValueBranch<Float_t>("Ele1_HEEPSF");
          }
          if(readerTools_->ReadValueBranch<Bool_t>("Ele2_PassHEEPID") == true){
-           float heepSFEle2 = readerTools_->ReadValueBranch<Float_t>("Ele2_HEEPSF");
+           heepSFEle2 = readerTools_->ReadValueBranch<Float_t>("Ele2_HEEPSF");
          }
-         recoHeepSF *= recoSFEle1*recoSFEle2*heepSFEle1*heepSFEle2;
-       }
-       else if(analysisYear==2017) {
-         float zVtxSF = ElectronScaleFactors2017::zVtxSF;
-         float recoSFLooseEle1 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"),ele1PtUncorr,verbose);
-         float recoSFLooseEle2 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"),ele2PtUncorr,verbose);
-         float heepSFLooseEle1 = ElectronScaleFactors2017::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"));
-         float heepSFLooseEle2 = ElectronScaleFactors2017::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"));
-         recoHeepSF *= zVtxSF*recoSFLooseEle1*recoSFLooseEle2*heepSFLooseEle1*heepSFLooseEle2;
-       }
-       else if(analysisYear==2018) {
-         float recoSFLooseEle1 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"),ele1PtUncorr,verbose);
-         float recoSFLooseEle2 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"),ele2PtUncorr,verbose);
-         float heepSFLooseEle1 = ElectronScaleFactors2018::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"));
-         float heepSFLooseEle2 = ElectronScaleFactors2018::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"));
-         recoHeepSF *= recoSFLooseEle1*recoSFLooseEle2*heepSFLooseEle1*heepSFLooseEle2;
-       }
+         if (analysisYear==2017){
+           zVtxSF = readerTools_->ReadValueBranch<Float_t>("ZVtxSF");
+         }
+         recoHeepSF *= recoSFEle1*recoSFEle2*heepSFEle1*heepSFEle2*zVtxSF;
+         if(current_file_name.find("DYJetsTo") != std::string::npos) {
+           gen_weight*=readerTools_->ReadValueBranch<Float_t>("EWKNLOCorrection");
+         }
+       //}
+       //else if(analysisYear==2017) {
+        // float zVtxSF = ElectronScaleFactors2017::zVtxSF;
+      //   float recoSFLooseEle1 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"),ele1PtUncorr,verbose);
+      //   float recoSFLooseEle2 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"),ele2PtUncorr,verbose);
+      //   float heepSFLooseEle1 = ElectronScaleFactors2017::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"));
+      //   float heepSFLooseEle2 = ElectronScaleFactors2017::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"));
+      //   recoHeepSF *= zVtxSF*recoSFLooseEle1*recoSFLooseEle2*heepSFLooseEle1*heepSFLooseEle2;
+      // }
+       //else if(analysisYear==2018) {
+       //  float recoSFLooseEle1 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"),ele1PtUncorr,verbose);
+       //  float recoSFLooseEle2 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"),ele2PtUncorr,verbose);
+       //  float heepSFLooseEle1 = ElectronScaleFactors2018::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"));
+       //  float heepSFLooseEle2 = ElectronScaleFactors2018::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"));
+       //  recoHeepSF *= recoSFLooseEle1*recoSFLooseEle2*heepSFLooseEle1*heepSFLooseEle2;
+       //}
        //FIXME: in the case that one ele passes HEEP, need to apply that SF only
        // we only care about MC for cej, 1 pass HEEP and 1 fail HEEP
        gen_weight*=recoHeepSF;
@@ -275,38 +298,73 @@ void analysisClass::Loop()
 
      if ( Ele1_hltPhotonPt > 0.0 ) {
        if(analysisYear==2016) {
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon22")   > 0.1 && Ele1_hltPhotonPt >= 22.  && Ele1_hltPhotonPt < 30. ) { passTrigger = 1; triggerName = "Photon22"; } 
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon30")   > 0.1 && Ele1_hltPhotonPt >= 30.  && Ele1_hltPhotonPt < 36. ) { passTrigger = 1; triggerName = "Photon30"; } 
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon36")   > 0.1 && Ele1_hltPhotonPt >= 36.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon36"; } 
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon120"; } 
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175.) { passTrigger = 1; triggerName = "Photon175"; } 
+//         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon22")   > 0.1 && Ele1_hltPhotonPt >= 22.  && Ele1_hltPhotonPt < 30. ) { passTrigger = 1; triggerName = "Photon22"; } 
+ //        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon30")   > 0.1 && Ele1_hltPhotonPt >= 30.  && Ele1_hltPhotonPt < 36. ) { passTrigger = 1; triggerName = "Photon30"; } 
+//         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon36")   > 0.1 && Ele1_hltPhotonPt >= 36.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon36"; } 
+//         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
+//         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
+//         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
+//         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon120"; } 
+//         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175.) { passTrigger = 1; triggerName = "Photon175"; } 
+         if (isData()){
+           if (current_file_name.find("SinglePhoton") != std::string::npos){
+             if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")==1 && Ele1_hltPhotonPt >= 175.) { passTrigger = 1; triggerName = "Photon175"; }
+           }
+           else if (current_file_name.find("SingleElectron") != std::string::npos){
+             if ( run >= 276453 && run <= 278822){
+               if ( readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_GsfIdVL") == 1 && readerTools_->ReadValueBranch<Float_t>("H_Photon175")!=1) { passTrigger = 1; triggerName = "DoubleEle33"; }
+             }else{
+               if ( readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_MW") == 1 /*|| readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_GsfIdVL") == 1*/ && readerTools_->ReadValueBranch<Float_t>("H_Photon175")!=1) { passTrigger = 1; triggerName = "DoubleEle33"; }
+             }
+           }
+         } else {
+             if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")==1 && Ele1_hltPhotonPt >= 175.) { passTrigger = 1; triggerName = "Photon175"; }
+             if ( readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_MW") == 1 && readerTools_->ReadValueBranch<Float_t>("H_Photon175")!=1) { passTrigger = 1; triggerName = "DoubleEle33"; }
+           }
        }
        else if(analysisYear==2017) {
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon25")   > 0.1 && Ele1_hltPhotonPt >= 25.  && Ele1_hltPhotonPt < 33. ) { passTrigger = 1; triggerName = "Photon25"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon33")   > 0.1 && Ele1_hltPhotonPt >= 33.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon33"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 150.) { passTrigger = 1; triggerName = "Photon120"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon150")  > 0.1 && Ele1_hltPhotonPt >= 150. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon150"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175. && Ele1_hltPhotonPt < 200.) { passTrigger = 1; triggerName = "Photon175"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; } 
+         //if ( readerTools_->ReadValueBranch<Double_t>("H_Photon25")   > 0.1 && Ele1_hltPhotonPt >= 25.  && Ele1_hltPhotonPt < 33. ) { passTrigger = 1; triggerName = "Photon25"; } 
+         //if ( readerTools_->ReadValueBranch<Double_t>("H_Photon33")   > 0.1 && Ele1_hltPhotonPt >= 33.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon33"; } 
+         //if ( readerTools_->ReadValueBranch<Double_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
+         //if ( readerTools_->ReadValueBranch<Double_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
+         //if ( readerTools_->ReadValueBranch<Double_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
+         //if ( readerTools_->ReadValueBranch<Double_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 150.) { passTrigger = 1; triggerName = "Photon120"; } 
+         //if ( readerTools_->ReadValueBranch<Double_t>("H_Photon150")  > 0.1 && Ele1_hltPhotonPt >= 150. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon150"; } 
+         //if ( readerTools_->ReadValueBranch<Double_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175. && Ele1_hltPhotonPt < 200.) { passTrigger = 1; triggerName = "Photon175"; } 
+         if (isData()){
+           if (current_file_name.find("SinglePhoton") != std::string::npos){
+             if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")==1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; }
+             //above checks for photon200 
+           }
+           else if (current_file_name.find("SingleElectron") != std::string::npos){
+             if ( readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_MW") == 1 && readerTools_->ReadValueBranch<Float_t>("H_Photon200")!=1) { passTrigger = 1; triggerName = "DoubleEle33"; }
+             //above checks for doubleEle33 only and avoids double counting events that fire both
+           }
+         } else {
+             //passTrigger = readerTools_->ReadValueBranch<bool>("PassTrigger");
+             if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")==1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; }
+             if ( readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_MW") == 1 && readerTools_->ReadValueBranch<Float_t>("H_Photon200")!=1) { passTrigger = 1; triggerName = "DoubleEle33"; }
+           }
        }
        else if(analysisYear==2018) {
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon33")   > 0.1 && Ele1_hltPhotonPt >= 33.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon33"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 150.) { passTrigger = 1; triggerName = "Photon120"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon150")  > 0.1 && Ele1_hltPhotonPt >= 150. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon150"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175. && Ele1_hltPhotonPt < 200.) { passTrigger = 1; triggerName = "Photon175"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; } 
+    //     if ( readerTools_->ReadValueBranch<Double_t>("H_Photon33")   > 0.1 && Ele1_hltPhotonPt >= 33.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon33"; } 
+    //     if ( readerTools_->ReadValueBranch<Double_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
+    //     if ( readerTools_->ReadValueBranch<Double_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
+    //     if ( readerTools_->ReadValueBranch<Double_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
+    //     if ( readerTools_->ReadValueBranch<Double_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 150.) { passTrigger = 1; triggerName = "Photon120"; } 
+    //     if ( readerTools_->ReadValueBranch<Double_t>("H_Photon150")  > 0.1 && Ele1_hltPhotonPt >= 150. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon150"; } 
+    //     if ( readerTools_->ReadValueBranch<Double_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175. && Ele1_hltPhotonPt < 200.) { passTrigger = 1; triggerName = "Photon175"; } 
+    //     if ( readerTools_->ReadValueBranch<Double_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; } 
+         //if (isData()){
+             if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")==1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; }
+             if ( readerTools_->ReadValueBranch<Float_t>("H_DoubleEle25_CIdL_MW") == 1 && readerTools_->ReadValueBranch<Float_t>("H_Photon200")!=1) { passTrigger = 1; triggerName = "DoubleEle25"; }
+         //} else {
+           //  if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")==1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; }
+           //  if ( readerTools_->ReadValueBranch<Float_t>("H_DoubleEle25_CIdL_MW") == 1 && readerTools_->ReadValueBranch<Float_t>("H_Photon200")!=1) { passTrigger = 1; triggerName = "DoubleEle25"; }
+          // }
        }
      }
-     if(isData() && passTrigger) {
+     if(isData() && passTrigger && triggerName != "DoubleEle33" && triggerName != "DoubleEle25") {
        //std::cout << "INFO: lookup trigger name " << triggerName << " for year: " << year << std::endl;
        min_prescale = run2PhotonTriggerPrescales.LookupPrescale(analysisYearStr,triggerName);
      }
@@ -353,12 +411,24 @@ void analysisClass::Loop()
      // LooseEle Pt is the uncorrected SCEt
      double Ele1_Pt = readerTools_->ReadValueBranch<Float_t>("Ele1_Pt");// loose ele Pt is now uncorrected /readerTools_->ReadValueBranch<Double_t>("LooseEle1_ECorr");
      double Ele2_Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_Pt");// loose ele Pt is now uncorrected /readerTools_->ReadValueBranch<Double_t>("LooseEle2_ECorr");
-     bool verboseFakeRateCalc = false;
-     float fakeRate1 = qcdFakeRateReader.LookupValue(Ele1_SCEta,Ele1_Pt,verboseFakeRateCalc);
-     float fakeRate2 = qcdFakeRateReader.LookupValue(Ele2_SCEta,Ele2_Pt,verboseFakeRateCalc);
-     float eFakeRate1 = qcdFakeRateReader.LookupValueError(Ele1_SCEta,Ele1_Pt,verboseFakeRateCalc);
-     float eFakeRate2 = qcdFakeRateReader.LookupValueError(Ele2_SCEta,Ele2_Pt,verboseFakeRateCalc);
+     //bool verboseFakeRateCalc = false;
+     float Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
+     float Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
 
+     double fakeRate1 = -1;
+     double fakeRate2 = -1;
+     double eFakeRate1 = 0;
+     double eFakeRate2 = 0;
+     if (analysisYear != 2018){
+       fakeRate1 = qcdFakeRateReader.GetFakeRate(Ele1_Pt, "", Ele1_SCEta);
+       fakeRate2 = qcdFakeRateReader.GetFakeRate(Ele2_Pt, "", Ele2_SCEta);
+       //eFakeRate1 = qcdFakeRateReader.LookupValueError(Ele1_SCEta,Ele1_Pt,verboseFakeRateCalc);
+       //eFakeRate2 = qcdFakeRateReader.LookupValueError(Ele2_SCEta,Ele2_Pt,verboseFakeRateCalc);
+       //Need to fix the above, not sure how
+     } else{
+       fakeRate1 = qcdFakeRateReader.GetFakeRate(Ele1_Pt, Ele1_SCEta, Ele1_Phi, run);
+       fakeRate2 = qcdFakeRateReader.GetFakeRate(Ele2_Pt, Ele2_SCEta, Ele2_Phi, run);
+     }
      //--------------------------------------------------------------------------
      // Finally have the effective fake rate
      //--------------------------------------------------------------------------
@@ -411,8 +481,8 @@ void analysisClass::Loop()
 
      double Ele1_Eta = readerTools_->ReadValueBranch<Float_t>("Ele1_Eta");
      double Ele2_Eta = readerTools_->ReadValueBranch<Float_t>("Ele2_Eta");
-     double Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
-     double Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
+     //double Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
+     //double Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
      double Ele1_Charge = readerTools_->ReadValueBranch<Int_t>("Ele1_Charge");
      double Ele2_Charge = readerTools_->ReadValueBranch<Int_t>("Ele2_Charge");
      double Jet1_Pt = readerTools_->ReadValueBranch<Float_t>("Jet1_Pt");
@@ -447,6 +517,7 @@ void analysisClass::Loop()
      //--------------------------------------------------------------------------
      // Fill variables
      //--------------------------------------------------------------------------
+     //std::cout<<pileup_weight<<": "<<min_prescale<<": "<<fakeRateEffective<<std::endl;
      double PFMET_Type1_Pt  = readerTools_->ReadValueBranch<Float_t>("PFMET_Type1_Pt");
      double PFMET_Type1_Phi  = readerTools_->ReadValueBranch<Float_t>("PFMET_Type1_Phi");
      double nEle_ptCut = readerTools_->ReadValueBranch<Int_t>("nEle_ptCut");
@@ -458,11 +529,13 @@ void analysisClass::Loop()
      //stitching in missing DY events: https://cms-talk.web.cern.ch/t/bug-in-ul-pt-binned-dy-samples/11639
      bool passLHECuts = true;
      if(current_file_name.find("DYJetsToLL_M-50_TuneCP5") != std::string::npos) {
+       //std::cout<<"found file "<<current_file_name<<std::endl;
        passLHECuts = false;
-       if(readerTools_->ReadValueBranch<Float_t>("LHE_Vpt") == 0);
-         passLHECuts = true;
+       if(readerTools_->ReadValueBranch<Float_t>("LHE_Vpt") == 0){
+         //std::cout<<"found LHE_Vpt = "<<readerTools_->ReadValueBranch<Float_t>("LHE_Vpt")<<" set passLHECuts = true"<<std::endl;
+         passLHECuts = true;}
      }
-     fillVariableWithValue("PassLHECuts",passLHECuts,gen_weight*pileup_weight);
+     fillVariableWithValue("PassLHECuts",passLHECuts, pileup_weight * min_prescale * fakeRateEffective);
      // JSON variable
      fillVariableWithValue( "PassJSON" , passedJSON, pileup_weight * min_prescale * fakeRateEffective) ; 
 
@@ -471,24 +544,28 @@ void analysisClass::Loop()
      // Fill noise filters
      // see: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2
      // we filled these at skim time
-     fillVariableWithValue("PassGlobalSuperTightHalo2016Filter" , int(readerTools_->ReadValueBranch<Bool_t>("PassGlobalSuperTightHalo2016Filter")     == 1), fakeRateEffective * min_prescale);
-     fillVariableWithValue("PassGoodVertices"                   , int(readerTools_->ReadValueBranch<Bool_t>("PassGoodVertices")                       == 1), fakeRateEffective * min_prescale);
-     fillVariableWithValue("PassHBHENoiseFilter"                , int(readerTools_->ReadValueBranch<Bool_t>("PassHBHENoiseFilter")                    == 1), fakeRateEffective * min_prescale);
-     fillVariableWithValue("PassHBHENoiseIsoFilter"             , int(readerTools_->ReadValueBranch<Bool_t>("PassHBHENoiseIsoFilter")                 == 1), fakeRateEffective * min_prescale);
+     if (analysisYear == 2016){
+       fillVariableWithValue("PassGlobalSuperTightHalo2016Filter" , int(readerTools_->ReadValueBranch<Bool_t>("PassGlobalSuperTightHalo2016Filter")     == 1), pileup_weight *fakeRateEffective * min_prescale);
+     } else{
+       fillVariableWithValue("PassGlobalSuperTightHalo2016Filter" , 1, pileup_weight *fakeRateEffective * min_prescale);
+     }
+     fillVariableWithValue("PassGoodVertices"                   , int(readerTools_->ReadValueBranch<Bool_t>("PassGoodVertices")                       == 1), pileup_weight *fakeRateEffective * min_prescale);
+     fillVariableWithValue("PassHBHENoiseFilter"                , int(readerTools_->ReadValueBranch<Bool_t>("PassHBHENoiseFilter")                    == 1), pileup_weight *fakeRateEffective * min_prescale);
+     fillVariableWithValue("PassHBHENoiseIsoFilter"             , int(readerTools_->ReadValueBranch<Bool_t>("PassHBHENoiseIsoFilter")                 == 1), pileup_weight *fakeRateEffective * min_prescale);
      // eBadScFilter not suggested for MC
      if(isData())
-       fillVariableWithValue("PassBadEESupercrystalFilter"      , int(readerTools_->ReadValueBranch<Bool_t>("PassBadEESupercrystalFilter")            == 1), fakeRateEffective * min_prescale);
+       fillVariableWithValue("PassBadEESupercrystalFilter"      , int(readerTools_->ReadValueBranch<Bool_t>("PassBadEESupercrystalFilter")            == 1), pileup_weight *fakeRateEffective * min_prescale);
      else
-       fillVariableWithValue("PassBadEESupercrystalFilter"      , 1                                                                                          , fakeRateEffective * min_prescale);
-     fillVariableWithValue("PassEcalDeadCellTrigPrim"           , int(readerTools_->ReadValueBranch<Bool_t>("PassEcalDeadCellTrigPrim")               == 1), fakeRateEffective * min_prescale);
+       fillVariableWithValue("PassBadEESupercrystalFilter"      , 1                                                                                          , pileup_weight *fakeRateEffective * min_prescale);
+     fillVariableWithValue("PassEcalDeadCellTrigPrim"           , int(readerTools_->ReadValueBranch<Bool_t>("PassEcalDeadCellTrigPrim")               == 1), pileup_weight *fakeRateEffective * min_prescale);
      // not recommended
      //fillVariableWithValue("PassChargedCandidateFilter"         , int(readerTools_->ReadValueBranch<Double_t>("PassChargedCandidateFilter")             == 1), fakeRateEffective * min_prescale);
-     fillVariableWithValue("PassBadPFMuonFilter"                , int(readerTools_->ReadValueBranch<Bool_t>("PassBadPFMuonFilter")                    == 1), fakeRateEffective * min_prescale);
+     fillVariableWithValue("PassBadPFMuonFilter"                , int(readerTools_->ReadValueBranch<Bool_t>("PassBadPFMuonFilter")                    == 1), pileup_weight *fakeRateEffective * min_prescale);
      // EcalBadCalibV2 for 2017, 2018
      if(analysisYear > 2016)
-       fillVariableWithValue("PassEcalBadCalibV2Filter"         , int(readerTools_->ReadValueBranch<Bool_t>("PassEcalBadCalibV2Filter")               == 1), fakeRateEffective * min_prescale);
+       fillVariableWithValue("PassEcalBadCalibV2Filter"         , int(readerTools_->ReadValueBranch<Bool_t>("PassEcalBadCalibFilter")               == 1), pileup_weight *fakeRateEffective * min_prescale);
      else
-       fillVariableWithValue("PassEcalBadCalibV2Filter"         , 1                                                                                          , fakeRateEffective * min_prescale);
+       fillVariableWithValue("PassEcalBadCalibV2Filter"         , 1                                                                                          , pileup_weight *fakeRateEffective * min_prescale);
 
      // MET
      fillVariableWithValue ( "PFMET"  , PFMET_Type1_Pt, pileup_weight * min_prescale * fakeRateEffective ) ;
@@ -507,6 +584,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "Ele2_Pt"                       , Ele2_Pt   , pileup_weight * min_prescale  * fakeRateEffective ) ;
        fillVariableWithValue( "Ele2_Eta"                      , Ele2_Eta  , pileup_weight * min_prescale  * fakeRateEffective ) ;
        fillVariableWithValue( "M_e1e2"                        , loose_e1e2.M()   , pileup_weight * min_prescale  * fakeRateEffective );
+       fillVariableWithValue( "M_e1e2_220"                    , loose_e1e2.M()   , pileup_weight * min_prescale  * fakeRateEffective );
        fillVariableWithValue( "Pt_e1e2"                       , loose_e1e2.Pt()  , pileup_weight * min_prescale  * fakeRateEffective );
      }
 
@@ -523,9 +601,13 @@ void analysisClass::Loop()
        fillVariableWithValue( "DR_Ele1Jet1"                   , loose_ele1.DeltaR ( jet1 ), pileup_weight * min_prescale  * fakeRateEffective );
        fillVariableWithValue( "DR_Ele2Jet1"                   , loose_ele2.DeltaR ( jet1 ), pileup_weight * min_prescale  * fakeRateEffective );
        fillVariableWithValue( "sT_eej_200"               , sT_eej                   , pileup_weight * min_prescale  * fakeRateEffective );
-       fillVariableWithValue( "sT_eej_450"               , sT_eej                   , pileup_weight * min_prescale  * fakeRateEffective );
-       fillVariableWithValue( "sT_eej_850"               , sT_eej                   , pileup_weight * min_prescale  * fakeRateEffective );
+       fillVariableWithValue( "sT_eej_400"               , sT_eej                   , pileup_weight * min_prescale  * fakeRateEffective );
+       //fillVariableWithValue( "sT_eej_850"               , sT_eej                   , pileup_weight * min_prescale  * fakeRateEffective );
      }      
+
+     fillVariableWithValue("closureTestControlReg", 1, pileup_weight * min_prescale  * fakeRateEffective );
+     fillVariableWithValue("closureTestPreselection", 1, pileup_weight * min_prescale  * fakeRateEffective );
+     fillVariableWithValue("closureTestBDTSelection", 1, pileup_weight * min_prescale  * fakeRateEffective );
 
      //--------------------------------------------------------------------------
      // Evaluate the cuts
@@ -541,8 +623,11 @@ void analysisClass::Loop()
      //       over data, though, so be sure to override it to 1.0 
      //       if you run over Monte Carlo
      //--------------------------------------------------------------------------     
+     if ( passedAllPreviousCuts("closureTestControlReg") && passedCut("closureTestControlReg")){
+       FillUserTH1D("Mee_ControlRegion", loose_e1e2.M() , pileup_weight * min_prescale * fakeRateEffective );
+     }
 
-     bool passed_preselection = ( passedAllPreviousCuts("sT_eej_200") && passedCut ("sT_eej_200") );
+     bool passed_preselection = ( passedAllPreviousCuts("closureTestBDTSelection") && passedCut ("closureTestBDTSelection") );
      if ( passed_preselection ) {
        double sT_eej = Ele1_Pt + Ele2_Pt + Jet1_Pt ;
        //fill these for all events
