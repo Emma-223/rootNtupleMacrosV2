@@ -568,6 +568,10 @@ PFMET_Type1_Pt_unclustEnup                  -inf           +inf           -     
 PFMET_Type1_Pt_unclustEndown                -inf           +inf           -           -           1           200           0              2000             SAVE
 PFMET_Type1_Pt_jesHEMIssueup                -inf           +inf           -           -           1           200           0              2000             SAVE
 PFMET_Type1_Pt_jesHEMIssuedown              -inf           +inf           -           -           1           200           0              2000             SAVE
+PFMET_Type1_Pt_eerup                        -inf           +inf           -           -           1           200           0              2000             SAVE
+PFMET_Type1_Pt_eerdown                      -inf           +inf           -           -           1           200           0              2000             SAVE
+PFMET_Type1_Pt_eesup                        -inf           +inf           -           -           1           200           0              2000             SAVE
+PFMET_Type1_Pt_eesdown                      -inf           +inf           -           -           1           200           0              2000             SAVE
 PFMET_Type1_Phi_jerup                        -inf           +inf           -           -           1           200           0              2000             SAVE
 PFMET_Type1_Phi_jerdown                      -inf           +inf           -           -           1           200           0              2000             SAVE
 PFMET_Type1_Phi_jesAbsoluteStatup            -inf           +inf           -           -           1           200           0              2000             SAVE
@@ -642,6 +646,10 @@ PFMET_Type1_Phi_unclustEnup                  -inf           +inf           -    
 PFMET_Type1_Phi_unclustEndown                -inf           +inf           -           -           1           200           0              2000             SAVE
 PFMET_Type1_Phi_jesHEMIssueup                -inf           +inf           -           -           1           200           0              2000             SAVE
 PFMET_Type1_Phi_jesHEMIssuedown              -inf           +inf           -           -           1           200           0              2000             SAVE
+PFMET_Type1_Phi_eerup                        -inf           +inf           -           -           1           200           0              2000             SAVE
+PFMET_Type1_Phi_eerdown                      -inf           +inf           -           -           1           200           0              2000             SAVE
+PFMET_Type1_Phi_eesup                        -inf           +inf           -           -           1           200           0              2000             SAVE
+PFMET_Type1_Phi_eesdown                      -inf           +inf           -           -           1           200           0              2000             SAVE
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Jets info 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

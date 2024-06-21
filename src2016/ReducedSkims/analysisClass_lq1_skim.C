@@ -56,6 +56,43 @@ std::string getTriggerBranchName(std::string triggerName)
     return triggerName;
 }
 
+std::vector<Electron> ScaleEnergy (const CollectionPtr collection, bool shiftRes, bool shiftUp, TLorentzVector & v_delta_met, const correction::Correction::Ref cset_scale, const std::string& analysisYear, const bool verbose=false ){
+    unsigned short this_collection_size = collection->GetSize();
+    std::vector<Electron> scaledObjVec;
+    scaledObjVec.reserve(this_collection_size);
+    TLorentzVector v_old, v_new, v_delta;
+    for (unsigned short i = 0; i < this_collection_size ; ++i) {    
+        Electron ele = collection->GetConstituent<Electron>(i);
+        double old_pt = ele.Pt();
+        double new_pt = old_pt;
+        if(shiftRes)
+            new_pt = shiftUp ? ele.PtDESigmaUp() : ele.PtDESigmaDown();
+        else
+            new_pt = shiftUp ? ele.Pt() * cset_scale->evaluate({analysisYear, "scaleup",   ele.SCEta(), ele.SeedGain()}) : ele.Pt() * cset_scale->evaluate({analysisYear, "scaledown", ele.SCEta(), ele.SeedGain()});
+
+        v_old.SetPtEtaPhiM( old_pt, ele.Eta(), ele.Phi(), 0.0 );
+        v_new.SetPtEtaPhiM( new_pt, ele.Eta(), ele.Phi(), 0.0 );
+        v_delta = v_old - v_new;
+        v_delta_met = v_delta_met + v_delta;
+
+        //std::cout << "Old pt = "  << old_pt       << ", "
+        //		<< "shiftRes? "   << shiftRes     << ", "
+        //		<< "shiftUp? "    << shiftUp      << ", "
+        //		<< "new pt = "    << new_pt       << ", " << std::endl;
+        //std::cout << "\tOld: "    << old_pt       << ", " << ele.Eta() << ", " << ele.Phi() << std::endl;
+        //std::cout << "\tNew: "    << new_pt       << ", " << ele.Eta() << ", " << ele.Phi() << std::endl;
+        //std::cout << "\tOld - New: " << v_delta.Pt() << ", " << v_delta.Eta()                     << ", " << v_delta.Phi() << std::endl;
+        //std::cout << "\tDelta(MET) = " << v_delta_met.Pt() << ", " << v_delta_met.Eta()                     << ", " << v_delta_met.Phi() << std::endl;
+
+        ele.SetPt(new_pt);
+        if ( new_pt >= 1e-6 )
+            scaledObjVec.push_back(ele);
+    }
+    if(verbose && this_collection_size > 0)
+        std::cout << "ScaleEnergy() final Delta(MET) = " << v_delta_met.Pt() << ", " << v_delta_met.Eta()                     << ", " << v_delta_met.Phi() << std::endl;
+    return scaledObjVec;
+}
+
 
 void analysisClass::Loop()
 {
@@ -289,13 +326,21 @@ void analysisClass::Loop()
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
     readerTools_->LoadEntry(jentry);
     // run ls event
-    //unsigned long long int event = readerTools_->ReadValueBranch<ULong64_t>("event");
-    //unsigned int ls = readerTools_->ReadValueBranch<UInt_t>("luminosityBlock");
-    //unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
+    unsigned long long int event = readerTools_->ReadValueBranch<ULong64_t>("event");
+    unsigned int ls = readerTools_->ReadValueBranch<UInt_t>("luminosityBlock");
+    unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
+    //if(run!=323841 || ls!=240 || event!=380587785) continue;
+    //if(run!=273725 || ls!=2366) continue;
     //std::cout << run << " " << ls << " " << event << std::endl;
     ////std::string current_file_name ( readerTools_->GetTree()->GetCurrentFile()->GetName());
     ////cout << "Found the event! in file:" << current_file_name << endl;
     //if(jentry > 10000) continue;
+    // filter on fired triggers
+    bool trigFired = readerTools_->ReadValueBranch<Bool_t>("Photon_50") || readerTools_->ReadValueBranch<Bool_t>("Photon_75") 
+        || readerTools_->ReadValueBranch<Bool_t>("Photon_90") 
+        || readerTools_->ReadValueBranch<Bool_t>("Photon_120") 
+        || readerTools_->ReadValueBranch<Bool_t>("Photon_150");
+    if(!trigFired) continue;
 
     //-----------------------------------------------------------------
     // Print progress
@@ -315,7 +360,7 @@ void analysisClass::Loop()
     //-----------------------------------------------------------------
     HLTriggerObjectCollectionHelper helper(*this);
 
-    std::vector<int> typeIds {11, 22};
+    std::vector<int> typeIds {11, 22}; // see: https://github.com/cms-sw/cmssw/blob/master/PhysicsTools/NanoAOD/python/triggerObjects_cff.py
     c_hlTriggerObjects_id = helper.GetTriggerObjectsByType(typeIds);
     //c_hlTriggerObjects_id->examine<HLTriggerObject>("c_hlTriggerObjectsid");
 
@@ -555,8 +600,8 @@ void analysisClass::Loop()
     //-----------------------------------------------------------------
     // Energy scaling and resolution smearing here
     //-----------------------------------------------------------------
-
-    TLorentzVector v_delta_met;
+    TLorentzVector v_PFMETType1Cor, v_delta_met;
+    v_PFMETType1Cor.SetPtEtaPhiM( readerTools_->ReadValueBranch<Float_t>("MET_pt"), 0., readerTools_->ReadValueBranch<Float_t>("MET_phi"), 0. );
     // Set the PFMET difference to zero
     v_delta_met.SetPtEtaPhiM(0.,0.,0.,0.);
 
@@ -573,13 +618,36 @@ void analysisClass::Loop()
     //c_pfjet_final_ptCut->SetSystematics(c_pfjet_final->GetSystematicsNames(), c_pfjet_final->GetSystematics());
 
     map<string, double> metSystematics = type1METUncertainties.ComputeType1METVariations(c_pfjet_all, c_genJet_all, !isData());
-    // get rid of "nominal" MET variations
+    // get rid of "nominal" string in nominal MET "variations"
     auto nominalItem = metSystematics.extract("Pt_nominal");
     nominalItem.key() = "Pt";
     metSystematics.insert(std::move(nominalItem));
     nominalItem = metSystematics.extract("Phi_nominal");
     nominalItem.key() = "Phi";
     metSystematics.insert(std::move(nominalItem));
+
+    // compute electron energy scale/res effect on MET for uncertainties
+    // use same collection as was used for jet cleaning
+    bool verbose = false;
+    ScaleEnergy(c_ele_final_ptCut, true, true, v_delta_met, 0, "", verbose); // shift res up
+    metSystematics["Pt_eerup"] = (v_PFMETType1Cor + v_delta_met).Pt();
+    metSystematics["Phi_eerup"] = (v_PFMETType1Cor + v_delta_met).Phi();
+    //std::cout << "INFO: PFMETType1 Pt, Phi ORIG = " << v_PFMETType1Cor.Pt() << ", " << v_PFMETType1Cor.Phi() << std::endl;
+    //std::cout << "INFO: PFMETType1 Pt, Phi EER UP = " << (v_PFMETType1Cor + v_delta_met).Pt() << ", " << (v_PFMETType1Cor + v_delta_met).Phi() << std::endl;
+    v_delta_met.SetPtEtaPhiM(0.,0.,0.,0.);
+    ScaleEnergy(c_ele_final_ptCut, true, false, v_delta_met, 0, ""); // shift res down
+    metSystematics["Pt_eerdown"] = (v_PFMETType1Cor + v_delta_met).Pt();
+    metSystematics["Phi_eerdown"] = (v_PFMETType1Cor + v_delta_met).Phi();
+    v_delta_met.SetPtEtaPhiM(0.,0.,0.,0.);
+    ScaleEnergy(c_ele_final_ptCut, false, true, v_delta_met, cset_ulEGMScale, analysisYear, verbose); // shift scale up
+    metSystematics["Pt_eesup"] = (v_PFMETType1Cor + v_delta_met).Pt();
+    metSystematics["Phi_eesup"] = (v_PFMETType1Cor + v_delta_met).Phi();
+    //std::cout << "INFO: PFMETType1 Pt, Phi EES UP = " << (v_PFMETType1Cor + v_delta_met).Pt() << ", " << (v_PFMETType1Cor + v_delta_met).Phi() << std::endl;
+    v_delta_met.SetPtEtaPhiM(0.,0.,0.,0.);
+    ScaleEnergy(c_ele_final_ptCut, false, false, v_delta_met,cset_ulEGMScale, analysisYear); // shift scale down
+    metSystematics["Pt_eesdown"] = (v_PFMETType1Cor + v_delta_met).Pt();
+    metSystematics["Phi_eesdown"] = (v_PFMETType1Cor + v_delta_met).Phi();
+    v_delta_met.SetPtEtaPhiM(0.,0.,0.,0.);
 
 
     //-----------------------------------------------------------------
@@ -1006,9 +1074,9 @@ void analysisClass::Loop()
           passedHLTriggerWPTightFilter = matchedObject.ObjectID()==11 && matchedObject.PassedFilterBit(1);
           passedHLTriggerCaloIdVTGsfTrkIdTFilter = matchedObject.ObjectID()==11 && matchedObject.PassedFilterBit(11);
           passedHLTriggerHighPtPhotonFilter = matchedObject.ObjectID()==11 && matchedObject.PassedFilterBit(13);
-          bool passedSinglePhotonFilter = matchedObject.PassedFilterBit(1) || matchedObject.PassedFilterBit(2) || matchedObject.PassedFilterBit(3) || matchedObject.PassedFilterBit(4) || matchedObject.PassedFilterBit(5) || matchedObject.PassedFilterBit(6) || matchedObject.PassedFilterBit(7);
+          bool passedSinglePhotonFilter = matchedObject.PassedFilterBit(1) || matchedObject.PassedFilterBit(2) || matchedObject.PassedFilterBit(3) || matchedObject.PassedFilterBit(4) || matchedObject.PassedFilterBit(5) || matchedObject.PassedFilterBit(6) || matchedObject.PassedFilterBit(7) || matchedObject.PassedFilterBit(8);
           passedHLTriggerSinglePhotonFilter = matchedObject.ObjectID()==22 && passedSinglePhotonFilter;
-          //std::cout << "\t--> Matched a trigger object with pT=" << matchedHLTriggerObjectPt << " to electron; dR=" << dR << ", dPt=" << dPt << std::endl <<
+          //std::cout << "\t--> Matched a trigger object with ID=" << matchedObject.ObjectID() << ", pT=" << matchedHLTriggerObjectPt << " to electron; dR=" << dR << ", dPt=" << dPt << std::endl <<
           //  "\t\t" << matchedObject << "; passedWPTight=" << passedHLTriggerWPTightFilter << ", passedCaloId=" << passedHLTriggerCaloIdVTGsfTrkIdTFilter << 
           //  ", passedHighPtPhoton=" << passedHLTriggerHighPtPhotonFilter << ", passedHLTriggerSinglePhotonFilter=" << passedHLTriggerSinglePhotonFilter << 
           //  ", filterBits=" << matchedObject.FilterBits() << std::endl;
@@ -1466,6 +1534,12 @@ void analysisClass::Loop()
       fillVariableWithValue ("PassTrigger", passHLT ? true : false );
     }
 
+    // debug output
+    //for(const auto& trig : triggersToConsider) {
+    //    if(getVariableValue(triggerToBranchNameMap[trig]) > 0) {
+    //        std::cout << "\tPassed trigger: " << trig << std::endl;
+    //    }
+    //}
     //-----------------------------------------------------------------
     // Evaluate the cuts
     //-----------------------------------------------------------------    
