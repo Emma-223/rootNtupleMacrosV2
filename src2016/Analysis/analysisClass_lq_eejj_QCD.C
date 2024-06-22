@@ -13,11 +13,35 @@
 //#include "Run2PhotonTriggerPrescales.h"
 #include "PrescaleProvider.h"
 #include <set>
+#include <limits>
 
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){}
 
   analysisClass::~analysisClass(){}
+
+bool CheckTriggerThreshold(const float thresh1, const float thresh2, const float hltPhotonPt, const float offlineElectronPt)
+{
+      if(hltPhotonPt >= thresh1  && hltPhotonPt < thresh2)
+        return true;
+      else if(offlineElectronPt >= thresh1 && offlineElectronPt < thresh2)
+        return true;
+      return false;
+}
+
+bool CheckTriggerThresholds(const float thresh1, const float thresh2, const float hltPhotonPt1, const float offlineElectronPt1,
+    const float hltPhotonPt2, const float offlineElectronPt2)
+{
+  return CheckTriggerThreshold(thresh1, thresh2, hltPhotonPt1, offlineElectronPt1) ||
+    CheckTriggerThreshold(thresh1, thresh2, hltPhotonPt2, offlineElectronPt2);
+}
+
+bool CheckTriggerThreshold(const float thresh1, const float thresh2, const float matchingObjectPt)
+{
+      if(matchingObjectPt >= thresh1  && matchingObjectPt < thresh2)
+        return true;
+      return false;
+}
 
 void analysisClass::Loop()
 {
@@ -152,6 +176,11 @@ void analysisClass::Loop()
   CreateUserHist( "FakeRateEffective_PassNEle"     ,    50   , 0      , 1	 );    
   CreateUserHist( "MinPrescale"           ,    1000 , 0      , 1000	 );    
 
+  CreateUserHist( "Trigger0OrOffline1Match" ,    2, 0, 2);
+  CreateUserHist( "Trigger0OrOffline1Match_PassingTrigger" ,    2, 0, 2);
+  CreateUserHist( "Trigger0OrOffline1Match_PAS" ,    2, 0, 2);
+  CreateUserHist( "Trigger_OfflineMatch_PassingTrigger_Ele1Pt" ,    100, 0, 1000);
+
   CreateUserHist( "M_j1j3_PAS"            ,    200 , 0       , 2000	 );    
   CreateUserHist( "M_j2j3_PAS"            ,    200 , 0       , 2000	 ); 
   CreateUserHist( "M_e1j3_PAS"            ,    200 , 0       , 2000	 );    
@@ -201,12 +230,15 @@ void analysisClass::Loop()
   CreateUserHist( "METPhi_PAS"		   , 	60  , -3.1416 , +3.1416	 ); 
   CreateUserHist( "Pt1stJet_PAS"          ,    200 , 0       , 2000	 ); 
   CreateUserHist( "Pt2ndJet_PAS"          ,    200 , 0       , 2000	 ); 
+  CreateUserHist( "Pt3rdJet_PAS"          ,    200 , 0       , 2000	 ); 
   //CreateUserHist( "Pt1stJet_PASandMee100" ,    200 , 0       , 2000	 ); 
   //CreateUserHist( "Pt2ndJet_PASandMee100" ,    200 , 0       , 2000	 ); 
   CreateUserHist( "Eta1stJet_PAS"         ,    100 , -5      , 5	 ); 
   CreateUserHist( "Eta2ndJet_PAS"         ,    100 , -5      , 5	 ); 
+  CreateUserHist( "Eta3rdJet_PAS"         ,    100 , -5      , 5	 ); 
   CreateUserHist( "Phi1stJet_PAS"	   , 	60  , -3.1416 , +3.1416	 ); 
   CreateUserHist( "Phi2ndJet_PAS"	   , 	60  , -3.1416 , +3.1416	 ); 
+  CreateUserHist( "Phi3rdJet_PAS"	   , 	60  , -3.1416 , +3.1416	 ); 
   CreateUserHist( "sTlep_PAS"             ,    200 , 0       , 2000	 ); 
   CreateUserHist( "sTjet_PAS"             ,    200 , 0       , 2000	 ); 
   //CreateUserHist( "sTlep_PASandMee100"    ,    200 , 0       , 2000	 ); 
@@ -922,6 +954,10 @@ void analysisClass::Loop()
     unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
     unsigned int ls = readerTools_->ReadValueBranch<UInt_t>("ls");
     unsigned long long int event = readerTools_->ReadValueBranch<ULong64_t>("event");
+    //if(run != 323841 || ls != 240 || event != 380587785) {
+    //if(run != 322179 || ls != 347 || event != 575321079)
+    //  continue;
+    //}
     //std::cout << "Run = " << run << ", event = " << event << ", ls = " << ls << std::endl;
     //--------------------------------------------------------------------------
     // Find the right prescale for this event
@@ -929,46 +965,46 @@ void analysisClass::Loop()
 
     min_prescale = 1;
     bool passTrigger = false;
+    std::string triggerName;
+    std::string triggerMatch = "none";
 
     float hltPhoton1Pt = readerTools_->ReadValueBranch<Float_t>("Ele1_MatchedHLTriggerObjectPt");
-    float hltPhoton2Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_MatchedHLTriggerObjectPt");
-    float hltPhotonPt = hltPhoton1Pt > hltPhoton2Pt ? hltPhoton1Pt : hltPhoton2Pt;
+    //float hltPhoton2Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_MatchedHLTriggerObjectPt");
+    float Ele1_Pt = readerTools_->ReadValueBranch<Float_t>("Ele1_Pt");
+    float Ele2_Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_Pt");
+    float Ele3_Pt = readerTools_->ReadValueBranch<Float_t>("Ele3_Pt");
+    float leadElePt = Ele1_Pt;
     
-    std::string triggerName = "";
+    vector<string> triggersToConsider;
+    vector<int> photonThresholds;
+    if(analysisYearInt==2016)
+      photonThresholds = {22, 30, 36, 50, 75, 90, 120, 175};
+    else if(analysisYearInt==2017)
+      photonThresholds = {25, 33, 50, 75, 90, 120, 150, 175, 200};
+    else if(analysisYearInt==2018)
+      photonThresholds = {33, 50, 75, 90, 120, 150, 175, 200};
+    //for(const auto& thresh : photonThresholds)
+    //  triggersToConsider.push_back("Photon"+to_string(thresh));
 
-    if ( hltPhotonPt > 0.0 ) {
-      if(analysisYearInt==2016) {
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon22")   > 0.1 && hltPhotonPt >= 22.  && hltPhotonPt < 30. ) { passTrigger = true; triggerName = "Photon22"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon30")   > 0.1 && hltPhotonPt >= 30.  && hltPhotonPt < 36. ) { passTrigger = true; triggerName = "Photon30"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon36")   > 0.1 && hltPhotonPt >= 36.  && hltPhotonPt < 50. ) { passTrigger = true; triggerName = "Photon36"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && hltPhotonPt >= 50.  && hltPhotonPt < 75. ) { passTrigger = true; triggerName = "Photon50"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && hltPhotonPt >= 75.  && hltPhotonPt < 90. ) { passTrigger = true; triggerName = "Photon75"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && hltPhotonPt >= 90.  && hltPhotonPt < 120.) { passTrigger = true; triggerName = "Photon90"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && hltPhotonPt >= 120. && hltPhotonPt < 175.) { passTrigger = true; triggerName = "Photon120"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && hltPhotonPt >= 175.) { passTrigger = true; triggerName = "Photon175"; } 
-      }
-      else if(analysisYearInt==2017) {
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon25")   > 0.1 && hltPhotonPt >= 25.  && hltPhotonPt < 33. ) { passTrigger = true; triggerName = "Photon25"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon33")   > 0.1 && hltPhotonPt >= 33.  && hltPhotonPt < 50. ) { passTrigger = true; triggerName = "Photon33"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && hltPhotonPt >= 50.  && hltPhotonPt < 75. ) { passTrigger = true; triggerName = "Photon50"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && hltPhotonPt >= 75.  && hltPhotonPt < 90. ) { passTrigger = true; triggerName = "Photon75"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && hltPhotonPt >= 90.  && hltPhotonPt < 120.) { passTrigger = true; triggerName = "Photon90"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && hltPhotonPt >= 120. && hltPhotonPt < 150.) { passTrigger = true; triggerName = "Photon120"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon150")  > 0.1 && hltPhotonPt >= 150. && hltPhotonPt < 175.) { passTrigger = true; triggerName = "Photon150"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && hltPhotonPt >= 175. && hltPhotonPt < 200.) { passTrigger = true; triggerName = "Photon175"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")  > 0.1 && hltPhotonPt >= 200.) { passTrigger = true; triggerName = "Photon200"; } 
-      }
-      else if(analysisYearInt==2018) {
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon33")   > 0.1 && hltPhotonPt >= 33.  && hltPhotonPt < 50. ) { passTrigger = true; triggerName = "Photon33"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && hltPhotonPt >= 50.  && hltPhotonPt < 75. ) { passTrigger = true; triggerName = "Photon50"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && hltPhotonPt >= 75.  && hltPhotonPt < 90. ) { passTrigger = true; triggerName = "Photon75"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && hltPhotonPt >= 90.  && hltPhotonPt < 120.) { passTrigger = true; triggerName = "Photon90"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && hltPhotonPt >= 120. && hltPhotonPt < 150.) { passTrigger = true; triggerName = "Photon120"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon150")  > 0.1 && hltPhotonPt >= 150. && hltPhotonPt < 175.) { passTrigger = true; triggerName = "Photon150"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && hltPhotonPt >= 175. && hltPhotonPt < 200.) { passTrigger = true; triggerName = "Photon175"; } 
-        if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")  > 0.1 && hltPhotonPt >= 200.) { passTrigger = true; triggerName = "Photon200"; } 
+    for(unsigned int idx = 0; idx < photonThresholds.size(); ++idx) {
+      int lowerThresh = photonThresholds[idx];
+      int upperThresh = idx >= photonThresholds.size() ? std::numeric_limits<double>::max() : photonThresholds[idx+1];
+      std::string trigName = "Photon"+to_string(lowerThresh);
+      if(readerTools_->ReadValueBranch<Float_t>("H_"+trigName) > 0.1) {
+       if(CheckTriggerThreshold(lowerThresh, upperThresh,  hltPhoton1Pt)) {
+         passTrigger = true;
+         triggerName = trigName;
+         triggerMatch = "online";
+       }
+       else if(CheckTriggerThreshold(lowerThresh, upperThresh,  Ele1_Pt)) {
+         // we no longer select these events, but we keep track of whether they _would_ have been kept, at least as far as the trigger matching is concerned
+         //passTrigger = true;
+         //triggerName = trigName;
+         triggerMatch = "offline";
+       }
       }
     }
+
     if(isData() && passTrigger) {
       //min_prescale = run2PhotonTriggerPrescales.LookupPrescale(analysisYear,triggerName);
       int hltPrescale = psProv.hltPrescale("HLT_"+triggerName+"_v", run, ls);
@@ -1087,17 +1123,6 @@ void analysisClass::Loop()
     //    std::cout << "\t" << trigName << " --> " << readerTools_->ReadValueBranch<Float_t>(trigName) << std::endl;
     //  
     //}
-    ///XXX SIC TEST FIXME to remove trigger and prescale requirements
-    //passTrigger=1;
-    //if ( H_Photon22   > 0.1 ) { passTrigger = 1; min_prescale = H_Photon22  ; } 
-    //if ( H_Photon30   > 0.1 ) { passTrigger = 1; min_prescale = H_Photon30  ; } 
-    //if ( H_Photon36   > 0.1 ) { passTrigger = 1; min_prescale = H_Photon36  ; } 
-    //if ( H_Photon50   > 0.1 ) { passTrigger = 1; min_prescale = H_Photon50  ; } 
-    //if ( H_Photon75   > 0.1 ) { passTrigger = 1; min_prescale = H_Photon75  ; } 
-    //if ( H_Photon90   > 0.1 ) { passTrigger = 1; min_prescale = H_Photon90  ; } 
-    //if ( H_Photon120  > 0.1 ) { passTrigger = 1; min_prescale = H_Photon120 ; } 
-    //if ( H_Photon175  > 0.1 ) { passTrigger = 1; min_prescale = H_Photon175 ; } 
-    //min_prescale=1.0;
 
     //// test output
     //std::cout << "Ele1_hltPhotonPt: " << hltPhoton1Pt << std::endl;
@@ -1164,9 +1189,6 @@ void analysisClass::Loop()
     float Ele3_SCEta = readerTools_->ReadValueBranch<Float_t>("Ele3_SCEta");
     //float Ele1_PtHeep = readerTools_->ReadValueBranch<Float_t>("Ele1_PtHeep");
     //float Ele2_PtHeep = readerTools_->ReadValueBranch<Float_t>("Ele2_PtHeep");
-    float Ele1_Pt = readerTools_->ReadValueBranch<Float_t>("Ele1_Pt");
-    float Ele2_Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_Pt");
-    float Ele3_Pt = readerTools_->ReadValueBranch<Float_t>("Ele3_Pt");
     float Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
     float Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
     float Ele3_Phi = readerTools_->ReadValueBranch<Float_t>("Ele3_Phi");
@@ -1335,6 +1357,19 @@ void analysisClass::Loop()
     FillUserHist("EventCount"           , 1                   , 1   ); 
     FillUserHist("FakeRateEffective"    , fakeRateEffective); 
     FillUserHist("MinPrescale"          , min_prescale     ); 
+    int trigMatchValToFill = -1;
+    if(triggerMatch != "none") {
+      if(triggerMatch == "online")
+        trigMatchValToFill = 0;
+      if(triggerMatch == "offline")
+        trigMatchValToFill = 1;
+    }
+    FillUserHist("Trigger0OrOffline1Match", trigMatchValToFill);
+    if(passTrigger) {
+      FillUserHist("Trigger0OrOffline1Match_PassingTrigger", trigMatchValToFill);
+      if(trigMatchValToFill == 1)
+        FillUserHist("Trigger_OfflineMatch_PassingTrigger_Ele1Pt", leadElePt);
+    }
     //if(fakeRateEffective * min_prescale != 1.0)
     //  std::cout << "!!!!!THIS EVENT HAD fakeRateEffective * min_prescale != 1.0: " << fakeRateEffective * min_prescale << std::endl;
     //if(fakeRateEffective >= 1) {
@@ -1350,22 +1385,36 @@ void analysisClass::Loop()
     //    cosh(Ele2_SCEta) << endl;
     //}
     //if(min_prescale != 1.0) {
-    //  std::cout << "!!!!!EVENT " << jentry << " HAD fakeRateEffective=" << fakeRateEffective << " and min_prescale != 1.0: " << min_prescale << "; Ele1_hltPhotonPt=" << Ele1_hltPhotonPt <<  std::endl;
+    //if(passIDRequirements) {
+    //  std::cout << "!!!!!EVENT " << jentry << " HAD fakeRateEffective=" << fakeRateEffective << " and min_prescale= " << min_prescale << "; Ele1_MatchedHLTriggerObjectPt=" << readerTools_->ReadValueBranch<Float_t>("Ele1_MatchedHLTriggerObjectPt") <<  std::endl;
     //  std::cout.precision(0);
     //  std::cout << fixed <<  "Run = " << run << ", event = " << event << ", ls = " << ls << std::endl;
     //  std::cout.precision(2);
-    //  std::cout << "\tEle1_hltPhotonPt: " << Ele1_hltPhotonPt << std::endl;
-    //  std::cout << "\tEle2_hltPhotonPt: " << readerTools_->ReadValueBranch<Float_t>("Ele2_hltPhotonPt") << std::endl;
-    //  std::cout << "\tEle1_Pt: " << readerTools_->ReadValueBranch<Float_t>("Ele1_Pt") << "; Ele1_Eta: " << readerTools_->ReadValueBranch<Float_t>("Ele1_Eta") << std::endl;
-    //  std::cout << "\tEle2_Pt: " << readerTools_->ReadValueBranch<Float_t>("Ele2_Pt") << "; Ele2_Eta: " << readerTools_->ReadValueBranch<Float_t>("Ele2_Eta") << std::endl;
-    //  std::cout << "\tPassTrigger? " << passTrigger << "; prescale of H_Photon22 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon22")  << "; min_prescale=" << min_prescale << std::endl;
-    //  std::cout << "\tPassTrigger? " << passTrigger << "; prescale of H_Photon30 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon30")  << "; min_prescale=" << min_prescale << std::endl;
-    //  std::cout << "\tPassTrigger? " << passTrigger << "; prescale of H_Photon36 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon36")  << "; min_prescale=" << min_prescale << std::endl;
-    //  std::cout << "\tPassTrigger? " << passTrigger << "; prescale of H_Photon50 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon50")  << "; min_prescale=" << min_prescale << std::endl;
-    //  std::cout << "\tPassTrigger? " << passTrigger << "; prescale of H_Photon75 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon75")  << "; min_prescale=" << min_prescale << std::endl;
-    //  std::cout << "\tPassTrigger? " << passTrigger << "; prescale of H_Photon90 = " << readerTools_->ReadValueBranch<Float_t>("H_Photon90")  << "; min_prescale=" << min_prescale << std::endl;
-    //  std::cout << "\tPassTrigger? " << passTrigger << "; prescale of H_Photon120= " << readerTools_->ReadValueBranch<Float_t>("H_Photon120") << "; min_prescale=" << min_prescale << std::endl;
-    //  std::cout << "\tPassTrigger? " << passTrigger << "; prescale of H_Photon175= " << readerTools_->ReadValueBranch<Float_t>("H_Photon175") << "; min_prescale=" << min_prescale << std::endl;
+    //  std::cout << "\tEle1_MatchedHLTriggerObjectPt: " << readerTools_->ReadValueBranch<Float_t>("Ele1_MatchedHLTriggerObjectPt") << std::endl;
+    //  std::cout << "\tEle2_MatchedHLTriggerObjectPt: " << readerTools_->ReadValueBranch<Float_t>("Ele2_MatchedHLTriggerObjectPt") << std::endl;
+    //  std::cout << "\tEle3_MatchedHLTriggerObjectPt: " << readerTools_->ReadValueBranch<Float_t>("Ele3_MatchedHLTriggerObjectPt") << std::endl;
+    //  std::cout << "\tEle1_Pt: " << readerTools_->ReadValueBranch<Float_t>("Ele1_Pt") <<"; Ele1_Eta: " << readerTools_->ReadValueBranch<Float_t>("Ele1_Eta") <<  "; Ele1_Phi: " << readerTools_->ReadValueBranch<Float_t>("Ele1_Phi") << "; passID=" << Ele1_PassID << std::endl;
+    //  std::cout << "\tEle2_Pt: " << readerTools_->ReadValueBranch<Float_t>("Ele2_Pt") <<"; Ele2_Eta: " << readerTools_->ReadValueBranch<Float_t>("Ele2_Eta") <<  "; Ele2_Phi: " << readerTools_->ReadValueBranch<Float_t>("Ele2_Phi") << "; passID=" << Ele2_PassID << std::endl;
+    //  std::cout << "\tEle3_Pt: " << readerTools_->ReadValueBranch<Float_t>("Ele3_Pt") <<"; Ele3_Eta: " << readerTools_->ReadValueBranch<Float_t>("Ele3_Eta") <<  "; Ele3_Phi: " << readerTools_->ReadValueBranch<Float_t>("Ele3_Phi") << "; passID=" << Ele3_PassID << std::endl;
+    //  if(analysisYearInt==2016) {
+    //    std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon22")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon22"  ? "[selected] " : "") <<  "prescale of H_Photon22 = " << psProv.hltPrescale("HLT_Photon22_v", run, ls)  << std::endl;
+    //    std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon30")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon30"  ? "[selected] " : "") <<  "prescale of H_Photon30 = " << psProv.hltPrescale("HLT_Photon30_v", run, ls)  << std::endl;
+    //    std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon36")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon36"  ? "[selected] " : "") <<  "prescale of H_Photon36 = " << psProv.hltPrescale("HLT_Photon36_v", run, ls)  << std::endl;
+    //  }
+    //  if(analysisYearInt==2017) {
+    //    std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon25")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon25"  ? "[selected] " : "") <<  "prescale of H_Photon25 = " << psProv.hltPrescale("HLT_Photon25_v", run, ls)  << std::endl;
+    //  }
+    //  if(analysisYearInt > 2016)
+    //    std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon33")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon33"  ? "[selected] " : "") <<  "prescale of H_Photon33 = " << psProv.hltPrescale("HLT_Photon33_v", run, ls)  << std::endl;
+    //  std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon50"  ? "[selected] " : "") <<  "prescale of H_Photon50 = " << psProv.hltPrescale("HLT_Photon50_v", run, ls)  << std::endl;
+    //  std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon75"  ? "[selected] " : "") <<  "prescale of H_Photon75 = " << psProv.hltPrescale("HLT_Photon75_v", run, ls)  << std::endl;
+    //  std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon90"  ? "[selected] " : "") <<  "prescale of H_Photon90 = " << psProv.hltPrescale("HLT_Photon90_v", run, ls)  << std::endl;
+    //  std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon120")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon120" ? "[selected] " : "") <<  "prescale of H_Photon120= " << psProv.hltPrescale("HLT_Photon120_v", run, ls) << std::endl;
+    //  if(analysisYearInt > 2016)
+    //    std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon150")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon150" ? "[selected] " : "") <<  "prescale of H_Photon150= " << psProv.hltPrescale("HLT_Photon150_v", run, ls) << std::endl;
+    //  std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon175")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon175" ? "[selected] " : "") <<  "prescale of H_Photon175= " << psProv.hltPrescale("HLT_Photon175_v", run, ls) << std::endl;
+    //  if(analysisYearInt > 2016)
+    //    std::cout << "\t" << (readerTools_->ReadValueBranch<Float_t>("H_Photon200")   > 0.1 ? "[passed] " : "") << (triggerName == "Photon200" ? "[selected] " : "") <<  "prescale of H_Photon200= " << psProv.hltPrescale("HLT_Photon200_v", run, ls) << std::endl;
     //}
 
     // reweighting
@@ -1944,6 +1993,7 @@ void analysisClass::Loop()
       //std::cout << "We have electrons which look like (pt,eta,phi): (" << Ele2_Pt << "," << Ele2_Eta << "," << Ele2_Phi << ")" << std::endl;
       //if(nEle_store > 2)
       //  std::cout << "We have electrons which look like (pt,eta,phi): (" << Ele3_Pt << "," << Ele3_Eta << "," << Ele3_Phi << ")" << std::endl;
+      FillUserHist("Trigger0OrOffline1Match_PAS", trigMatchValToFill, min_prescale * gen_weight * fakeRateEffective);
 
       //--------------------------------------------------------------------------
       // Electron quality histograms (preselection)
@@ -2043,10 +2093,13 @@ void analysisClass::Loop()
       FillUserHist("METPhi_PAS"	   , PFMET_Type1_Phi                 , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Pt1stJet_PAS"         , Jet1_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Pt2ndJet_PAS"         , Jet2_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
+      FillUserHist("Pt3rdJet_PAS"         , Jet3_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Eta1stJet_PAS"        , Jet1_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Eta2ndJet_PAS"        , Jet2_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
+      FillUserHist("Eta3rdJet_PAS"        , Jet3_Eta                    , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Phi1stJet_PAS"	   , Jet1_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Phi2ndJet_PAS"	   , Jet2_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
+      FillUserHist("Phi3rdJet_PAS"     , Jet3_Phi                    , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("sTlep_PAS"            , Ele1_Pt + Ele2_Pt        , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("sTjet_PAS"            , Jet1_Pt + Jet2_Pt  , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("sT_PAS"               , sT_eejj                            , min_prescale * gen_weight * fakeRateEffective ) ;
