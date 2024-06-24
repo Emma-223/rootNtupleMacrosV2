@@ -318,6 +318,10 @@ Ele1_PFRelIsoCh03                                           -inf           +inf 
 Ele1_PFRelIsoAll03                                          -inf           +inf           -           -           1           200           0              2000             SAVE
 Ele1_R9                                                     -inf           +inf           -           -           1           200           0              2000             SAVE
 Ele1_MatchedHLTriggerObjectPt                               -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele1_MatchedHLTriggerObjectEta                              -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele1_MatchedHLTriggerObjectPhi                              -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele1_MatchedHLTriggerObjectID                               -inf           +inf           -           -           1           200           0              2000             SAVE/I
+Ele1_MatchedHLTriggerObjectFilterBits                       -inf           +inf           -           -           1           200           0              2000             SAVE/I
 Ele1_PassedHLTriggerWPTightFilter                           -inf           +inf           -           -           1           200           0              2000             SAVE/O
 Ele1_PassedHLTriggerCaloIdVTGsfTrkIdTFilter                 -inf           +inf           -           -           1           200           0              2000             SAVE/O
 Ele1_PassedHLTriggerHighPtPhotonFilter                      -inf           +inf           -           -           1           200           0              2000             SAVE/O
@@ -384,6 +388,10 @@ Ele2_PFRelIsoCh03                                           -inf           +inf 
 Ele2_PFRelIsoAll03                                          -inf           +inf           -           -           1           200           0              2000             SAVE
 Ele2_R9                                                     -inf           +inf           -           -           1           200           0              2000             SAVE
 Ele2_MatchedHLTriggerObjectPt                               -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele2_MatchedHLTriggerObjectEta                              -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele2_MatchedHLTriggerObjectPhi                              -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele2_MatchedHLTriggerObjectID                               -inf           +inf           -           -           1           200           0              2000             SAVE/I
+Ele2_MatchedHLTriggerObjectFilterBits                       -inf           +inf           -           -           1           200           0              2000             SAVE/I
 Ele2_PassedHLTriggerWPTightFilter                           -inf           +inf           -           -           1           200           0              2000             SAVE/O
 Ele2_PassedHLTriggerCaloIdVTGsfTrkIdTFilter                 -inf           +inf           -           -           1           200           0              2000             SAVE/O
 Ele2_PassedHLTriggerHighPtPhotonFilter                      -inf           +inf           -           -           1           200           0              2000             SAVE/O
@@ -450,6 +458,10 @@ Ele3_PFRelIsoCh03                                           -inf           +inf 
 Ele3_PFRelIsoAll03                                          -inf           +inf           -           -           1           200           0              2000             SAVE
 Ele3_R9                                                     -inf           +inf           -           -           1           200           0              2000             SAVE
 Ele3_MatchedHLTriggerObjectPt                               -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele3_MatchedHLTriggerObjectEta                              -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele3_MatchedHLTriggerObjectPhi                              -inf           +inf           -           -           1           200           0              2000             SAVE
+Ele3_MatchedHLTriggerObjectID                               -inf           +inf           -           -           1           200           0              2000             SAVE/I
+Ele3_MatchedHLTriggerObjectFilterBits                       -inf           +inf           -           -           1           200           0              2000             SAVE/I
 Ele3_PassedHLTriggerWPTightFilter                           -inf           +inf           -           -           1           200           0              2000             SAVE/O
 Ele3_PassedHLTriggerCaloIdVTGsfTrkIdTFilter                 -inf           +inf           -           -           1           200           0              2000             SAVE/O
 Ele3_PassedHLTriggerHighPtPhotonFilter                      -inf           +inf           -           -           1           200           0              2000             SAVE/O

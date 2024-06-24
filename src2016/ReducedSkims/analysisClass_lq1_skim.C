@@ -336,11 +336,11 @@ void analysisClass::Loop()
     ////cout << "Found the event! in file:" << current_file_name << endl;
     //if(jentry > 10000) continue;
     // filter on fired triggers
-    bool trigFired = readerTools_->ReadValueBranch<Bool_t>("Photon_50") || readerTools_->ReadValueBranch<Bool_t>("Photon_75") 
-        || readerTools_->ReadValueBranch<Bool_t>("Photon_90") 
-        || readerTools_->ReadValueBranch<Bool_t>("Photon_120") 
-        || readerTools_->ReadValueBranch<Bool_t>("Photon_150");
-    if(!trigFired) continue;
+    //bool trigFired = readerTools_->ReadValueBranch<Bool_t>("Photon_50") || readerTools_->ReadValueBranch<Bool_t>("Photon_75") 
+    //    || readerTools_->ReadValueBranch<Bool_t>("Photon_90") 
+    //    || readerTools_->ReadValueBranch<Bool_t>("Photon_120") 
+    //    || readerTools_->ReadValueBranch<Bool_t>("Photon_150");
+    //if(!trigFired) continue;
 
     //-----------------------------------------------------------------
     // Print progress
@@ -1058,6 +1058,10 @@ void analysisClass::Loop()
       std::string prefix = "Ele"+std::to_string(iEle+1);
       unsigned int n_trigObjs = c_hlTriggerObjects_id -> GetSize();
       float matchedHLTriggerObjectPt = -999.;
+      float matchedHLTriggerObjectEta = -999.;
+      float matchedHLTriggerObjectPhi = -999.;
+      int matchedHLTriggerObjectID = -999;
+      int matchedHLTriggerObjectFilterBits = -999;
       bool passedHLTriggerWPTightFilter = false;
       bool passedHLTriggerCaloIdVTGsfTrkIdTFilter = false;
       bool passedHLTriggerHighPtPhotonFilter = false;
@@ -1069,6 +1073,10 @@ void analysisClass::Loop()
         //bool matched = ele.template MatchByDR<HLTriggerObject>(c_hlTriggerObjects_id, matchedObject, ele_hltMatch_DeltaRCut);
         if(matched) {
           matchedHLTriggerObjectPt = matchedObject.Pt();
+          matchedHLTriggerObjectEta = matchedObject.Eta();
+          matchedHLTriggerObjectPhi = matchedObject.Phi();
+          matchedHLTriggerObjectID = matchedObject.ObjectID();
+          matchedHLTriggerObjectFilterBits = matchedObject.FilterBits();
           float dR = matchedObject.DeltaR(&ele);
           float dPt = matchedObject.DeltaPt(&ele);
           passedHLTriggerWPTightFilter = matchedObject.ObjectID()==11 && matchedObject.PassedFilterBit(1);
@@ -1144,6 +1152,10 @@ void analysisClass::Loop()
       fillVariableWithValue( prefix+"_PassEGammaLooseGsfEleMissingHitsCut"          ,ele.PassEGammaIDLooseGsfEleMissingHitsCut          () );
 
       fillVariableWithValue( prefix+"_MatchedHLTriggerObjectPt"  , matchedHLTriggerObjectPt );
+      fillVariableWithValue( prefix+"_MatchedHLTriggerObjectEta"  , matchedHLTriggerObjectPt );
+      fillVariableWithValue( prefix+"_MatchedHLTriggerObjectPhi"  , matchedHLTriggerObjectPt );
+      fillVariableWithValue( prefix+"_MatchedHLTriggerObjectID"  , matchedHLTriggerObjectID );
+      fillVariableWithValue( prefix+"_MatchedHLTriggerObjectFilterBits"  , matchedHLTriggerObjectFilterBits );
       fillVariableWithValue( prefix+"_PassedHLTriggerWPTightFilter"  , passedHLTriggerWPTightFilter );
       fillVariableWithValue( prefix+"_PassedHLTriggerCaloIdVTGsfTrkIdTFilter"  , passedHLTriggerCaloIdVTGsfTrkIdTFilter );
       fillVariableWithValue( prefix+"_PassedHLTriggerHighPtPhotonFilter"  , passedHLTriggerHighPtPhotonFilter );
