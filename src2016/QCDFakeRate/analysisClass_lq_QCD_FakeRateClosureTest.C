@@ -23,8 +23,8 @@
 #include "Run2PhotonTriggerPrescales.h"
 #include "PrescaleProvider.h"
 #include <set>
-#include "HistoReader.h"
-
+//#include "HistoReader.h"
+#include "QCDFakeRate.h"
 
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){}
@@ -71,37 +71,47 @@ void analysisClass::Loop()
    Run2PhotonTriggerPrescales run2PhotonTriggerPrescales;
    
    //--------------------------------------------------------------------------
-   // QCD Fake Rate loading part
-   //--------------------------------------------------------------------------
-   std::string qcdFileName = getPreCutString1("QCDFakeRateFileName");
-   HistoReader qcdFakeRateReader(qcdFileName,"fr2D_1Jet_TrkIsoHEEP7vsHLTPt_PAS","fr2D_1Jet_TrkIsoHEEP7vsHLTPt_PAS",true,false);
-
-   //--------------------------------------------------------------------------
    // Analysis year
    //--------------------------------------------------------------------------
    std::string getAnalysisYear = getPreCutString1("AnalysisYear");
-   //std::cout<<"analysis year: "<<getAnalysisYear<<std::endl;
    int analysisYear;
    std::string analysisYearStr;
    if (getAnalysisYear.find("pre") != string::npos ){
-     analysisYear = 2016;
-     analysisYearStr = "2016preVFP";
+      analysisYear = 2016;
+      analysisYearStr = "2016preVFP";
    }
    else if (getAnalysisYear.find("post") != string::npos){
-     analysisYear = 2016;
-     analysisYearStr = "2016postVFP";
+      analysisYear = 2016;
+      analysisYearStr = "2016postVFP";
    }
    else if (getAnalysisYear.find("17") != string::npos){
-     analysisYear = 2017;
-     analysisYearStr = "2017";
-   } 
+      analysisYear = 2017;
+      analysisYearStr = "2017";
+   }
    else if (getAnalysisYear.find("18") != string::npos){
-     analysisYear = 2018;
-     analysisYearStr = "2018"; 
+      analysisYear = 2018;
+      analysisYearStr = "2018";
    }
    else{
-     std::cout<<"ERROR: cannot determine analysis year from cutfile"<<std::endl;
+      std::cout<<"ERROR: cannot determine analysis year from cutfile"<<std::endl;
    }
+
+   //--------------------------------------------------------------------------
+   // QCD Fake Rate loading part
+   //--------------------------------------------------------------------------
+   std::string qcdFileName = getPreCutString1("QCDFakeRateFileName");
+   //HistoReader qcdFakeRateReader(qcdFileName,"fr2D_1Jet_TrkIsoHEEP7vsHLTPt_PAS","fr2D_1Jet_TrkIsoHEEP7vsHLTPt_PAS",true,false);
+   std::vector<std::string> regionVec;
+   if(analysisYear != 2018) regionVec = {"1Jet_TrkIsoHEEP7vsHLTPt_PAS"};
+   else{
+     regionVec = {
+       "1Jet_TrkIsoHEEP7vsHLTPt_pre319077",
+       "1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077",
+       "1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077",
+     };
+   } 
+   QCDFakeRate qcdFakeRateReader(qcdFileName, "fr2D_", regionVec, true);
+
    //--------------------------------------------------------------------------
    // reco scale factors
    //--------------------------------------------------------------------------
@@ -280,31 +290,18 @@ void analysisClass::Loop()
      if(!isData()) {
        float ele1PtUncorr = readerTools_->ReadValueBranch<Float_t>("Ele1_Pt");// loose ele Pt is now uncorrected /readerTools_->ReadValueBranch<Double_t>("LooseEle1_ECorr");
        float ele2PtUncorr = readerTools_->ReadValueBranch<Float_t>("Ele2_Pt");// loose ele Pt is now uncorrected /readerTools_->ReadValueBranch<Double_t>("LooseEle2_ECorr");
-       //float ele1PtUncorr = readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEt");
-       //float ele2PtUncorr = readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEt");
-       //std::cout << "LooseEle1_Pt = " << readerTools_->ReadValueBranch<Double_t>("LooseEle1_Pt") << "; LooseEle1_ECorr = " << ele1ECorr << "; LooseEle1_SCEta = " << readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta") << std::endl;
-       //std::cout << "LooseEle2_Pt = " << readerTools_->ReadValueBranch<Double_t>("LooseEle2_Pt") << "; LooseEle2_ECorr = " << ele2ECorr << "; LooseEle2_SCEta = " << readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta") << std::endl;
 
        float heepSFEle1 = 1.0;
        float heepSFEle2 = 1.0;
        float recoSFEle1 = 1.0;
        float recoSFEle2 = 1.0;
+       float zVtxSF = 1.0;
        bool verbose = false;
 
-       if(analysisYear==2016) {
-         float recoSFEle1 = readerTools_->ReadValueBranch<Float_t>("Ele1_RecoSF");
-         float recoSFEle2 = readerTools_->ReadValueBranch<Float_t>("Ele2_RecoSF");
-         if(readerTools_->ReadValueBranch<Bool_t>("Ele1_PassHEEPID") == true){
-           float heepSFEle1 = readerTools_->ReadValueBranch<Float_t>("Ele1_HEEPSF");
+         if(analysisYear==2017) {
+           zVtxSF = ElectronScaleFactors2017::zVtxSF;
          }
-         if(readerTools_->ReadValueBranch<Bool_t>("Ele2_PassHEEPID") == true){
-           float heepSFEle2 = readerTools_->ReadValueBranch<Float_t>("Ele2_HEEPSF");
-         }
-         recoHeepSF *= recoSFEle1*recoSFEle2*heepSFEle1*heepSFEle2;
-       }
-       else if(analysisYear==2017) {
-         float zVtxSF = ElectronScaleFactors2017::zVtxSF;
-         //std::cout<<"zVtxSF = "<<zVtxSF<<std::endl;
+	 //std::cout<<"zVtxSF = "<<zVtxSF<<std::endl;
          if(readerTools_->ReadValueBranch<Int_t>("nEle_store")>=1){
            recoSFEle1 = readerTools_->ReadValueBranch<Float_t>("Ele1_RecoSF");
          }
@@ -321,16 +318,6 @@ void analysisClass::Loop()
          //std::cout<<"recoSF ele1: "<<recoSFEle1<<"; recoSF ele2: "<<recoSFEle2<<std::endl;
          recoHeepSF *= zVtxSF*recoSFEle1*recoSFEle2*heepSFEle1*heepSFEle2;
          //std::cout<<"recoHEEPSF = "<<recoHeepSF<<std::endl;
-       }
-       else if(analysisYear==2018) {
-         float recoSFLooseEle1 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"),ele1PtUncorr,verbose);
-         float recoSFLooseEle2 = recoScaleFactorReader->LookupValue(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"),ele2PtUncorr,verbose);
-         float heepSFLooseEle1 = ElectronScaleFactors2018::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle1_SCEta"));
-         float heepSFLooseEle2 = ElectronScaleFactors2018::LookupHeepSF(readerTools_->ReadValueBranch<Double_t>("LooseEle2_SCEta"));
-         recoHeepSF *= recoSFLooseEle1*recoSFLooseEle2*heepSFLooseEle1*heepSFLooseEle2;
-       }
-       //FIXME: in the case that one ele passes HEEP, need to apply that SF only
-       // we only care about MC for cej, 1 pass HEEP and 1 fail HEEP
        gen_weight*=recoHeepSF;
        // stick the gen_weight in with the pileup_weight
        pileup_weight*=gen_weight;
@@ -344,61 +331,38 @@ void analysisClass::Loop()
      int passTrigger = 0;
      std::string triggerName = "";
      double Ele1_hltPhotonPt = readerTools_->ReadValueBranch<Float_t>("Ele1_MatchedHLTriggerObjectPt");
+     bool passSinglePhoton = false;
+     bool passDoubleEle = false;
 
      if ( Ele1_hltPhotonPt > 0.0 ) {
        if(analysisYear==2016) {
-         //testing out doubleEle33 trigger: - need new skims to actually use
-         //if (readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_GsfIdVL")  > 0.1 && Ele1_hltPhotonPt >= 33. ) {passTrigger = 1; triggerName = "doubleEle33";}
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon22")   > 0.1 && Ele1_hltPhotonPt >= 22.  && Ele1_hltPhotonPt < 30. ) { passTrigger = 1; triggerName = "Photon22"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon30")   > 0.1 && Ele1_hltPhotonPt >= 30.  && Ele1_hltPhotonPt < 36. ) { passTrigger = 1; triggerName = "Photon30"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon36")   > 0.1 && Ele1_hltPhotonPt >= 36.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon36"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon120"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175.) { passTrigger = 1; triggerName = "Photon175"; }
-         if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 ) { passTrigger = 1; triggerName = "Photon175"; } 
+         if (run >= 276453 && run <= 278822){
+           passDoubleEle = readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_GsfIdVL") > 0.1;
+      	 }else{
+           passDoubleEle = readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_MW") > 0.1;
+         }
+	 passSinglePhoton = readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175.;
        }
        else if(analysisYear==2017) {
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon25")   > 0.1 && Ele1_hltPhotonPt >= 25.  && Ele1_hltPhotonPt < 33. ) { passTrigger = 1; triggerName = "Photon25"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon33")   > 0.1 && Ele1_hltPhotonPt >= 33.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon33"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 150.) { passTrigger = 1; triggerName = "Photon120"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon150")  > 0.1 && Ele1_hltPhotonPt >= 150. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon150"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175. && Ele1_hltPhotonPt < 200.) { passTrigger = 1; triggerName = "Photon175"; } 
-         //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; } 
-
-         //Trying with the DoubleEle33 trigger:
-         bool passDoubleEle = readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_MW") > 0.1;
-         bool passPhoton200 = readerTools_->ReadValueBranch<Float_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.;
-         if (isData()){
-           if(current_file_name.find("SinglePhoton") != std::string::npos) {
-             //Photon200 only
-             if(passPhoton200 & !passDoubleEle) { passTrigger = 1; triggerName = "Photon200"; }
-             //count events that fire both triggers here
-             if(passPhoton200 && passDoubleEle) { passTrigger = 1; triggerName = "Photon200_and_DoubleEle33"; }
-           }
-           if(current_file_name.find("SingleElectron") != std::string::npos) {
-             //DoubleEle only. Avoid double counting events that fire both triggers
-             if(passDoubleEle && !passPhoton200) { passTrigger = 1; triggerName = "DoubleEle33"; }
-           }
-         } else {//for MC:
-             if(passPhoton200 & !passDoubleEle) {passTrigger = 1; triggerName = "Photon200";}
-             if(passDoubleEle & !passPhoton200) {passTrigger = 1; triggerName = "DoubleEle33";}
-             if(passDoubleEle && passPhoton200) {passTrigger = 1; triggerName = "Photon200_and_DoubleEle33";}
-         } 
+         passDoubleEle = readerTools_->ReadValueBranch<Float_t>("H_DoubleEle33_CIdL_MW") > 0.1;
+         passSinglePhoton = readerTools_->ReadValueBranch<Float_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.;
        }
        else if(analysisYear==2018) {
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon33")   > 0.1 && Ele1_hltPhotonPt >= 33.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon33"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 150.) { passTrigger = 1; triggerName = "Photon120"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon150")  > 0.1 && Ele1_hltPhotonPt >= 150. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon150"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175. && Ele1_hltPhotonPt < 200.) { passTrigger = 1; triggerName = "Photon175"; } 
-         if ( readerTools_->ReadValueBranch<Double_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; } 
+         passSinglePhoton = readerTools_->ReadValueBranch<Float_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.;
+	 passDoubleEle = readerTools_->ReadValueBranch<Float_t>("H_DoubleEle25_CIdL_MW") > 0.1;
+       }
+       
+       if(current_file_name.find("SinglePhoton") != std::string::npos) {
+	 if(passSinglePhoton & !passDoubleEle) { passTrigger = 1; triggerName = "Photon"; }
+	 if(passSinglePhoton && passDoubleEle) { passTrigger = 1; triggerName = "Photon_and_DoubleEle"; }
+       }
+       else if(current_file_name.find("SingleElectron") != std::string::npos) {
+	 if(passDoubleEle && !passSinglePhoton) { passTrigger = 1; triggerName = "DoubleEle"; }
+       }
+       else{//EGamma datasets for 2018, or MC 
+         if(passSinglePhoton & !passDoubleEle) {passTrigger = 1; triggerName = "Photon";}
+	 if(passDoubleEle & !passSinglePhoton) {passTrigger = 1; triggerName = "DoubleEle";}
+	 if(passDoubleEle && passSinglePhoton) {passTrigger = 1; triggerName = "Photon_and_DoubleEle";}
        }
      }
      if(isData() && passTrigger) {//if we use photon175 only it's unprescaled so all of this becomes unecessary
@@ -484,11 +448,26 @@ void analysisClass::Loop()
      // LooseEle Pt is the uncorrected SCEt
      double Ele1_Pt = readerTools_->ReadValueBranch<Float_t>("Ele1_Pt");// loose ele Pt is now uncorrected /readerTools_->ReadValueBranch<Double_t>("LooseEle1_ECorr");
      double Ele2_Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_Pt");// loose ele Pt is now uncorrected /readerTools_->ReadValueBranch<Double_t>("LooseEle2_ECorr");
+     double Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
+     double Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
+
      bool verboseFakeRateCalc = false;
-     float fakeRate1 = qcdFakeRateReader.LookupValue(Ele1_SCEta,Ele1_Pt,verboseFakeRateCalc);
-     float fakeRate2 = qcdFakeRateReader.LookupValue(Ele2_SCEta,Ele2_Pt,verboseFakeRateCalc);
-     float eFakeRate1 = qcdFakeRateReader.LookupValueError(Ele1_SCEta,Ele1_Pt,verboseFakeRateCalc);
-     float eFakeRate2 = qcdFakeRateReader.LookupValueError(Ele2_SCEta,Ele2_Pt,verboseFakeRateCalc);
+     double fakeRate1 = -1;
+     double fakeRate2 = -1;
+     double eFakeRate1 = 0;
+     double eFakeRate2 = 0;
+     if (analysisYear != 2018){
+       fakeRate1 = qcdFakeRateReader.GetFakeRate(Ele1_Pt,"",Ele1_SCEta);
+       fakeRate2 = qcdFakeRateReader.GetFakeRate(Ele2_Pt, "", Ele2_SCEta);
+       eFakeRate1 = qcdFakeRateReader.GetFakeRateError(Ele1_Pt,"",Ele1_SCEta);
+       eFakeRate2 = qcdFakeRateReader.GetFakeRateError(Ele2_Pt, "", Ele2_SCEta);
+     }else{
+       fakeRate1 = qcdFakeRateReader.GetFakeRate(Ele1_Pt, Ele1_SCEta, Ele1_Phi, run);
+       fakeRate2 = qcdFakeRateReader.GetFakeRate(Ele2_Pt, Ele2_SCEta, Ele2_Phi, run);
+       eFakeRate1 = qcdFakeRateReader.GetFakeRateError(Ele1_Pt, Ele1_SCEta, Ele1_Phi, run);
+       eFakeRate2 = qcdFakeRateReader.GetFakeRateError(Ele2_Pt, Ele2_SCEta, Ele2_Phi, run);
+     }
+     //std::cout<<"fake rate 1 = "<<fakeRate1<<" +/- "<<eFakeRate1<<std::endl;
 
      //--------------------------------------------------------------------------
      // Finally have the effective fake rate
@@ -544,8 +523,8 @@ void analysisClass::Loop()
 
      double Ele1_Eta = readerTools_->ReadValueBranch<Float_t>("Ele1_Eta");
      double Ele2_Eta = readerTools_->ReadValueBranch<Float_t>("Ele2_Eta");
-     double Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
-     double Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
+     //double Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
+     //double Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
      double Ele1_Charge = readerTools_->ReadValueBranch<Int_t>("Ele1_Charge");
      double Ele2_Charge = readerTools_->ReadValueBranch<Int_t>("Ele2_Charge");
      double Jet1_Pt = readerTools_->ReadValueBranch<Float_t>("Jet1_Pt");
