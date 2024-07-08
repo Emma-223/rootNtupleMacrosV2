@@ -647,6 +647,7 @@ void analysisClass::Loop()
   CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet3Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
   // >= 1 b-tag
   CreateUserHist2D("MeeVsNJet_BkgControlRegion_gteOneBtaggedJet", 10, -0.5, 9.5, 1000, 0, 2000);
@@ -664,6 +665,7 @@ void analysisClass::Loop()
   CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet3Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
   // >= 2 b-tags
   CreateUserHist2D("MeeVsNJet_BkgControlRegion_gteTwoBtaggedJets", 10, -0.5, 9.5, 1000, 0, 2000);
@@ -681,6 +683,7 @@ void analysisClass::Loop()
   CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet3Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   //// test opt
   //CreateUserHist( "Mee_sT2000_PAS"		             ,    200   , 0       , 2000	  ); 
@@ -1634,8 +1637,6 @@ void analysisClass::Loop()
       Pt_j1j2j3 = j1j2j3.Pt();
       M_eejjj = eejjj.M();
     }
-    // calc Meejj
-    float Meejj = eejj.M();
 
     double sT_zjj = Pt_e1e2 + Jet1_Pt + Jet2_Pt;
     double sT_eejj = e1.Pt() + e2.Pt() + j1.Pt() + j2.Pt();
@@ -1736,7 +1737,7 @@ void analysisClass::Loop()
     fillVariableWithValue( "Masym", M_ej_asym, fakeRateEffective * min_prescale * gen_weight  ) ;
     fillVariableWithValue( "MejMin", M_ej_min, fakeRateEffective * min_prescale * gen_weight  ) ;
     fillVariableWithValue( "MejMax", M_ej_max, fakeRateEffective * min_prescale * gen_weight  ) ;
-    fillVariableWithValue( "Meejj", Meejj, fakeRateEffective * min_prescale * gen_weight  ) ;
+    fillVariableWithValue( "Meejj", M_eejj, fakeRateEffective * min_prescale * gen_weight  ) ;
     //fillVariableWithValue( "PFMET_opt", PFMET_Type1_Pt, fakeRateEffective * min_prescale * gen_weight  ) ;
     fillVariableWithValue( "PFMET_Type1_Pt", PFMET_Type1_Pt,  fakeRateEffective * min_prescale * gen_weight ) ;
     fillVariableWithValue( "PFMET_Type1_Phi", PFMET_Type1_Phi, fakeRateEffective * min_prescale * gen_weight ) ;
@@ -1929,6 +1930,7 @@ void analysisClass::Loop()
         FillUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteOneBtaggedJet", Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
         FillUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteOneBtaggedJet", Jet1_Pt, M_e1e2, pileup_weight * gen_weight);
         FillUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteOneBtaggedJet", Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsJet3Pt_BkgControlRegion_gteOneBtaggedJet", Jet3_Pt, M_e1e2, pileup_weight * gen_weight);
         FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteOneBtaggedJet", PFMET_Type1_Pt, M_e1e2, pileup_weight * gen_weight);
         if(nBJet_ptCut>=2) {
           FillUserHist( "Mee_BkgControlRegion_gteTwoBtaggedJets"      , M_e1e2,  pileup_weight * gen_weight * weightAtLeastTwoBJets, "preselection" ) ;
@@ -1947,6 +1949,7 @@ void analysisClass::Loop()
           FillUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteTwoBtaggedJets", Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
           FillUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteTwoBtaggedJets", Jet1_Pt, M_e1e2, pileup_weight * gen_weight);
           FillUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteTwoBtaggedJets", Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsJet3Pt_BkgControlRegion_gteTwoBtaggedJets", Jet3_Pt, M_e1e2, pileup_weight * gen_weight);
           FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteTwoBtaggedJets", PFMET_Type1_Pt, M_e1e2, pileup_weight * gen_weight);
         }
       }
@@ -1971,6 +1974,7 @@ void analysisClass::Loop()
       FillUserHist2D("MeeVsEle2Pt_BkgControlRegion", Ele2_Pt, M_e1e2, fakeRateEffective * min_prescale * gen_weight);
       FillUserHist2D("MeeVsJet1Pt_BkgControlRegion", Jet1_Pt, M_e1e2, fakeRateEffective * min_prescale * gen_weight);
       FillUserHist2D("MeeVsJet2Pt_BkgControlRegion", Jet2_Pt, M_e1e2, fakeRateEffective * min_prescale * gen_weight);
+      FillUserHist2D("MeeVsJet3Pt_BkgControlRegion", Jet3_Pt, M_e1e2, fakeRateEffective * min_prescale * gen_weight);
       FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion", PFMET_Type1_Pt, M_e1e2, fakeRateEffective * min_prescale * gen_weight);
     }
 

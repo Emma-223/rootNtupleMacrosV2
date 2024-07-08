@@ -649,6 +649,7 @@ void analysisClass::Loop()
   CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet3Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion", 1000, 0, 2000, 1000, 0, 2000);
   // >= 1 b-tag
   CreateUserHist2D("MeeVsNJet_BkgControlRegion_gteOneBtaggedJet", 10, -0.5, 9.5, 1000, 0, 2000);
@@ -666,6 +667,7 @@ void analysisClass::Loop()
   CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet3Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteOneBtaggedJet", 1000, 0, 2000, 1000, 0, 2000);
   // >= 2 b-tags
   CreateUserHist2D("MeeVsNJet_BkgControlRegion_gteTwoBtaggedJets", 10, -0.5, 9.5, 1000, 0, 2000);
@@ -683,6 +685,7 @@ void analysisClass::Loop()
   CreateUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
+  CreateUserHist2D("MeeVsJet3Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   CreateUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteTwoBtaggedJets", 1000, 0, 2000, 1000, 0, 2000);
   //// test opt
   //CreateUserHist( "Mee_sT2000_PAS"		             ,    200   , 0       , 2000	  ); 
@@ -1227,7 +1230,7 @@ void analysisClass::Loop()
     // Calculate electron-jet pair mass values
     //--------------------------------------------------------------------------
 
-    double M_ej_avg = 0, M_ej_min = 0, M_ej_max = 0, M_ej_asym = 0, M_eejj = 0;
+    double M_ej_avg = 0, M_ej_min = 0, M_ej_max = 0, M_ej_asym = 0;
     double M_ej_avg_JER_Up = 0, M_ej_min_JER_Up = 0, M_ej_max_JER_Up = 0, M_ej_asym_JER_Up = 0;
     double M_ej_avg_JER_Dn = 0, M_ej_min_JER_Dn = 0, M_ej_max_JER_Dn = 0, M_ej_asym_JER_Dn = 0;
     double M_ej_avg_JES_Up = 0, M_ej_min_JES_Up = 0, M_ej_max_JES_Up = 0, M_ej_asym_JES_Up = 0;
@@ -1491,15 +1494,15 @@ void analysisClass::Loop()
     float MejMin = M_ej_min;
     float MejMax = M_ej_max;
     float Masym = M_ej_asym;
-    float Meejj = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
-    float Meejj_EER_Up = GetMeejj( Ele1_Pt_EER_Up,  Ele2_Pt_EER_Up,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
-    float Meejj_EER_Dn = GetMeejj( Ele1_Pt_EER_Dn,  Ele2_Pt_EER_Dn,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
-    float Meejj_EES_Up = GetMeejj( Ele1_Pt_EES_Up,  Ele2_Pt_EES_Up,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
-    float Meejj_EES_Dn = GetMeejj( Ele1_Pt_EES_Dn,  Ele2_Pt_EES_Dn,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
-    float Meejj_JER_Up = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt_JER_Up,  Jet2_Pt_JER_Up, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
-    float Meejj_JER_Dn = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt_JER_Dn,  Jet2_Pt_JER_Dn, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
-    float Meejj_JES_Up = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt_JES_Up,  Jet2_Pt_JES_Up, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
-    float Meejj_JES_Dn = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt_JES_Dn,  Jet2_Pt_JES_Dn, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj_EER_Up = GetMeejj( Ele1_Pt_EER_Up,  Ele2_Pt_EER_Up,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj_EER_Dn = GetMeejj( Ele1_Pt_EER_Dn,  Ele2_Pt_EER_Dn,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj_EES_Up = GetMeejj( Ele1_Pt_EES_Up,  Ele2_Pt_EES_Up,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj_EES_Dn = GetMeejj( Ele1_Pt_EES_Dn,  Ele2_Pt_EES_Dn,  Jet1_Pt,  Jet2_Pt, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj_JER_Up = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt_JER_Up,  Jet2_Pt_JER_Up, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj_JER_Dn = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt_JER_Dn,  Jet2_Pt_JER_Dn, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj_JES_Up = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt_JES_Up,  Jet2_Pt_JES_Up, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
+    float M_eejj_JES_Dn = GetMeejj( Ele1_Pt,  Ele2_Pt,  Jet1_Pt_JES_Dn,  Jet2_Pt_JES_Dn, Ele1_Eta,  Ele2_Eta,  Jet1_Eta,  Jet2_Eta, Ele1_Phi,  Ele2_Phi,  Jet1_Phi,  Jet2_Phi);
 
     if ( nEle_store >= 2 ) { 						    
       fillVariableWithValue( "M_e1e2"      , M_e1e2 , gen_weight * pileup_weight  ) ;
@@ -1521,7 +1524,7 @@ void analysisClass::Loop()
     fillVariableWithValue( "Masym", Masym, gen_weight * pileup_weight  ) ;
     fillVariableWithValue( "MejMin", MejMin, gen_weight * pileup_weight  ) ;
     fillVariableWithValue( "MejMax", MejMax, gen_weight * pileup_weight  ) ;
-    fillVariableWithValue( "Meejj", Meejj, gen_weight * pileup_weight  ) ;
+    fillVariableWithValue( "Meejj", M_eejj, gen_weight * pileup_weight  ) ;
     //fillVariableWithValue( "PFMET_opt", PFMET_Type1_Pt, gen_weight * pileup_weight  ) ;
     fillVariableWithValue( "PFMET_Type1_Pt", PFMET_Type1_Pt, gen_weight * pileup_weight  ) ;
     fillVariableWithValue( "PFMET_Type1_Phi", PFMET_Type1_Phi, gen_weight * pileup_weight  ) ;
@@ -1543,14 +1546,14 @@ void analysisClass::Loop()
     fillSystVariableWithValue("JESDown", "Masym",   isData() ? Masym : M_ej_asym_JES_Dn);
 
     // Meejj
-    fillSystVariableWithValue("EERUp",   "Meejj",  isData() ? Meejj : Meejj_EER_Up);
-    fillSystVariableWithValue("EERDown", "Meejj",  isData() ? Meejj : Meejj_EER_Dn);
-    fillSystVariableWithValue("EESUp",   "Meejj",  isData() ? Meejj : Meejj_EES_Up);
-    fillSystVariableWithValue("EESDown", "Meejj",  isData() ? Meejj : Meejj_EES_Dn);
-    fillSystVariableWithValue("JERUp",   "Meejj",  isData() ? Meejj : Meejj_JER_Up);
-    fillSystVariableWithValue("JERDown", "Meejj",  isData() ? Meejj : Meejj_JER_Dn);
-    fillSystVariableWithValue("JESUp",   "Meejj",  isData() ? Meejj : Meejj_JES_Up);
-    fillSystVariableWithValue("JESDown", "Meejj",  isData() ? Meejj : Meejj_JES_Dn);
+    fillSystVariableWithValue("EERUp",   "Meejj",  isData() ? M_eejj : M_eejj_EER_Up);
+    fillSystVariableWithValue("EERDown", "Meejj",  isData() ? M_eejj : M_eejj_EER_Dn);
+    fillSystVariableWithValue("EESUp",   "Meejj",  isData() ? M_eejj : M_eejj_EES_Up);
+    fillSystVariableWithValue("EESDown", "Meejj",  isData() ? M_eejj : M_eejj_EES_Dn);
+    fillSystVariableWithValue("JERUp",   "Meejj",  isData() ? M_eejj : M_eejj_JER_Up);
+    fillSystVariableWithValue("JERDown", "Meejj",  isData() ? M_eejj : M_eejj_JER_Dn);
+    fillSystVariableWithValue("JESUp",   "Meejj",  isData() ? M_eejj : M_eejj_JES_Up);
+    fillSystVariableWithValue("JESDown", "Meejj",  isData() ? M_eejj : M_eejj_JES_Dn);
     // MejMax
     fillSystVariableWithValue("EERUp",   "MejMax",  isData() ? MejMax : M_ej_max_EER_Up);
     fillSystVariableWithValue("EERDown", "MejMax",  isData() ? MejMax : M_ej_max_EER_Dn);
@@ -1809,6 +1812,7 @@ void analysisClass::Loop()
         FillUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteOneBtaggedJet", Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
         FillUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteOneBtaggedJet", Jet1_Pt, M_e1e2, pileup_weight * gen_weight);
         FillUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteOneBtaggedJet", Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+        FillUserHist2D("MeeVsJet3Pt_BkgControlRegion_gteOneBtaggedJet", Jet3_Pt, M_e1e2, pileup_weight * gen_weight);
         FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteOneBtaggedJet", PFMET_Type1_Pt, M_e1e2, pileup_weight * gen_weight);
         if(nBJet_ptCut>=2) {
           FillUserHist( "Mee_BkgControlRegion_gteTwoBtaggedJets"      , M_e1e2,  pileup_weight * gen_weight * weightAtLeastTwoBJets, "preselection" ) ;
@@ -1827,6 +1831,7 @@ void analysisClass::Loop()
           FillUserHist2D("MeeVsEle2Pt_BkgControlRegion_gteTwoBtaggedJets", Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
           FillUserHist2D("MeeVsJet1Pt_BkgControlRegion_gteTwoBtaggedJets", Jet1_Pt, M_e1e2, pileup_weight * gen_weight);
           FillUserHist2D("MeeVsJet2Pt_BkgControlRegion_gteTwoBtaggedJets", Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+          FillUserHist2D("MeeVsJet3Pt_BkgControlRegion_gteTwoBtaggedJets", Jet3_Pt, M_e1e2, pileup_weight * gen_weight);
           FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion_gteTwoBtaggedJets", PFMET_Type1_Pt, M_e1e2, pileup_weight * gen_weight);
         }
       }
@@ -1854,6 +1859,7 @@ void analysisClass::Loop()
       FillUserHist2D("MeeVsEle2Pt_BkgControlRegion", Ele2_Pt, M_e1e2, pileup_weight * gen_weight);
       FillUserHist2D("MeeVsJet1Pt_BkgControlRegion", Jet1_Pt, M_e1e2, pileup_weight * gen_weight);
       FillUserHist2D("MeeVsJet2Pt_BkgControlRegion", Jet2_Pt, M_e1e2, pileup_weight * gen_weight);
+      FillUserHist2D("MeeVsJet3Pt_BkgControlRegion", Jet3_Pt, M_e1e2, pileup_weight * gen_weight);
       FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion", PFMET_Type1_Pt, M_e1e2, pileup_weight * gen_weight);
     }
 
