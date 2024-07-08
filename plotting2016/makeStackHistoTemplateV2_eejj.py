@@ -1610,7 +1610,7 @@ if doPreselPlots:
     # plots[-1].ytit = "S_{T}(eejj) [GeV]"
     #
     #
-    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1000"))
+    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1000")) #, dataBlindAbove=0))  # blind above 0 for now
     plots[-1].xtit = "BDT output [TrainRegion, M_{LQ} = 1000 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -3869,3 +3869,7 @@ print("DONE")
 
 print("INFO: MakeTOC()")
 makeTOC("allPlots_eejj_analysis_toc.tex", fileps, plots)
+print("INFO: year = {}".format(year))
+print("INFO: using file: " + inputFile)
+if doQCD:
+    print("INFO: using QCD file: " + inputFileQCD)
