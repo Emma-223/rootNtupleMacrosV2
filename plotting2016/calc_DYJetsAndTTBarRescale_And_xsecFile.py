@@ -1036,10 +1036,13 @@ sfYValsForVar["TTBar"] = {}
 sfYErrsForVar["TTBar"] = {}
 for idx, plot in enumerate(plotsTTBar):
     dyjPlot = plotsDYJets[idx]
+    print("INFO: Calculating scale factors for plot={}".format(dyjPlot.name), flush=True)
     try:
         rDYJets, rDYJetsSigma, rTTBar, rTTBarSigma = CalculateRescaleFactor(plot, dyjPlot, fileps)
     except Exception as e:
         plotErrors.append("Had an exception doing CalculateRescaleFactor for plot {}: {}".format(plot.name, e))
+        print("WARN: Had an exception doing CalculateRescaleFactor for plot {}: {}".format(plot.name, e), flush=True)
+        continue
     if dyjPlot.name == nominalBkgSFPlotNames[0]:
         nominalScaleFactors["DYJets"] = rDYJets
         nominalScaleFactorErrs["DYJets"] = rDYJetsSigma
@@ -1049,7 +1052,6 @@ for idx, plot in enumerate(plotsTTBar):
     if "Vs" in plot.name or "Vs" in dyjPlot.name:
         var = plot.name[plot.name.find("Vs")+2:plot.name.find("_", plot.name.find("Vs"))]
         xrange = plot.name.split("_")[-2]
-        # print("INFO: found var={}".format(var), flush=True)
         xmin = float(xrange.split("to")[0])
         xmax = xrange.split("to")[1]
         if xmax == "Inf":
