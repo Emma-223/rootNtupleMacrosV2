@@ -227,7 +227,7 @@ void analysisClass::Loop()
      // Print progress
      //-----------------------------------------------------------------
      if(jentry < 10 || jentry%5000 == 0) std::cout << "analysisClass:Loop(): jentry = " << jentry << "/" << nentries << std::endl;
-     //if (jentry==150) break; //run over just a few events for troubleshooting
+     if (jentry==150) break; //run over just a few events for troubleshooting
      //// run ls event
      unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
      unsigned int ls = readerTools_->ReadValueBranch<UInt_t>("ls");
@@ -468,7 +468,7 @@ void analysisClass::Loop()
        eFakeRate2 = qcdFakeRateReader.GetFakeRateError(Ele2_Pt, Ele2_SCEta, Ele2_Phi, run);
      }
      //std::cout<<"fake rate 1 = "<<fakeRate1<<" +/- "<<eFakeRate1<<std::endl;
-
+     //std::cout<<"fake rate 2 = "<<fakeRate2<<" +/- "<<eFakeRate2<<std::endl;
      //--------------------------------------------------------------------------
      // Finally have the effective fake rate
      //--------------------------------------------------------------------------
@@ -491,13 +491,21 @@ void analysisClass::Loop()
      fakeRateEffective += fakeRate2/(1-fakeRate2);
      eFakeRateEff2 = eFakeRate2 / ( (1-fakeRate2)*(1-fakeRate2) );
 
-     double eFakeRateEffectiveSQ = fakeRateEffective * fakeRateEffective + eFakeRateEff1 * eFakeRateEff1 + eFakeRateEff2 * eFakeRateEff2 ;
+     //double eFakeRateEffectiveSQ = fakeRateEffective * fakeRateEffective + eFakeRateEff1 * eFakeRateEff1 + eFakeRateEff2 * eFakeRateEff2 ;
+     double eFakeRateEffectiveSQ = pow(eFakeRateEff1,2) + pow(eFakeRateEff1,2) ;//+ 2 * eFakeRateEff1 * eFakeRateEff2;
+
      //Error on f(x,y) = A(x) + B(y) = sqrt( (err_x * dA/dx)^2 + (err_y * dB/dy)^2 )
      //For N events, the uncertainty will be [ sumOverNEvents(eFakeRateEffectiveSQ_i) ]^(1/2)
      double eFakeRateEffective = sqrt(eFakeRateEffectiveSQ); 
+     if (nEle_store >=2){
      //double eFakeRateEffective = sqrt(fakeRateEffective);
-     //std::cout<<"FR ele1 = "<<fakeRate1<<" +/- "<<eFakeRate1<<"; FR ele2 = "<<fakeRate2<<" +/- "<<eFakeRate2<<std::endl;
-     //std::cout<<"  FR effective = FR1/(1 - FR1) + FR2/(1 - FR2) = "<<fakeRateEffective<<" +/- "<<eFakeRateEffective<<std::endl;
+     std::cout<<"FR ele1 = "<<fakeRate1<<" +/- "<<eFakeRate1<<"; FR ele2 = "<<fakeRate2<<" +/- "<<eFakeRate2<<std::endl;
+     std::cout<<"  FR effective = "<<fakeRateEffective<<" +/- "<<eFakeRateEffective<<std::endl;
+     //std::cout<<"  Event weight = "<<pileup_weight<<std::endl;
+     //without using prescaled triggers, pileup_weight is just 1 for data, but I am writing it this way in case we end up going back to prescaled triggers.
+     double errThisEvent = sqrt( pow(eFakeRateEffective,2) * pow(pileup_weight,2) + pileup_weight * pow(fakeRateEffective,2) );
+     //std::cout<<"  Error this event = "<<errThisEvent<<std::endl;
+     }
      //std::cout<<"---------------------------------------------------------------------------------------"<<std::endl;
      //--------------------------------------------------------------------------
      // User has the option to use a flat fake rate (e.g. 1.0 = no fake rate)
