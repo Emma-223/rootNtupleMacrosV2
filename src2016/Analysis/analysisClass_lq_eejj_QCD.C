@@ -180,6 +180,14 @@ void analysisClass::Loop()
   CreateUserHist( "Trigger0OrOffline1Match_PassingTrigger" ,    2, 0, 2);
   CreateUserHist( "Trigger0OrOffline1Match_PAS" ,    2, 0, 2);
   CreateUserHist( "Trigger_OfflineMatch_PassingTrigger_Ele1Pt" ,    100, 0, 1000);
+  GetUserHist<TH1>("Trigger0OrOffline1Match").GetXaxis()->SetBinLabel(1, "trigger");
+  GetUserHist<TH1>("Trigger0OrOffline1Match").GetXaxis()->SetBinLabel(2, "offline");
+  GetUserHist<TH1>("Trigger0OrOffline1Match_PassingTrigger").GetXaxis()->SetBinLabel(1, "trigger");
+  GetUserHist<TH1>("Trigger0OrOffline1Match_PassingTrigger").GetXaxis()->SetBinLabel(2, "offline");
+  GetUserHist<TH1>("Trigger0OrOffline1Match_PAS").GetXaxis()->SetBinLabel(1, "trigger");
+  GetUserHist<TH1>("Trigger0OrOffline1Match_PAS").GetXaxis()->SetBinLabel(2, "offline");
+  GetUserHist<TH1>("Trigger_OfflineMatch_PassingTrigger_Ele1Pt").GetXaxis()->SetBinLabel(1, "trigger");
+  GetUserHist<TH1>("Trigger_OfflineMatch_PassingTrigger_Ele1Pt").GetXaxis()->SetBinLabel(2, "offline");
 
   CreateUserHist( "M_j1j3_PAS"            ,    200 , 0       , 2000	 );    
   CreateUserHist( "M_j2j3_PAS"            ,    200 , 0       , 2000	 ); 
@@ -871,7 +879,7 @@ void analysisClass::Loop()
     //------------------------------------------------------------------
     // Print progress
     //------------------------------------------------------------------
-    if(jentry < 10 || jentry%5000 == 0) std::cout << "analysisClass::Loop(): jentry = " << jentry << "/" << nentries << std::endl;   
+    if(jentry < 10 || jentry%10000 == 0) std::cout << "analysisClass::Loop(): jentry = " << jentry << "/" << nentries << std::endl;   
 
     //--------------------------------------------------------------------------
     // Reset the cuts
@@ -957,15 +965,10 @@ void analysisClass::Loop()
     unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
     unsigned int ls = readerTools_->ReadValueBranch<UInt_t>("ls");
     unsigned long long int event = readerTools_->ReadValueBranch<ULong64_t>("event");
-    //if(run != 323841 || ls != 240 || event != 380587785) {
-    //if(run != 322179 || ls != 347 || event != 575321079)
-    //  continue;
-    //}
-    //std::cout << "Run = " << run << ", event = " << event << ", ls = " << ls << std::endl;
+
     //--------------------------------------------------------------------------
     // Find the right prescale for this event
     //--------------------------------------------------------------------------
-
     min_prescale = 1;
     bool passTrigger = false;
     std::string triggerName;
@@ -991,7 +994,7 @@ void analysisClass::Loop()
 
     for(unsigned int idx = 0; idx < photonThresholds.size(); ++idx) {
       int lowerThresh = photonThresholds[idx];
-      int upperThresh = idx >= photonThresholds.size() ? std::numeric_limits<double>::max() : photonThresholds[idx+1];
+      int upperThresh = (idx+1) >= photonThresholds.size() ? std::numeric_limits<int>::max() : photonThresholds[idx+1];
       std::string trigName = "Photon"+to_string(lowerThresh);
       if(readerTools_->ReadValueBranch<Float_t>("H_"+trigName) > 0.1) {
        if(CheckTriggerThreshold(lowerThresh, upperThresh,  hltPhoton1Pt)) {
@@ -1128,9 +1131,10 @@ void analysisClass::Loop()
     //}
 
     //// test output
+    //std::cout << "Run = " << run << ", event = " << event << ", ls = " << ls << std::endl;
     //std::cout << "Ele1_hltPhotonPt: " << hltPhoton1Pt << std::endl;
-    //std::cout << "Ele2_hltPhotonPt: " << hltPhoton2Pt << std::endl;
-    //std::cout << "Ele_hltPhotonPt: " << hltPhotonPt << std::endl;
+    ////std::cout << "Ele2_hltPhotonPt: " << hltPhoton2Pt << std::endl;
+    ////std::cout << "Ele_hltPhotonPt: " << hltPhotonPt << std::endl;
     //std::cout << "PassTrigger? " << passTrigger << "; trigger=" << triggerName << "; min_prescale=" << min_prescale << std::endl;
     //std::cout << "Passed Photon22 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon22")  > 0.1) << std::endl;
     //std::cout << "Passed Photon22 ? "  << (readerTools_->ReadValueBranch<Float_t>("H_Photon25")  > 0.1) << std::endl;
@@ -1528,6 +1532,7 @@ void analysisClass::Loop()
     int PassNMuon = 0;
     if ( nMuon_ptCut == 0 ) PassNMuon = 1;
 
+    //std::cout << "INFO: Call PassHLT with value = " << passTrigger << " for trigger = " << triggerName << " (triggerMatch=" << triggerMatch << "), hltPhoton1Pt=" << hltPhoton1Pt << " and weight=" << fakeRateEffective * min_prescale * gen_weight << std::endl;
     fillVariableWithValue ( "PassHLT"                        , passTrigger             , fakeRateEffective * min_prescale * gen_weight ) ;
     fillVariableWithValue("nEle_hltMatched",-1, fakeRateEffective * min_prescale * gen_weight ) ;
     fillVariableWithValue("nJet_hltMatched",-1, fakeRateEffective * min_prescale * gen_weight ) ;
