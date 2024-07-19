@@ -7,7 +7,7 @@ import numpy as np
 from plot_class import GetFile, Plot, Plot2D, generateHistoList, generateHisto, generateHistoBlank, generateHistoListFakeSystsFromModel, makeTOC, QuasiRebinHisto
 from ROOT import gROOT, kCyan, kRed, TCanvas, TGraphAsymmErrors, TH1D
 
-# gROOT.SetBatch(True)
+gROOT.SetBatch(True)
 gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
 # gErrorIgnoreLevel = kWarning  # doesn't work
 
@@ -732,6 +732,15 @@ if doPreselPlots:
     plots[-1].ylog = "yes"
     plots[-1].xtit = "2nd Jet p_{T} (GeV) [Preselection]"
 
+    plots.append(makeDefaultPlot("Pt3rdJet_PAS", systs=doSystematics))
+    plots[-1].rebin = pt_rebin
+    # plots[-1].ymax = 1e4
+    # plots[-1].ymin = 1e-1
+    plots[-1].xmax = 2000
+    plots[-1].xmin = 0
+    plots[-1].ylog = "yes"
+    plots[-1].xtit = "3rd Jet p_{T} (GeV) [Preselection]"
+
     plots.append(makeDefaultPlot("Eta1stJet_PAS", systs=doSystematics))
     plots[-1].rebin = 2
     # plots[-1].ymax = 200000000
@@ -750,6 +759,15 @@ if doPreselPlots:
     plots[-1].ylog = "yes"
     plots[-1].xtit = "2nd Jet #eta [Preselection]"
 
+    plots.append(makeDefaultPlot("Eta3rdJet_PAS", systs=doSystematics))
+    plots[-1].rebin = 2
+    # plots[-1].ymax = 200000000
+    # plots[-1].ymin = 1e-1
+    plots[-1].xmin = -3
+    plots[-1].xmax = 3
+    plots[-1].ylog = "yes"
+    plots[-1].xtit = "3rd Jet #eta [Preselection]"
+
     plots.append(makeDefaultPlot("Phi1stJet_PAS", systs=doSystematics))
     plots[-1].rebin = 1
     # plots[-1].ymax = 4e7
@@ -763,6 +781,13 @@ if doPreselPlots:
     # plots[-1].ymin = 1e-1
     plots[-1].ylog = "yes"
     plots[-1].xtit = "2nd Jet #phi [Preselection]"
+
+    plots.append(makeDefaultPlot("Phi3rdJet_PAS", systs=doSystematics))
+    plots[-1].rebin = 1
+    # plots[-1].ymax = 4e7
+    # plots[-1].ymin = 1e-1
+    plots[-1].ylog = "yes"
+    plots[-1].xtit = "3rd Jet #phi [Preselection]"
 
     plots.append(makeDefaultPlot("sTlep_PAS", systs=doSystematics))
     plots[-1].rebin = 1
@@ -1610,8 +1635,26 @@ if doPreselPlots:
     # plots[-1].ytit = "S_{T}(eejj) [GeV]"
     #
     #
-    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1000")) #, dataBlindAbove=0))  # blind above 0 for now
+    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ500", dataBlindAbove=0.7))  # above 0.7 covers most of the mass ranges
+    plots[-1].xtit = "BDT output [TrainRegion, M_{LQ} = 500 GeV]"
+    plots[-1].rebin = 10
+    plots[-1].ymax = 1e6
+    plots[-1].ymin = 1e-1
+    plots[-1].xmax = 1
+    plots[-1].xmin = -1
+    plots[-1].ylog = "yes"
+
+    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1000", dataBlindAbove=0.7))  # above 0.7 covers most of the mass ranges
     plots[-1].xtit = "BDT output [TrainRegion, M_{LQ} = 1000 GeV]"
+    plots[-1].rebin = 10
+    plots[-1].ymax = 1e6
+    plots[-1].ymin = 1e-1
+    plots[-1].xmax = 1
+    plots[-1].xmin = -1
+    plots[-1].ylog = "yes"
+
+    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1500", dataBlindAbove=0.7))  # above 0.7 covers most of the mass ranges
+    plots[-1].xtit = "BDT output [TrainRegion, M_{LQ} = 1500 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
     plots[-1].ymin = 1e-1
