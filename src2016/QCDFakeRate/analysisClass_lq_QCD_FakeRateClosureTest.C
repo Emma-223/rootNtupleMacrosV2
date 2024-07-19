@@ -26,6 +26,13 @@
 //#include "HistoReader.h"
 #include "QCDFakeRate.h"
 
+bool isHEMElectron(float eta, float phi) {
+  if(eta <= -1.3 && eta >= -3.0)
+    if(phi <= -0.87 && phi >= -1.57)
+      return true;
+  return false;
+}
+
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){}
 
@@ -156,20 +163,46 @@ void analysisClass::Loop()
      CreateUserTH1D( "Mt_MET_Ele1_PAS"        ,    200 , 0       , 2000     );
      CreateUserTH1D( "Mt_MET_Ele2_PAS"        ,    200 , 0       , 2000     );
      CreateUserTH1D( "HT"                     ,    200 , 0       , 2000     );
+     CreateUserTH1D( "Pt1stEle_tight"         ,    100 , 0       , 1000);
+     CreateUserTH1D( "Mee_tight"              ,    200 , 0       , 2000);
+     CreateUserTH1D( "Me1j1_tight"            ,    200 , 0       , 2000);
+     CreateUserTH1D( "Me2j1_tight"            ,    200 , 0       , 2000);
+     CreateUserTH1D( "sT_tight"               ,    200 , 0       , 2000);
+     CreateUserTH1D( "Pt2ndEle_tight"         ,    100 , 0       , 1000);
+     CreateUserTH1D( "MET_tight"              ,    200 , 0       , 1000);
    std::string region;
    for (int i=0; i<3; i++){
+     int nHEMRegions;
+     if (analysisYear==2018) nHEMRegions = 3;
+     else nHEMRegions = 1;
      if (i==0){region = "_Barrel";}
      else if (i==1){region = "_End1";}
      else {region = "_End2";}
-     CreateUserTH2D( "Pt1stEle_tight"+region         ,    100 , 0       , 1000     , 200, 0, 1000);
-     CreateUserTH2D( "Mee_tight"+region              ,    200 , 0       , 2000     , 200, 0, 1000);
-     CreateUserTH2D( "Me1j1_tight"+region            ,    200 , 0       , 2000     , 200, 0, 1000);
-     CreateUserTH2D( "sT_tight"+region               ,    200 , 0       , 2000     , 200, 0, 1000);
-     CreateUserTH2D( "Pt2ndEle_tight"+region         ,    100 , 0       , 1000     , 200, 0, 1000);
-     CreateUserTH2D( "Me2j1_tight"+region            ,    200 , 0       , 2000     , 200, 0, 1000);
-     CreateUserTH2D( "MET_tight"+region              ,    200 , 0       , 1000     , 200, 0, 1000);
-     CreateUserTH2D("MeeControlReg"+region           ,    200 , 0       , 2000     , 200, 0, 1000);
+     for (int j=0; j<nHEMRegions;j++){
+     std::string HEMRegion = "";
+     if (analysisYear==2018){
+       if (j==0) HEMRegion = "_pre319077";
+       else if (j==1) HEMRegion = "_post319077_HEMOnly";
+       else HEMRegion = "_post319077_noHEM";
+     }
+     CreateUserTH2D( "Pt1stEle_PAS"+region+HEMRegion         ,    100 , 0       , 1000     , 200, 0, 1000);
+     CreateUserTH2D( "Mee_PAS"+region+HEMRegion              ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Me1j1_PAS"+region+HEMRegion            ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "sT_PAS"+region+HEMRegion               ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Pt2ndEle_PAS"+region+HEMRegion         ,    100 , 0       , 1000     , 200, 0, 1000);
+     CreateUserTH2D( "Me2j1_PAS"+region+HEMRegion            ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "MET_PAS"+region+HEMRegion              ,    200 , 0       , 1000     , 200, 0, 1000);
+     CreateUserTH2D( "Pt1stEle_tight"+region+HEMRegion         ,    100 , 0       , 1000     , 200, 0, 1000);
+     CreateUserTH2D( "Mee_tight"+region+HEMRegion              ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Me1j1_tight"+region+HEMRegion            ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "sT_tight"+region+HEMRegion               ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Pt2ndEle_tight"+region+HEMRegion         ,    100 , 0       , 1000     , 200, 0, 1000);
+     CreateUserTH2D( "Me2j1_tight"+region+HEMRegion            ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "MET_tight"+region+HEMRegion              ,    200 , 0       , 1000     , 200, 0, 1000);
+     CreateUserTH2D("MeeControlReg"+region+HEMRegion           ,    200 , 0       , 2000     , 200, 0, 1000);
+     }
    }
+     CreateUserTH1D("MeeControlReg"           ,    200 , 0       , 2000);
      CreateUserTH1D( "HT_tight"               ,    200 , 0       , 2000     );
      CreateUserTH1D( "Mt_MET_Ele1_tight"      ,    200 , 0       , 2000     );
      CreateUserTH1D( "Mt_MET_Ele2_tight"      ,    200 , 0       , 2000     );
@@ -358,16 +391,16 @@ void analysisClass::Loop()
        }
        
        if(current_file_name.find("SinglePhoton") != std::string::npos) {
-	 if(passSinglePhoton /*& !passDoubleEle)*/) { passTrigger = 1; triggerName = "Photon"; }
-	 //if(passSinglePhoton && passDoubleEle) { passTrigger = 1; triggerName = "Photon_and_DoubleEle"; }
+	 if(passSinglePhoton && !passDoubleEle) { passTrigger = 1; triggerName = "Photon"; }
+	 if(passSinglePhoton && passDoubleEle) { passTrigger = 1; triggerName = "Photon_and_DoubleEle"; }
        }
-	//else if(current_file_name.find("SingleElectron") != std::string::npos) {
-	 //if(passDoubleEle && !passSinglePhoton) { passTrigger = 1; triggerName = "DoubleEle"; }
-       //}
+	else if(current_file_name.find("SingleElectron") != std::string::npos) {
+	 if(passDoubleEle && !passSinglePhoton) { passTrigger = 1; triggerName = "DoubleEle"; }
+       }
        else{//EGamma datasets for 2018, or MC 
-         if(passSinglePhoton /*& !passDoubleEle)*/) {passTrigger = 1; triggerName = "Photon";}
-	 //if(passDoubleEle & !passSinglePhoton) {passTrigger = 1; triggerName = "DoubleEle";}
-	 //if(passDoubleEle && passSinglePhoton) {passTrigger = 1; triggerName = "Photon_and_DoubleEle";}
+         if(passSinglePhoton && !passDoubleEle) {passTrigger = 1; triggerName = "Photon";}
+	 if(passDoubleEle && !passSinglePhoton) {passTrigger = 1; triggerName = "DoubleEle";}
+	 if(passDoubleEle && passSinglePhoton) {passTrigger = 1; triggerName = "Photon_and_DoubleEle";}
        }
      }
      if(isData() && passTrigger) {//if we use photon175 only it's unprescaled so all of this becomes unecessary
@@ -736,14 +769,26 @@ void analysisClass::Loop()
     //   FillUserTH1D("totalWeight", pileup_weight*min_prescale*fakeRateEffective,1);
     //   FillUserTH1D("Mee_HTStudyRegion", loose_e1e2.M(), pileup_weight * min_prescale * fakeRateEffective );
      //}
-
+     std::string ele1HEMReg = "";
+     std::string ele2HEMReg = "";
+     if (analysisYear==2018 && run < 319077) {ele1HEMReg = "_pre319077"; ele2HEMReg = "_pre319077";}
+     else if (analysisYear==2018 && run >=319077){
+       if (isHEMElectron(Ele1_Eta, Ele1_Phi)) {ele1HEMReg = "_post319077_HEMOnly";} else {ele1HEMReg="_post319077_noHEM";}
+       if (isHEMElectron(Ele2_Eta, Ele2_Phi)) {ele2HEMReg = "_post319077_HEMOnly";} else {ele2HEMReg="_post319077_noHEM";}
+     }     
      if (passed_controlRegion) { 
-       if(ele1_isBarrel) FillUserTH2D("MeeControlReg_Barrel", loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
-       if(ele1_isEndcap1) FillUserTH2D("MeeControlReg_End1", loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
-       if(ele1_isEndcap2) FillUserTH2D("MeeControlReg_End2", loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
-       if(ele2_isBarrel) FillUserTH2D("MeeControlReg_Barrel", loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
-       if(ele2_isEndcap1) FillUserTH2D("MeeControlReg_End1", loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
-       if(ele2_isEndcap2) FillUserTH2D("MeeControlReg_End2", loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 ); 
+       if (override_fakeRate > 0){
+         FillUserTH1D("MeeControlReg", loose_e1e2.M(), pileup_weight*min_prescale*fakeRateEffective);
+       }
+       else{
+       
+       if(ele1_isBarrel) FillUserTH2D("MeeControlReg_Barrel"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+       if(ele1_isEndcap1) FillUserTH2D("MeeControlReg_End1"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+       if(ele1_isEndcap2) FillUserTH2D("MeeControlReg_End2"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+       if(ele2_isBarrel) FillUserTH2D("MeeControlReg_Barrel"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
+       if(ele2_isEndcap1) FillUserTH2D("MeeControlReg_End1"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
+       if(ele2_isEndcap2) FillUserTH2D("MeeControlReg_End2"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 ); 
+       }
      }  
 
      if ( passed_preselection ) {
@@ -796,6 +841,62 @@ void analysisClass::Loop()
             FillUserTH1D("HEEPEle_Pt"      , Ele2_Pt                   , pileup_weight * min_prescale * fakeRateEffective );
             FillUserTH1D("LooseEle_Pt"     , Ele1_Pt                   , pileup_weight * min_prescale * fakeRateEffective );
          }
+       }
+       else{
+        if(ele1_isBarrel){
+	FillUserTH2D("Pt1stEle_PAS_Barrel"+ele1HEMReg          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("Mee_PAS_Barrel"+ele1HEMReg          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("Me1j1_PAS_Barrel"+ele1HEMReg          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("sT_PAS_Barrel"+ele1HEMReg          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("Me2j1_PAS_Barrel"+ele1HEMReg          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("Pt2ndEle_PAS_Barrel"+ele1HEMReg          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("MET_PAS_Barrel"+ele1HEMReg          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        }
+        if(ele1_isEndcap1){
+    	FillUserTH2D("Pt1stEle_PAS_End1"+ele1HEMReg          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("Mee_PAS_End1"+ele1HEMReg          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("Me1j1_PAS_End1"+ele1HEMReg          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("sT_PAS_End1"+ele1HEMReg          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("Me2j1_PAS_End1"+ele1HEMReg          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("Pt2ndEle_PAS_End1"+ele1HEMReg          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("MET_PAS_End1"+ele1HEMReg          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        }
+        if(ele1_isEndcap2){
+	FillUserTH2D("Pt1stEle_PAS_End2"+ele1HEMReg          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("Mee_PAS_End2"+ele1HEMReg          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("Me1j1_PAS_End2"+ele1HEMReg          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("sT_PAS_End2"+ele1HEMReg          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("Me2j1_PAS_End2"+ele1HEMReg          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("Pt2ndEle_PAS_End2"+ele1HEMReg          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("MET_PAS_End2"+ele1HEMReg          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        }
+        if(ele2_isBarrel){
+      	FillUserTH2D("Pt1stEle_PAS_Barrel"+ele2HEMReg          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("Mee_PAS_Barrel"+ele2HEMReg          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("Me1j1_PAS_Barrel"+ele2HEMReg          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("sT_PAS_Barrel"+ele2HEMReg          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("Me2j1_PAS_Barrel"+ele2HEMReg          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        FillUserTH2D("Pt2ndEle_PAS_Barrel"+ele2HEMReg          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        FillUserTH2D("MET_PAS_Barrel"+ele2HEMReg          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        }
+        if(ele2_isEndcap1){
+	FillUserTH2D("Pt1stEle_PAS_End1"+ele2HEMReg          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("Mee_PAS_End1"+ele2HEMReg          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("Me1j1_PAS_End1"+ele2HEMReg          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("sT_PAS_End1"+ele2HEMReg          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        FillUserTH2D("Me2j1_PAS_End1"+ele2HEMReg          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        FillUserTH2D("Pt2ndEle_PAS_End1"+ele2HEMReg          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        FillUserTH2D("MET_PAS_End1"+ele2HEMReg          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        }
+        if(ele2_isEndcap2){
+     	FillUserTH2D("Pt1stEle_PAS_End2"+ele2HEMReg          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("Mee_PAS_End2"+ele2HEMReg          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("Me1j1_PAS_End2"+ele2HEMReg          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("sT_PAS_End2"+ele2HEMReg          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        FillUserTH2D("Me2j1_PAS_End2"+ele2HEMReg          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        FillUserTH2D("Pt2ndEle_PAS_End2"+ele2HEMReg          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        FillUserTH2D("MET_PAS_End2"+ele2HEMReg          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+        }	   
        }
        //fill these for only the region that this event is in
        //it is possible for none of these to be true because there is a gap between the barrel and endcap
@@ -854,13 +955,13 @@ void analysisClass::Loop()
      }
      if(passed_tightSelection){
          double sT_eej = Ele1_Pt + Ele2_Pt + Jet1_Pt ;
-//         FillUserTH1D("Pt1stEle_tight"          , Ele1_Pt , pileup_weight * min_prescale * fakeRateEffective );
-//         FillUserTH1D("Mee_tight"        , loose_e1e2.M() , pileup_weight * min_prescale * fakeRateEffective );
-//         FillUserTH1D("Me1j1_tight"             , e1j1.M(), pileup_weight * min_prescale * fakeRateEffective );
-//         FillUserTH1D("sT_tight"                 , sT_eej , pileup_weight * min_prescale * fakeRateEffective );
-//         FillUserTH1D("Pt2ndEle_tight"          , Ele2_Pt , pileup_weight * min_prescale * fakeRateEffective );
-//         FillUserTH1D("Me2j1_tight"             , e2j1.M(), pileup_weight * min_prescale * fakeRateEffective );
-//         FillUserTH1D("MET_tight"        ,  PFMET_Type1_Pt, pileup_weight * min_prescale * fakeRateEffective );
+         FillUserTH1D("Pt1stEle_tight"          , Ele1_Pt , pileup_weight * min_prescale * fakeRateEffective );
+         FillUserTH1D("Mee_tight"        , loose_e1e2.M() , pileup_weight * min_prescale * fakeRateEffective );
+         FillUserTH1D("Me1j1_tight"             , e1j1.M(), pileup_weight * min_prescale * fakeRateEffective );
+         FillUserTH1D("sT_tight"                 , sT_eej , pileup_weight * min_prescale * fakeRateEffective );
+         FillUserTH1D("Pt2ndEle_tight"          , Ele2_Pt , pileup_weight * min_prescale * fakeRateEffective );
+         FillUserTH1D("Me2j1_tight"             , e2j1.M(), pileup_weight * min_prescale * fakeRateEffective );
+         FillUserTH1D("MET_tight"        ,  PFMET_Type1_Pt, pileup_weight * min_prescale * fakeRateEffective );
          FillUserTH1D("HT_tight"                , HT      , pileup_weight * min_prescale * fakeRateEffective );
          FillUserTH1D("Mt_MET_Ele1_tight"      , Mt_MET_Ele1, pileup_weight * min_prescale * fakeRateEffective );
          FillUserTH1D("Mt_MET_Ele2_tight"      , Mt_MET_Ele2, pileup_weight * min_prescale * fakeRateEffective );
@@ -869,58 +970,58 @@ void analysisClass::Loop()
          FillUserTH1D("METPhi_tight"     , PFMET_Type1_Phi, pileup_weight * min_prescale * fakeRateEffective );
 
          if(ele1_isBarrel){
-	   FillUserTH2D("Pt1stEle_tight_Barrel"          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-           FillUserTH2D("Mee_tight_Barrel"          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("Me1j1_tight_Barrel"          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("sT_tight_Barrel"          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("Me2j1_tight_Barrel"          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("Pt2ndEle_tight_Barrel"          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("MET_tight_Barrel"          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Pt1stEle_tight_Barrel"+ele1HEMReg          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+           FillUserTH2D("Mee_tight_Barrel"+ele1HEMReg          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Me1j1_tight_Barrel"+ele1HEMReg          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("sT_tight_Barrel"+ele1HEMReg          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Me2j1_tight_Barrel"+ele1HEMReg          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Pt2ndEle_tight_Barrel"+ele1HEMReg          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("MET_tight_Barrel"+ele1HEMReg          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
 	 }
 	 if(ele1_isEndcap1){
-	   FillUserTH2D("Pt1stEle_tight_End1"          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("Mee_tight_End1"          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("Me1j1_tight_End1"          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("sT_tight_End1"          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("Me2j1_tight_End1"          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("Pt2ndEle_tight_End1"          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-	   FillUserTH2D("MET_tight_End1"          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Pt1stEle_tight_End1"+ele1HEMReg          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Mee_tight_End1"+ele1HEMReg          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Me1j1_tight_End1"+ele1HEMReg          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("sT_tight_End1"+ele1HEMReg          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Me2j1_tight_End1"+ele1HEMReg          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Pt2ndEle_tight_End1"+ele1HEMReg          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("MET_tight_End1"+ele1HEMReg          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
 	 }
          if(ele1_isEndcap2){
-	   FillUserTH2D("Pt1stEle_tight_End2"          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-           FillUserTH2D("Mee_tight_End2"          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-           FillUserTH2D("Me1j1_tight_End2"          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-           FillUserTH2D("sT_tight_End2"          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-           FillUserTH2D("Me2j1_tight_End2"          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-           FillUserTH2D("Pt2ndEle_tight_End2"          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
-           FillUserTH2D("MET_tight_End2"          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	   FillUserTH2D("Pt1stEle_tight_End2"+ele1HEMReg          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+           FillUserTH2D("Mee_tight_End2"+ele1HEMReg          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+           FillUserTH2D("Me1j1_tight_End2"+ele1HEMReg          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+           FillUserTH2D("sT_tight_End2"+ele1HEMReg          , sT_eej , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+           FillUserTH2D("Me2j1_tight_End2"+ele1HEMReg          , e2j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+           FillUserTH2D("Pt2ndEle_tight_End2"+ele1HEMReg          , Ele2_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+           FillUserTH2D("MET_tight_End2"+ele1HEMReg          , PFMET_Type1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
 	 }
 	 if(ele2_isBarrel){
-           FillUserTH2D("Pt1stEle_tight_Barrel"          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-           FillUserTH2D("Mee_tight_Barrel"          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-           FillUserTH2D("Me1j1_tight_Barrel"          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("sT_tight_Barrel"          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Me2j1_tight_Barrel"          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Pt2ndEle_tight_Barrel"          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("MET_tight_Barrel"          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+           FillUserTH2D("Pt1stEle_tight_Barrel"+ele2HEMReg          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+           FillUserTH2D("Mee_tight_Barrel"+ele2HEMReg          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+           FillUserTH2D("Me1j1_tight_Barrel"+ele2HEMReg          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("sT_tight_Barrel"+ele2HEMReg          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Me2j1_tight_Barrel"+ele2HEMReg          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Pt2ndEle_tight_Barrel"+ele2HEMReg          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("MET_tight_Barrel"+ele2HEMReg          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
 	 }
          if(ele2_isEndcap1){
-	   FillUserTH2D("Pt1stEle_tight_End1"          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Mee_tight_End1"          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Me1j1_tight_End1"          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("sT_tight_End1"          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Me2j1_tight_End1"          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Pt2ndEle_tight_End1"          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("MET_tight_End1"          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Pt1stEle_tight_End1"+ele2HEMReg          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Mee_tight_End1"+ele2HEMReg          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Me1j1_tight_End1"+ele2HEMReg          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("sT_tight_End1"+ele2HEMReg          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Me2j1_tight_End1"+ele2HEMReg          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Pt2ndEle_tight_End1"+ele2HEMReg          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("MET_tight_End1"+ele2HEMReg          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
 	 }
          if(ele2_isEndcap2){
-       	   FillUserTH2D("Pt1stEle_tight_End2"          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Mee_tight_End2"          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-           FillUserTH2D("Me1j1_tight_End2"          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("sT_tight_End2"          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Me2j1_tight_End2"          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("Pt2ndEle_tight_End2"          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
-	   FillUserTH2D("MET_tight_End2"          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+       	   FillUserTH2D("Pt1stEle_tight_End2"+ele2HEMReg          , Ele1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Mee_tight_End2"+ele2HEMReg          , loose_e1e2.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+           FillUserTH2D("Me1j1_tight_End2"+ele2HEMReg          , e1j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("sT_tight_End2"+ele2HEMReg          , sT_eej , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Me2j1_tight_End2"+ele2HEMReg          , e2j1.M() , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("Pt2ndEle_tight_End2"+ele2HEMReg          , Ele2_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	   FillUserTH2D("MET_tight_End2"+ele2HEMReg          , PFMET_Type1_Pt , Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
 	 }
 
 	 //FillUserTH1D("errFRsq_Pt1stEle_tight"     , Ele1_Pt                   , eFakeRateEffectiveSQ );
