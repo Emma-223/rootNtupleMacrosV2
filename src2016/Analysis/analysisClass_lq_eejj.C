@@ -2071,13 +2071,15 @@ void analysisClass::Loop()
       FillUserHist("METPhi_PAS"	    , PFMET_Type1_Phi             , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("Pt1stJet_PAS"          , Jet1_Pt                        , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("Pt2ndJet_PAS"          , Jet2_Pt                        , pileup_weight * gen_weight, preselectionCut );
-      FillUserHist("Pt3rdJet_PAS"          , Jet3_Pt                        , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("Eta1stJet_PAS"         , Jet1_Eta                       , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("Eta2ndJet_PAS"         , Jet2_Eta                       , pileup_weight * gen_weight, preselectionCut );
-      FillUserHist("Eta3rdJet_PAS"         , Jet3_Eta                       , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("Phi1stJet_PAS"	    , Jet1_Phi                       , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("Phi2ndJet_PAS"	    , Jet2_Phi                       , pileup_weight * gen_weight, preselectionCut );
-      FillUserHist("Phi3rdJet_PAS"	    , Jet3_Phi                       , pileup_weight * gen_weight, preselectionCut );
+      if(nJet_store > 2) {
+        FillUserHist("Pt3rdJet_PAS"          , Jet3_Pt                        , pileup_weight * gen_weight, preselectionCut );
+        FillUserHist("Eta3rdJet_PAS"         , Jet3_Eta                       , pileup_weight * gen_weight, preselectionCut );
+        FillUserHist("Phi3rdJet_PAS"	    , Jet3_Phi                       , pileup_weight * gen_weight, preselectionCut );
+      }
       FillUserHist("sTlep_PAS"             , Ele1_Pt + Ele2_Pt              , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("sTjet_PAS"             , Jet1_Pt + Jet2_Pt              , pileup_weight * gen_weight, preselectionCut );
       FillUserHist("sT_PAS"                , sT_eejj                        , pileup_weight * gen_weight, preselectionCut );

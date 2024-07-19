@@ -2102,13 +2102,15 @@ void analysisClass::Loop()
       FillUserHist("METPhi_PAS"	   , PFMET_Type1_Phi                 , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Pt1stJet_PAS"         , Jet1_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Pt2ndJet_PAS"         , Jet2_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
-      FillUserHist("Pt3rdJet_PAS"         , Jet3_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Eta1stJet_PAS"        , Jet1_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Eta2ndJet_PAS"        , Jet2_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
-      FillUserHist("Eta3rdJet_PAS"        , Jet3_Eta                    , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Phi1stJet_PAS"	   , Jet1_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("Phi2ndJet_PAS"	   , Jet2_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
-      FillUserHist("Phi3rdJet_PAS"     , Jet3_Phi                    , min_prescale * gen_weight * fakeRateEffective ) ;
+      if(nJet_store > 2) {
+        FillUserHist("Pt3rdJet_PAS"         , Jet3_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
+        FillUserHist("Eta3rdJet_PAS"        , Jet3_Eta                    , min_prescale * gen_weight * fakeRateEffective ) ;
+        FillUserHist("Phi3rdJet_PAS"     , Jet3_Phi                    , min_prescale * gen_weight * fakeRateEffective ) ;
+      }
       FillUserHist("sTlep_PAS"            , Ele1_Pt + Ele2_Pt        , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("sTjet_PAS"            , Jet1_Pt + Jet2_Pt  , min_prescale * gen_weight * fakeRateEffective ) ;
       FillUserHist("sT_PAS"               , sT_eejj                            , min_prescale * gen_weight * fakeRateEffective ) ;
