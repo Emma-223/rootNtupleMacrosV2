@@ -11,6 +11,7 @@
 #include "ElectronScaleFactors.C"
 // for prescales
 #include "Run2PhotonTriggerPrescales.h"
+#include "PrescaleProvider.h"
 
 const std::vector<string> jetBinNames = {"", "lte1Jet", "1Jet", "2Jet", "3Jet"};
 const std::vector<string> allRegions = {"", "Bar", "End1", "End2"};
@@ -23,6 +24,15 @@ bool isHEMElectron(float eta, float phi) {
   return false;
 }
 
+bool isHEMEta(float eta){
+  if(eta <= -1.3 && eta >= -3.0) return true;
+  else return false;
+}
+
+bool isHEMPhi(float phi){
+  if(phi <= -0.87 && phi >= -1.57) return true;
+  else return false;
+}
 void createHistsForAllRegionsAndJetBins(analysisClass* anaClass, const std::string& category, const std::string& nameTitle, const int xBins, const float xBinLow, const float xBinHigh, const int yBins=0, const float yBinLow=0, const float yBinHigh=0) {
   //CreateUserTH2D( "Total_PFRelIsoAllvsNvtx_PAS"        ,    100,0,100, 300 , 0.0     , 3.     );
   //CreateUserTH2D( "Total_Bar_lte1Jet_PFRelIsoAllvsNvtx_PAS"        ,    100,0,100, 300 , 0.0     , 3.     );
@@ -46,7 +56,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){}
 
   analysisClass::~analysisClass(){}
-
+int negativePrescaleCount = 0;
 void analysisClass::Loop()
 {
   std::cout << "analysisClass::Loop() begins" <<std::endl;   
@@ -81,7 +91,7 @@ void analysisClass::Loop()
   //--------------------------------------------------------------------------
   
   std::string getAnalysisYear = getPreCutString1("AnalysisYear");
-  //std::cout<<"analysis year: "<<getAnalysisYear<<std::endl;
+  std::cout<<"analysis year: "<<getAnalysisYear<<std::endl;
   int analysisYear;
   std::string analysisYearStr;
   if (getAnalysisYear.find("pre") != string::npos ){
@@ -108,6 +118,16 @@ void analysisClass::Loop()
   // Photon trigger average prescales
   //--------------------------------------------------------------------------
   Run2PhotonTriggerPrescales run2PhotonTriggerPrescales;
+  std::string psFileLocation;
+  // Per-LS prescales
+  if (analysisYear == 2016)
+     psFileLocation = "/afs/cern.ch/user/e/eipearso/public/ul-analysis-inputs/prescales/2016/triggerData2016";
+  else if (analysisYear == 2017)
+     psFileLocation = "/afs/cern.ch/user/e/eipearso/public/ul-analysis-inputs/prescales/2017/triggerData2017";
+  else if (analysisYear == 2018)
+     psFileLocation = "/afs/cern.ch/user/e/eipearso/public/ul-analysis-inputs/prescales/2018/hltData2018"; //for some reason 2018 is named different
+  else std::cout<<"Cannot find prescales for analysis year "<<analysisYear<<std::endl;
+  PrescaleProvider psProv(psFileLocation);
 
   //--------------------------------------------------------------------------
   // Create TH1D's
@@ -135,6 +155,8 @@ void analysisClass::Loop()
     createHistsForAllRegionsAndJetBins(this, cat, "TrkIsoHEEP7vsHLTPt_post319077"     ,    1500,0,1500, 200 , 0.0     , 100.     );
     createHistsForAllRegionsAndJetBins(this, cat, "TrkIsoHEEP7vsHLTPt_noHEM_post319077"     ,    1500,0,1500, 200 , 0.0     , 100.     );  
     createHistsForAllRegionsAndJetBins(this, cat, "TrkIsoHEEP7vsHLTPt_HEMonly_post319077"     ,    1500,0,1500, 200 , 0.0     , 100.    );
+    createHistsForAllRegionsAndJetBins(this, cat, "TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077",1500,0,1500, 200 , 0.0     , 100.    );
+    createHistsForAllRegionsAndJetBins(this, cat, "TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077",1500,0,1500, 200 , 0.0     , 100.    );
     createHistsForAllRegionsAndJetBins(this, cat, "TrkIsoHEEP7vsMTenu_PAS"     , 400, 0, 2000, 200, 0.0, 100.);
     createHistsForAllRegionsAndJetBins(this, cat, "MTenu_PAS"     , 400, 0, 2000);
     createHistsForAllRegionsAndJetBins(this, cat, "TrkIsoHEEP7vsNvtx_PAS"        ,    100,0,100, 200 , 0.0     , 100.     );
@@ -208,7 +230,11 @@ void analysisClass::Loop()
     // Print progress
     //-----------------------------------------------------------------
     if(jentry < 10 || jentry%10000 == 0) std::cout << "analysisClass::Loop(): jentry = " << jentry << "/" << nentries << std::endl;
+    //if(jentry==100) break;
     //// run ls event
+    unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
+    unsigned int ls = readerTools_->ReadValueBranch<UInt_t>("ls");
+    unsigned long long int event = readerTools_->ReadValueBranch<ULong64_t>("event");
     //std::cout << static_cast<unsigned int>(run) << " " << static_cast<unsigned int>(ls) << " " << static_cast<unsigned int>(event) << std::endl;
 
     //--------------------------------------------------------------------------
@@ -221,10 +247,11 @@ void analysisClass::Loop()
     // Check good run list
     //--------------------------------------------------------------------------
 
-    float run = readerTools_->ReadValueBranch<UInt_t>("run");
-    int passedJSON = passJSON ( run,
-        readerTools_->ReadValueBranch<UInt_t>("ls"),
-        isData() ) ;
+    //float run = readerTools_->ReadValueBranch<UInt_t>("run");
+    //int ls = readerTools_->ReadValueBranch<UInt_t>("ls");
+    int passedJSON = readerTools_->ReadValueBranch<Bool_t>("PassJSON"); //passJSON ( run,
+        //ls, //readerTools_->ReadValueBranch<UInt_t>("ls"),
+        //isData() ) ;
 
     //--------------------------------------------------------------------------
     // Find the right prescale for this event
@@ -270,9 +297,55 @@ void analysisClass::Loop()
     }
     if(isData() && passTrigger) { 
       //std::cout << "INFO: lookup trigger name " << triggerName << " for year: " << year << std::endl;
-      min_prescale = run2PhotonTriggerPrescales.LookupPrescale(analysisYearStr,triggerName);
+      //min_prescale = run2PhotonTriggerPrescales.LookupPrescale(analysisYearStr,triggerName);
+      int hltPrescale = psProv.hltPrescale("HLT_"+triggerName+"_v", run, ls);
+      int l1Prescale = 1;
+      std::string l1Seed = "";
+      if(triggerName =="Photon22"){
+        l1Seed = "L1_SingleEG18";
+        l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
+      }
+      else if(triggerName == "Photon25" || triggerName == "Photon30" || triggerName == "Photon36"){
+        l1Seed = "L1_SingleEG26";
+        l1Prescale = psProv.l1Prescale(l1Seed, run, ls); 
+      } 
+      else if(triggerName == "Photon33") {
+        l1Seed = "L1_SingleEG26er2p5";
+        l1Prescale = psProv.l1Prescale(l1Seed, run, ls);//some runs have EG26 instead of EG26er2p5
+        if (l1Prescale <= 0) {l1Seed = "L1_SingleEG26"; l1Prescale = psProv.l1Prescale(l1Seed, run, ls);}
+      }
+      else if(triggerName == "Photon50" || triggerName == "Photon75" || triggerName == "Photon90" || triggerName == "Photon120" || triggerName == "Photon150" || (analysisYear > 2016 && triggerName == "Photon175") ) {
+        int eg34Prescale = psProv.l1Prescale("L1_SingleEG34", run, ls);
+        l1Seed = "L1_SingleEG40";
+        if(analysisYear == 2018){
+          l1Seed = "L1_SingleEG42er2p5";
+          l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
+          if (l1Prescale <=0){
+            l1Seed = "L1_SingleEG42";
+            l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
+            if (l1Prescale <=0){
+              l1Seed = "L1_SingleEG45er2p5";
+              l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
+            }
+          }
+        }
+      }
+      else if(analysisYear == 2016 && triggerName == "Photon175") {
+        l1Prescale = 1;
+        hltPrescale = 1;
+      }
+      else if(analysisYear > 2016 && triggerName == "Photon200") {
+        l1Prescale = 1;
+        hltPrescale = 1;
+      }
+      if(l1Prescale <= 0 || hltPrescale <= 0)
+        std::cout << "INFO: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << "; hlt prescale = " << hltPrescale << "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() << "; hlt menu=" << psProv.getRunInfo(run)->hltMenu() << "; trig mode=" << psProv.getRunInfo(run)->triggerMode() << std::endl;
+      min_prescale = l1Prescale * hltPrescale;
+      if(min_prescale <=0)
+        passTrigger = false;
+      if(l1Prescale <= 0){negativePrescaleCount +=1;}
     }
-
+    //std::cout<<"min_prescale: "<<min_prescale<<", "<<"ls: "<<ls<<", "<<"run: "<<run<<std::endl;
     //--------------------------------------------------------------------------
     // Do pileup re-weighting
     //--------------------------------------------------------------------------
@@ -289,6 +362,9 @@ void analysisClass::Loop()
     //// TopPt reweight
     //// only valid for powheg
     std::string current_file_name ( readerTools_->GetTree()->GetCurrentFile()->GetName());
+    //use gen_weight sing only for these samples:
+    if(current_file_name.find("powhegMiNNLO") != std::string::npos) gen_weight = TMath::Sign(1, gen_weight);
+    //std::cout<<"gen_weight = "<<gen_weight<<std::endl;
     //if(current_file_name.find("TT_") != std::string::npos) {
     //  gen_weight*=TopPtWeight;
     //}
@@ -328,8 +404,24 @@ void analysisClass::Loop()
       if(readerTools_->ReadValueBranch<Float_t>("LHE_Vpt") == 0)
         passLHECuts = true; 
     }
+    // for stitching with powhegMiNNLO mass-binned samples, Aug. 2023
+    if(current_file_name.find("DYJetsToEE_M-50_massWgtFix_TuneCP5") != std::string::npos) {
+      passLHECuts = false;
+      // construct mass of dielectron system
+      TLorentzVector e1, e2;
+      float Ele1_Pt = readerTools_->ReadValueBranch<Float_t>("Ele1_Pt");
+      float Ele2_Pt = readerTools_->ReadValueBranch<Float_t>("Ele2_Pt");
+      float Ele1_Eta = readerTools_->ReadValueBranch<Float_t>("Ele1_Eta");
+      float Ele2_Eta = readerTools_->ReadValueBranch<Float_t>("Ele2_Eta");
+      float Ele1_Phi = readerTools_->ReadValueBranch<Float_t>("Ele1_Phi");
+      float Ele2_Phi = readerTools_->ReadValueBranch<Float_t>("Ele2_Phi");
+      e1.SetPtEtaPhiM ( Ele1_Pt, Ele1_Eta, Ele1_Phi, 0.0 );
+      e2.SetPtEtaPhiM ( Ele2_Pt, Ele2_Eta, Ele2_Phi, 0.0 );
+      float dielectron_mass = (e1 + e2).M();
+      if(dielectron_mass < 100)
+        passLHECuts = true;
+    }
     fillVariableWithValue("PassLHECuts",passLHECuts,min_prescale*pileup_weight);
-
     // JSON variable								            
     fillVariableWithValue(   "PassJSON"                      , passedJSON                  , min_prescale * pileup_weight ); 
 
@@ -351,7 +443,7 @@ void analysisClass::Loop()
     fillVariableWithValue("PassBadPFMuonFilter"                , int(readerTools_->ReadValueBranch<Bool_t>("PassBadPFMuonFilter")                    == 1), min_prescale * pileup_weight);
     // EcalBadCalibV2 for 2017, 2018
     if(analysisYear > 2016)
-      fillVariableWithValue("PassEcalBadCalibV2Filter"         , int(readerTools_->ReadValueBranch<Bool_t>("PassEcalBadCalibV2Filter")               == 1), min_prescale * pileup_weight);
+      fillVariableWithValue("PassEcalBadCalibV2Filter"         , int(readerTools_->ReadValueBranch<Bool_t>("PassEcalBadCalibFilter")               == 1), min_prescale * pileup_weight);
     else
       fillVariableWithValue("PassEcalBadCalibV2Filter"         , 1                                                                                          , min_prescale * pileup_weight);
 
@@ -730,9 +822,15 @@ void analysisClass::Loop()
               FillUserTH2D( "Total_Bar_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
             else
               FillUserTH2D( "Total_Bar_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+ 
+            if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi)) 
+              FillUserTH2D("Total_Bar_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
           }
-          else
+          else{
             FillUserTH2D( "Total_Bar_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+            if (isHEMEta(Ele1_SCEta))
+              FillUserTH2D("Total_Bar_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+          }
         }
         FillUserTH2D( "Total_Bar_TrkIsoHEEP7vsMTenu_PAS"   , MT_Ele1MET, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
         FillUserTH1D( "Total_Bar_MTenu_PAS", MT_Ele1MET, min_prescale * pileup_weight);
@@ -760,9 +858,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Total_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Total_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if (isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Total_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Total_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if (isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Total_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           FillUserTH2D( "Total_Bar_lte1Jet_TrkIsoHEEP7vsMTenu_PAS"   , MT_Ele1MET, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
           FillUserTH1D( "Total_Bar_lte1Jet_MTenu_PAS", MT_Ele1MET, min_prescale * pileup_weight);
@@ -822,9 +925,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Total_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Total_Bar_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if (isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Total_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Total_Bar_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if (isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Total_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           FillUserTH2D( "Total_Bar_2Jet_TrkIsoHEEP7vsMTenu_PAS"   , MT_Ele1MET, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
           FillUserTH1D( "Total_Bar_2Jet_MTenu_PAS", MT_Ele1MET, min_prescale * pileup_weight);
@@ -878,6 +986,7 @@ void analysisClass::Loop()
           FillUserTH1D( "Total_Bar_PU9-UP_Charge1stEle_PAS"      , Ele1_Charge             , min_prescale * pileup_weight);  
           FillUserTH1D( "Total_Bar_PU9-UP_MET_PAS"               , PFMET_Type1_Pt            , min_prescale * pileup_weight);
         }
+
       }
 
       if ( isEndcap1 ) {
@@ -904,9 +1013,14 @@ void analysisClass::Loop()
               FillUserTH2D( "Total_End1_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
             else
               FillUserTH2D( "Total_End1_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+            if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+              FillUserTH2D("Total_End1_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
           }
-          else
+          else{
             FillUserTH2D( "Total_End1_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+          if(isHEMEta(Ele1_SCEta))
+            FillUserTH2D("Total_End1_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+          }
         }
         FillUserTH2D( "Total_End1_TrkIsoHEEP7vsHLTPt_PAS"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
 
@@ -933,9 +1047,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Total_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Total_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Total_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Total_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Total_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           FillUserTH2D( "Total_End1_lte1Jet_TrkIsoHEEP7vsMTenu_PAS"   , MT_Ele1MET, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
           FillUserTH1D( "Total_End1_lte1Jet_MTenu_PAS", MT_Ele1MET, min_prescale * pileup_weight);
@@ -995,9 +1114,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Total_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Total_End1_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Total_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Total_End1_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Total_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           FillUserTH2D( "Total_End1_2Jet_TrkIsoHEEP7vsMTenu_PAS"   , MT_Ele1MET, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
           FillUserTH1D( "Total_End1_2Jet_MTenu_PAS", MT_Ele1MET, min_prescale * pileup_weight);
@@ -1077,9 +1201,14 @@ void analysisClass::Loop()
               FillUserTH2D( "Total_End2_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
             else
               FillUserTH2D( "Total_End2_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+            if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+              FillUserTH2D("Total_End2_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
           }
-          else
+          else{
             FillUserTH2D( "Total_End2_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+            if(isHEMEta(Ele1_SCEta))
+              FillUserTH2D("Total_End2_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+          }
         }
         FillUserTH2D( "Total_End2_TrkIsoHEEP7vsHLTPt_PAS"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
 
@@ -1105,9 +1234,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Total_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Total_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Total_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Total_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Total_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           FillUserTH2D( "Total_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_PAS"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
         }
@@ -1163,9 +1297,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Total_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Total_End2_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Total_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Total_End2_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Total_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           FillUserTH2D( "Total_End2_2Jet_TrkIsoHEEP7vsHLTPt_PAS"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
         }
@@ -1385,9 +1524,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Electrons_Bar_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Electrons_Bar_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Electrons_Bar_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Electrons_Bar_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Electrons_Bar_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           if(passHEEP) {
             FillUserTH1D( "ElectronsHEEP_Bar_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
@@ -1417,9 +1561,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Electrons_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Electrons_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Electrons_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Electrons_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Electrons_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             if(passHEEP) {
               FillUserTH1D( "ElectronsHEEP_Bar_lte1Jet_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
@@ -1483,9 +1632,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Electrons_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Electrons_Bar_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Electrons_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Electrons_Bar_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Electrons_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             if(passHEEP) {
               FillUserTH1D( "ElectronsHEEP_Bar_2Jet_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
@@ -1570,9 +1724,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Electrons_End1_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Electrons_End1_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Electrons_End1_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Electrons_End1_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Electrons_End1_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           if(passHEEP) {
             FillUserTH1D( "ElectronsHEEP_End1_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
@@ -1602,15 +1761,19 @@ void analysisClass::Loop()
                   FillUserTH2D( "Electrons_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Electrons_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Electrons_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Electrons_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Electrons_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             if(passHEEP) {
               FillUserTH1D( "ElectronsHEEP_End1_lte1Jet_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
               FillUserTH1D( "ElectronsHEEP_End1_lte1Jet_Pt1stEle_PAS"            , Ele1_Pt            , min_prescale * pileup_weight);
             }
-
           }
 
           if ( nJet_ptCut >= 1 ) {
@@ -1644,7 +1807,6 @@ void analysisClass::Loop()
               FillUserTH1D( "ElectronsHEEP_End1_1Jet_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
               FillUserTH1D( "ElectronsHEEP_End1_1Jet_Pt1stEle_PAS"            , Ele1_Pt            , min_prescale * pileup_weight);
             }
-
           }
 
           if ( nJet_ptCut >= 2 ) {
@@ -1670,9 +1832,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Electrons_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Electrons_End1_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Electrons_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Electrons_End1_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Electrons_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             if(passHEEP) {
               FillUserTH1D( "ElectronsHEEP_End1_2Jet_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
@@ -1757,9 +1924,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Electrons_End2_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Electrons_End2_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Electrons_End2_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Electrons_End2_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Electrons_End2_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           if(passHEEP) {
             FillUserTH1D( "ElectronsHEEP_End2_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
@@ -1789,9 +1961,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Electrons_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Electrons_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Electrons_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Electrons_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Electrons_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             if(passHEEP) {
               FillUserTH1D( "ElectronsHEEP_End2_lte1Jet_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
@@ -1855,9 +2032,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Electrons_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Electrons_End2_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Electrons_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Electrons_End2_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Electrons_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             if(passHEEP) {
               FillUserTH1D( "ElectronsHEEP_End2_2Jet_MTenu_PAS"               , MT_Ele1MET            , min_prescale * pileup_weight);
@@ -2032,9 +2214,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Jets_Bar_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Jets_Bar_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Jets_Bar_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Jets_Bar_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Jets_Bar_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           FillUserTH2D( "Jets_Bar_TrkIsoHEEP7vsMTenu_PAS"   , MT_Ele1MET, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
           // for SR/SR division
@@ -2070,9 +2257,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Jets_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Jets_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Jets_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Jets_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Jets_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             FillUserTH2D( "Jets_Bar_lte1Jet_TrkIsoHEEP7vsHLTPt_PAS"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
             // for SR/SR division
@@ -2149,9 +2341,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Jets_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Jets_Bar_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Jets_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Jets_Bar_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Jets_Bar_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             // for SR/SR division
             if(Ele1_TrkIsoHEEP7 < 5) {
@@ -2248,9 +2445,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Jets_End1_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Jets_End1_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Jets_End1_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Jets_End1_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Jets_End1_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           // for SR/SR division
           if(Ele1_TrkIsoHEEP7 < 5) {
@@ -2286,9 +2488,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Jets_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Jets_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Jets_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Jets_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Jets_End1_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             // for SR/SR division
             if(Ele1_TrkIsoHEEP7 < 5) {
@@ -2364,9 +2571,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Jets_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Jets_End1_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Jets_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Jets_End1_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Jets_End1_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             // for SR/SR division
             if(Ele1_TrkIsoHEEP7 < 5) {
@@ -2463,9 +2675,14 @@ void analysisClass::Loop()
                 FillUserTH2D( "Jets_End2_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
               else
                 FillUserTH2D( "Jets_End2_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                FillUserTH2D("Jets_End2_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
             }
-            else
+            else{
               FillUserTH2D( "Jets_End2_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+              if(isHEMEta(Ele1_SCEta))
+                FillUserTH2D("Jets_End2_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+            }
           }
           // for SR/SR division
           if(Ele1_TrkIsoHEEP7 < 5) {
@@ -2501,9 +2718,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Jets_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Jets_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Jets_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Jets_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Jets_End2_lte1Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             // for SR/SR division
             if(Ele1_TrkIsoHEEP7 < 5) {
@@ -2579,9 +2801,14 @@ void analysisClass::Loop()
                   FillUserTH2D( "Jets_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
                 else
                   FillUserTH2D( "Jets_End2_2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta) && !isHEMPhi(Ele1_Phi))
+                  FillUserTH2D("Jets_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaDiffPhi_post319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
               }
-              else
+              else{
                 FillUserTH2D( "Jets_End2_2Jet_TrkIsoHEEP7vsHLTPt_pre319077"   , Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7            , min_prescale * pileup_weight);
+                if(isHEMEta(Ele1_SCEta))
+                  FillUserTH2D("Jets_End2_2Jet_TrkIsoHEEP7vsHLTPt_HEMSameEtaAllPhi_pre319077", Ele1_hltPhotonPt, Ele1_TrkIsoHEEP7 , min_prescale * pileup_weight);
+              }
             }
             // for SR/SR division
             if(Ele1_TrkIsoHEEP7 < 5) {
@@ -2654,7 +2881,9 @@ void analysisClass::Loop()
         }
       }
     }
+
   } // End loop over events
 
   std::cout << "analysisClass::Loop() ends" <<std::endl;   
+  std::cout << "negative or 0 prescale count: "<<negativePrescaleCount<<std::endl;
 }
