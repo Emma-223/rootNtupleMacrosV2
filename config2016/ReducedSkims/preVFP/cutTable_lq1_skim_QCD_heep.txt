@@ -49,11 +49,10 @@ BTVJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/BT
 #-----------------------------------------------------------------------------------------------------------------------------
 # JME
 #-----------------------------------------------------------------------------------------------------------------------------
-#JMEJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/2016preVFP_UL/jet_jerc.json.gz  - - - -1
-JECTextFilePath  ${LQINPUTS}/jec/  - - - -1
-JERTextFilePath  ${LQINPUTS}/jer/  - - - -1
+JMEJSONFileName  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/2016preVFP_UL/jet_jerc.json.gz  - - - -1
 JECTag   Summer19UL16APV_V7_MC  - - - -1
 JERTag   Summer20UL16APV_JRV3_MC  - - - -1
+SmearingToolJSON  /cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/jer_smear.json.gz   - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Analysis year
 #-----------------------------------------------------------------------------------------------------------------------------
