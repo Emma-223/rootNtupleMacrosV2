@@ -259,10 +259,29 @@ void analysisClass::Loop()
   //--------------------------------------------------------------------------
   // For JES/JER/MET uncertainties
   //--------------------------------------------------------------------------
-  std::string jecTextFilePath = getPreCutString1("JECTextFilePath");
+  std::string jecJSON = getPreCutString1("JMEJSONFileName");
   std::string jecTag = getPreCutString1("JECTag");
-  std::string jerTextFilePath = getPreCutString1("JERTextFilePath");
+  std::string smearingToolJSON = getPreCutString1("SmearingToolJSON");
   std::string jerTag = getPreCutString1("JERTag");
+  bool hem2018 = false;
+  if(analysisYearInt == 2018)
+    hem2018 = true;
+  //-----------------------------------------------------------------
+  // If this is MC, smear jets if requested
+  // Don't do it for data
+  //-----------------------------------------------------------------
+  //FIXME TODO: implement the do_jer variable here?
+  if (isData())
+    jerTag = "";
+
+  const std::string jetAlgo = "AK4PFchs";
+  const std::string jecLevel = "L1L2L3Res";
+  const std::string smearingToolName = "JERSmear";
+  const std::string l1Jec = "L1FastJet";
+  const float unclEnThreshold = 15;
+  const float emEnFracThreshold = 0.9;
+  const bool isT1SmearedMET = false;
+  const bool splitJER = false;
   
   static const std::vector<std::string> jesUncertainties {"AbsoluteStat", "AbsoluteScale", "AbsoluteMPFBias", "Fragmentation",
     "SinglePionECAL", "SinglePionHCAL", "FlavorQCD", "TimePtEta", "RelativeJEREC1", "RelativeJEREC2", "RelativeJERHF", "RelativePtBB",
@@ -270,22 +289,13 @@ void analysisClass::Loop()
     "RelativeStatHF", "PileUpDataMC", "PileUpPtRef", "PileUpPtBB", "PileUpPtEC1", "PileUpPtEC2", "PileUpPtHF",
     "Total", "FlavorZJet", "FlavorPureGluon", "FlavorPureQuark", "FlavorPureBottom"};
 
-  bool splitJER = false;
-  JMEUncertainties jetUncertainties(JetVariationsCalculator(), this, jesUncertainties, jecTextFilePath, jerTextFilePath, jecTag, jerTag, splitJER);
-  JMEUncertainties type1METUncertainties(Type1METVariationsCalculator(), this, jesUncertainties, jecTextFilePath, jerTextFilePath, jecTag, jerTag, splitJER);
-  //-----------------------------------------------------------------
-  // If this is MC, smear jets if requested
-  // Don't do it for data
-  //-----------------------------------------------------------------
-  //FIXME TODO: implement the do_jer variable here?
-  if (!isData()) {
-    jetUncertainties.setSmearing();
-    type1METUncertainties.setSmearing();
-  }
-  if(analysisYearInt == 2018) {
-    jetUncertainties.setAddHEM2018Issue(true);
-    type1METUncertainties.setAddHEM2018Issue(true);
-  }
+  //FIXME: need to fix the JEC tags for data!
+  JMEUncertainties<JetVariationsCalculator> jetUncertainties(this, jecJSON, jetAlgo, jecTag, jecLevel, jesUncertainties, hem2018,
+      jerTag, smearingToolJSON, smearingToolName, splitJER);
+  JMEUncertainties<Type1METVariationsCalculator> type1METUncertainties(this,  jecJSON, jetAlgo, jecTag, jecLevel, l1Jec, unclEnThreshold, emEnFracThreshold,
+      jesUncertainties, hem2018,
+      isT1SmearedMET,
+      jerTag, smearingToolJSON, smearingToolName, splitJER);
 
   //-----------------------------------------------------------------
   // QCD triggers 2016    2017        2018
@@ -1492,8 +1502,8 @@ void analysisClass::Loop()
             fillVariableWithValue("M_e2j2_EES_Up"     , (t_ele2ScaledUp+t_jet2).M());
             fillVariableWithValue("M_e2j2_EES_Dn"     , (t_ele2ScaledDown+t_jet2).M());
             for(int idx = 1; idx < compSystNames.size(); ++idx) {
-              fillVariableWithValue("M_e2j2_"+compSystNames[idx], (t_ele2+jet2FourVectors_ptVariations[idx]).M());
-              fillVariableWithValue("sT_eejj_"+compSystNames[idx], t_ele1.Pt() + t_ele2.Pt() + jet1FourVectors_ptVariations[idx].Pt() + jet2FourVectors_ptVariations[idx].Pt());
+              fillVariableWithValue("M_e2j2_"+compSystNames[idx], (t_ele2+jet2FourVectors_ptVariations[idx-1]).M());
+              fillVariableWithValue("sT_eejj_"+compSystNames[idx], t_ele1.Pt() + t_ele2.Pt() + jet1FourVectors_ptVariations[idx-1].Pt() + jet2FourVectors_ptVariations[idx-1].Pt());
             }
             fillVariableWithValue("sT_eejj_EER_Up"    , t_ele1SigmaUp.Pt() + t_ele2SigmaUp.Pt() + t_jet1.Pt() + t_jet2.Pt());
             fillVariableWithValue("sT_eejj_EER_Dn"    , t_ele1SigmaDown.Pt() + t_ele2SigmaDown.Pt() + t_jet1.Pt() + t_jet2.Pt());
