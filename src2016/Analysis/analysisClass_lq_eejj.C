@@ -1036,6 +1036,9 @@ void analysisClass::Loop()
             passHLT = true;
       }
     }
+    // TEST
+    //gen_weight = gen_weight > 0 ? 1.0 : -1.0;
+    //pileup_weight = 1.0;
     fillVariableWithValue ( "PassHLT", passHLT, gen_weight * pileup_weight  ) ;     
 
     //--------------------------------------------------------------------------
@@ -1054,14 +1057,10 @@ void analysisClass::Loop()
     fillVariableWithValue("nEle_hltMatched",nEle_hltMatched, gen_weight * pileup_weight  );
     fillVariableWithValue("nJet_hltMatched",nJet_hltMatched, gen_weight * pileup_weight  );
 
-
     //--------------------------------------------------------------------------
     // First variable to fill just shows the "reweighting".  Always passes.
     //--------------------------------------------------------------------------
 
-    // TEST
-    //gen_weight = gen_weight > 0 ? 1.0 : -1.0;
-    //pileup_weight = 1.0;
     fillVariableWithValue ( "Reweighting", 1, gen_weight * pileup_weight  );
 
     //--------------------------------------------------------------------------
@@ -1414,11 +1413,12 @@ void analysisClass::Loop()
     if ( nEle_store >= 2 ) {
       //fillVariableWithValue( "Ele2_PtHeep",            Ele2_PtHeep, gen_weight * pileup_weight  ) ;
       fillVariableWithValue( "Ele2_Pt",            Ele2_Pt, gen_weight * pileup_weight  ) ;
-      fillVariableWithValue( "Ele2_Pt_skim",       Ele1_Pt, gen_weight * pileup_weight  ) ;
+      fillVariableWithValue( "Ele2_Pt_skim",       Ele2_Pt, gen_weight * pileup_weight  ) ;
       fillVariableWithValue( "Ele2_Eta",            Ele2_Eta, gen_weight * pileup_weight  ) ;
       fillVariableWithValue( "Ele2_Phi",            Ele2_Phi, gen_weight * pileup_weight  ) ;
       //fillVariableWithValue( "Ele2_AbsDeltaEtaEleTrk",
       //    fabs(Ele2_Eta-Ele2_TrkEta), gen_weight * pileup_weight );
+      //std::cout << "INFO: Filled Ele2_Pt=" << Ele2_Pt << "; Ele2_Pt > 50 ? " << (Ele2_Pt > 50) << "; for run: " << run << " ls: " << ls << " event: " << event << std::endl;
     }
 
     //--------------------------------------------------------------------------
