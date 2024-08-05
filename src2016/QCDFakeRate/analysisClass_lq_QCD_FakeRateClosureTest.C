@@ -74,34 +74,42 @@ void analysisClass::Loop()
    bool override_fakeRate = ( fakeRate_override > 0.0 );
    
    //prescales
-   PrescaleProvider psProv("/afs/cern.ch/user/s/scooper/work/public/Leptoquarks/ul-analysis-inputs/prescales/2016/triggerData2016");
-   Run2PhotonTriggerPrescales run2PhotonTriggerPrescales;
+   //PrescaleProvider psProv("$LQINPUTS/prescales/2016/triggerData2016");
+   //Run2PhotonTriggerPrescales run2PhotonTriggerPrescales;
    
    //--------------------------------------------------------------------------
-   // Analysis year
+   // Analysis year and prescale
    //--------------------------------------------------------------------------
    std::string getAnalysisYear = getPreCutString1("AnalysisYear");
    int analysisYear;
    std::string analysisYearStr;
+   std::string prescalePath;
    if (getAnalysisYear.find("pre") != string::npos ){
       analysisYear = 2016;
       analysisYearStr = "2016preVFP";
+      prescalePath = "/afs/cern.ch/user/e/eipearso/public/ul-analysis-inputs/prescales/2016/triggerData2016";
    }
    else if (getAnalysisYear.find("post") != string::npos){
       analysisYear = 2016;
       analysisYearStr = "2016postVFP";
+      prescalePath = "/afs/cern.ch/user/e/eipearso/public/ul-analysis-inputs/prescales/2016/triggerData2016";
    }
    else if (getAnalysisYear.find("17") != string::npos){
       analysisYear = 2017;
       analysisYearStr = "2017";
+      prescalePath = "/afs/cern.ch/user/e/eipearso/public/ul-analysis-inputs/prescales/2017/triggerData2017";
    }
    else if (getAnalysisYear.find("18") != string::npos){
       analysisYear = 2018;
       analysisYearStr = "2018";
+      prescalePath = "/afs/cern.ch/user/e/eipearso/public/ul-analysis-inputs/prescales/2018/hltData2018";
    }
    else{
       std::cout<<"ERROR: cannot determine analysis year from cutfile"<<std::endl;
    }
+
+   PrescaleProvider psProv(prescalePath);
+   Run2PhotonTriggerPrescales run2PhotonTriggerPrescales;
 
    //--------------------------------------------------------------------------
    // QCD Fake Rate loading part
@@ -185,6 +193,8 @@ void analysisClass::Loop()
        else if (j==1) HEMRegion = "_post319077_HEMOnly";
        else HEMRegion = "_post319077_noHEM";
      }
+     CreateUserTH2D( "Mt_MET_Ele1_PAS"+region+HEMRegion      ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Mt_MET_Ele2_PAS"+region+HEMRegion      ,    200 , 0       , 2000     , 200, 0, 1000);
      CreateUserTH2D( "Pt1stEle_PAS"+region+HEMRegion         ,    100 , 0       , 1000     , 200, 0, 1000);
      CreateUserTH2D( "Mee_PAS"+region+HEMRegion              ,    200 , 0       , 2000     , 200, 0, 1000);
      CreateUserTH2D( "Me1j1_PAS"+region+HEMRegion            ,    200 , 0       , 2000     , 200, 0, 1000);
@@ -192,6 +202,8 @@ void analysisClass::Loop()
      CreateUserTH2D( "Pt2ndEle_PAS"+region+HEMRegion         ,    100 , 0       , 1000     , 200, 0, 1000);
      CreateUserTH2D( "Me2j1_PAS"+region+HEMRegion            ,    200 , 0       , 2000     , 200, 0, 1000);
      CreateUserTH2D( "MET_PAS"+region+HEMRegion              ,    200 , 0       , 1000     , 200, 0, 1000);
+     CreateUserTH2D( "Mt_MET_Ele1_tight"+region+HEMRegion      ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Mt_MET_Ele2_tight"+region+HEMRegion      ,    200 , 0       , 2000     , 200, 0, 1000);
      CreateUserTH2D( "Pt1stEle_tight"+region+HEMRegion         ,    100 , 0       , 1000     , 200, 0, 1000);
      CreateUserTH2D( "Mee_tight"+region+HEMRegion              ,    200 , 0       , 2000     , 200, 0, 1000);
      CreateUserTH2D( "Me1j1_tight"+region+HEMRegion            ,    200 , 0       , 2000     , 200, 0, 1000);
@@ -199,16 +211,34 @@ void analysisClass::Loop()
      CreateUserTH2D( "Pt2ndEle_tight"+region+HEMRegion         ,    100 , 0       , 1000     , 200, 0, 1000);
      CreateUserTH2D( "Me2j1_tight"+region+HEMRegion            ,    200 , 0       , 2000     , 200, 0, 1000);
      CreateUserTH2D( "MET_tight"+region+HEMRegion              ,    200 , 0       , 1000     , 200, 0, 1000);
-     CreateUserTH2D("MeeControlReg"+region+HEMRegion           ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "MeeControlReg"+region+HEMRegion          ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Mt_MET_Ele1_passNJetCut"+region+HEMRegion,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Mt_MET_Ele2_passNJetCut"+region+HEMRegion,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Mt_MET_Ele1_passMETCut"+region+HEMRegion ,    200 , 0       , 2000     , 200, 0, 1000);
+     CreateUserTH2D( "Mt_MET_Ele2_passMETCut"+region+HEMRegion ,    200 , 0       , 2000     , 200, 0, 1000);
      }
    }
-     CreateUserTH1D("MeeControlReg"           ,    200 , 0       , 2000);
+     CreateUserTH1D( "Mt_MET_Ele1_WPeak"      ,    200 , 0       , 2000     );
+     CreateUserTH1D( "Mt_MET_Ele2_WPeak"      ,    200 , 0       , 2000     );
+     CreateUserTH1D( "nEleLoose_fewCuts"              ,      5 , -0.5       ,    4.5     );
+     CreateUserTH1D( "nJet_fewCuts"                   ,     10 , -0.5       ,    9.5     );
+     CreateUserTH1D( "MeeControlReg"          ,    200 , 0       , 2000     );
+     CreateUserTH1D( "Mt_MET_Ele1_passNJetCut",    200 , 0	 , 2000     );
+     CreateUserTH1D( "Mt_MET_Ele2_passNJetCut",    200 , 0       , 2000     );
+     CreateUserTH1D( "Mt_MET_Ele1_passMETCut" ,    200 , 0       , 2000     );
+     CreateUserTH1D( "Mt_MET_Ele2_passMETCut" ,    200 , 0       , 2000     );
      CreateUserTH1D( "HT_tight"               ,    200 , 0       , 2000     );
      CreateUserTH1D( "Mt_MET_Ele1_tight"      ,    200 , 0       , 2000     );
      CreateUserTH1D( "Mt_MET_Ele2_tight"      ,    200 , 0       , 2000     );
      CreateUserTH1D( "Phi1stEle_tight"        ,    60  , -3.1416 , +3.1416  );
      CreateUserTH1D( "Phi2ndEle_tight"        ,    60  , -3.1416 , +3.1416  );
      CreateUserTH1D( "METPhi_tight"           ,    60  , -3.1416 , +3.1416  );
+     CreateUserTH1D( "LooseEle1_Pt"           ,    100 , 0       , 1000     );
+     CreateUserTH1D( "LooseEle2_Pt"           ,    100 , 0       , 1000     );
+     CreateUserTH1D( "nHEEPEle"               ,    5   , -0.5    , 4.5      );
+     CreateUserTH1D( "HEEPEle1_Pt"            ,    100 , 0       , 1000     );
+     CreateUserTH1D( "HEEPEle2_Pt"            ,    100 , 0       , 1000     );
+     CreateUserTH1D( "MET_WPeakReg"           ,    100 , 0       , 1000     );
      //error squared for fake rate:
      /*CreateUserTH1D("errFRsq_Pt1stEle"+region      ,    100 , 0       , 1000);
      CreateUserTH1D("errFRsq_Mee"+region           ,    200 , 0       , 2000);
@@ -265,7 +295,7 @@ void analysisClass::Loop()
      // Print progress
      //-----------------------------------------------------------------
      if(jentry < 10 || jentry%5000 == 0) std::cout << "analysisClass:Loop(): jentry = " << jentry << "/" << nentries << std::endl;
-//     if (jentry==150) break; //run over just a few events for troubleshooting
+     //if (jentry==500) break; //run over just a few events for troubleshooting
      //// run ls event
      unsigned int run = readerTools_->ReadValueBranch<UInt_t>("run");
      unsigned int ls = readerTools_->ReadValueBranch<UInt_t>("ls");
@@ -371,7 +401,7 @@ void analysisClass::Loop()
      double Ele1_hltPhotonPt = readerTools_->ReadValueBranch<Float_t>("Ele1_MatchedHLTriggerObjectPt");
      bool passSinglePhoton = false;
      bool passDoubleEle = false;
-
+     
      if ( Ele1_hltPhotonPt > 0.0 ) {
        if(analysisYear==2016) {
          if (run >= 276453 && run <= 278822){
@@ -392,57 +422,92 @@ void analysisClass::Loop()
        
        if(current_file_name.find("SinglePhoton") != std::string::npos) {
 	 if(passSinglePhoton && !passDoubleEle) { passTrigger = 1; triggerName = "Photon"; }
-	 if(passSinglePhoton && passDoubleEle) { passTrigger = 1; triggerName = "Photon_and_DoubleEle"; }
+	 //if(passSinglePhoton && passDoubleEle) { passTrigger = 1; triggerName = "Photon_and_DoubleEle"; }
        }
-	else if(current_file_name.find("SingleElectron") != std::string::npos) {
-	 if(passDoubleEle && !passSinglePhoton) { passTrigger = 1; triggerName = "DoubleEle"; }
+	else if(current_file_name.find("DoubleEG") != std::string::npos) {
+	 if(passDoubleEle /*&& !passSinglePhoton*/) { passTrigger = 1; triggerName = "DoubleEle"; }
        }
        else{//EGamma datasets for 2018, or MC 
-         if(passSinglePhoton && !passDoubleEle) {passTrigger = 1; triggerName = "Photon";}
-	 if(passDoubleEle && !passSinglePhoton) {passTrigger = 1; triggerName = "DoubleEle";}
-	 if(passDoubleEle && passSinglePhoton) {passTrigger = 1; triggerName = "Photon_and_DoubleEle";}
+         //if(passSinglePhoton && !passDoubleEle) {passTrigger = 1; triggerName = "Photon";}
+	 if(passDoubleEle /*&& !passSinglePhoton*/) {passTrigger = 1; triggerName = "DoubleEle";}
+	 //if(passDoubleEle && passSinglePhoton) {passTrigger = 1; triggerName = "Photon_and_DoubleEle";}
        }
+       //std::cout<<triggerName<<", "<<Ele1_hltPhotonPt<<std::endl;
+       
+      // if(analysisYear==2016) {
+	 /*if ( readerTools_->ReadValueBranch<Float_t>("H_Photon22")   > 0.1 && Ele1_hltPhotonPt >= 22.  && Ele1_hltPhotonPt < 30. ) { passTrigger = 1; triggerName = "Photon22"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon30")   > 0.1 && Ele1_hltPhotonPt >= 30.  && Ele1_hltPhotonPt < 36. ) { passTrigger = 1; triggerName = "Photon30"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon36")   > 0.1 && Ele1_hltPhotonPt >= 36.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon36"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon120"; }*/ 
+	// if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175.) { passTrigger = 1; triggerName = "Photon175"; } 
+       //}
+       //else if(analysisYear==2017) {
+         /*if ( readerTools_->ReadValueBranch<Float_t>("H_Photon25")   > 0.1 && Ele1_hltPhotonPt >= 25.  && Ele1_hltPhotonPt < 33. ) { passTrigger = 1; triggerName = "Photon25"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon33")   > 0.1 && Ele1_hltPhotonPt >= 33.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon33"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 150.) { passTrigger = 1; triggerName = "Photon120"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon150")  > 0.1 && Ele1_hltPhotonPt >= 150. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon150"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175. && Ele1_hltPhotonPt < 200.) { passTrigger = 1; triggerName = "Photon175"; }*/ 
+	 //if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; } 
+       //}
+       //else if(analysisYear==2018) {
+         /*if ( readerTools_->ReadValueBranch<Float_t>("H_Photon33")   > 0.1 && Ele1_hltPhotonPt >= 33.  && Ele1_hltPhotonPt < 50. ) { passTrigger = 1; triggerName = "Photon33"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon50")   > 0.1 && Ele1_hltPhotonPt >= 50.  && Ele1_hltPhotonPt < 75. ) { passTrigger = 1; triggerName = "Photon50"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon75")   > 0.1 && Ele1_hltPhotonPt >= 75.  && Ele1_hltPhotonPt < 90. ) { passTrigger = 1; triggerName = "Photon75"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon90")   > 0.1 && Ele1_hltPhotonPt >= 90.  && Ele1_hltPhotonPt < 120.) { passTrigger = 1; triggerName = "Photon90"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon120")  > 0.1 && Ele1_hltPhotonPt >= 120. && Ele1_hltPhotonPt < 150.) { passTrigger = 1; triggerName = "Photon120"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon150")  > 0.1 && Ele1_hltPhotonPt >= 150. && Ele1_hltPhotonPt < 175.) { passTrigger = 1; triggerName = "Photon150"; } 
+	 if ( readerTools_->ReadValueBranch<Float_t>("H_Photon175")  > 0.1 && Ele1_hltPhotonPt >= 175. && Ele1_hltPhotonPt < 200.) { passTrigger = 1; triggerName = "Photon175"; }*/ 
+	// if ( readerTools_->ReadValueBranch<Float_t>("H_Photon200")  > 0.1 && Ele1_hltPhotonPt >= 200.) { passTrigger = 1; triggerName = "Photon200"; } 
+       //}
      }
+/*
      if(isData() && passTrigger) {//if we use photon175 only it's unprescaled so all of this becomes unecessary
        //std::cout << "INFO: lookup trigger name " << triggerName << " for year: " << year << std::endl;
       //if (triggerName.find("Photon") != std::string::npos){
-        //min_prescale = run2PhotonTriggerPrescales.LookupPrescale(analysisYearStr,triggerName);
+      //  min_prescale = run2PhotonTriggerPrescales.LookupPrescale(analysisYearStr,triggerName);
       //}
-      //int hltPrescale = psProv.hltPrescale("HLT_"+triggerName+"_v", run, ls);
-      //int l1Prescale = 1;
-      //std::string l1Seed = "";
-      //if(triggerName == "Photon22") {
-        //l1Seed = "L1_SingleEG18";
-        //l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-      //}
-      //else if(triggerName == "Photon25" || triggerName == "Photon30" || triggerName == "Photon36") {
-        //l1Seed = "L1_SingleEG26";
-        //l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-      //}
-      //else if(triggerName == "Photon33") {
-        //l1Seed = "L1_SingleEG26er2p5";
-        //l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-      //}
-      //else if(triggerName == "Photon50" || triggerName == "Photon75" || triggerName == "Photon90" || triggerName == "Photon120" ||
-        //  triggerName == "Photon150" || (analysisYear > 2016 && triggerName == "Photon175") ) {
-        //int eg34Prescale = psProv.l1Prescale("L1_SingleEG34", run, ls);
-      //l1Seed = "L1_SingleEG40";
-        //if(analysisYear == 2018)
-          //l1Seed = "SingleEG42er2p5";
-        //l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
-      //}
-      //else if(analysisYear == 2016 && triggerName == "Photon175") {
-        //l1Prescale = 1;
-        //hltPrescale = 1;
-      //}
-      //if(l1Prescale <= 0 || hltPrescale <= 0)
-        //std::cout << "INFO: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << "; hlt prescale = " << hltPrescale << 
-          //"; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
-          //"; hlt menu=" << psProv.getRunInfo(run)->hltMenu() << "; trig mode=" << psProv.getRunInfo(run)->triggerMode() << std::endl;
-      //min_prescale = l1Prescale * hltPrescale;
+      int hltPrescale = psProv.hltPrescale("HLT_"+triggerName+"_v", run, ls);
+      int l1Prescale = 1;
+      std::string l1Seed = "";
+      if(triggerName == "Photon22") {
+        l1Seed = "L1_SingleEG18";
+        l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
+      }
+      else if(triggerName == "Photon25" || triggerName == "Photon30" || triggerName == "Photon36") {
+        l1Seed = "L1_SingleEG26";
+        l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
+      }
+      else if(triggerName == "Photon33") {
+	if (analysisYear==2017) l1Seed = "L1_SingleEG26";
+	else l1Seed = "L1_SingleEG26er2p5";
+        l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
+      }
+      else if(triggerName == "Photon50" || triggerName == "Photon75" || triggerName == "Photon90" || triggerName == "Photon120" ||
+          triggerName == "Photon150" || (analysisYear > 2016 && triggerName == "Photon175") ) {
+        int eg34Prescale = psProv.l1Prescale("L1_SingleEG34", run, ls);
+      l1Seed = "L1_SingleEG40";
+        if(analysisYear == 2018)
+          l1Seed = "SingleEG42er2p5";
+        l1Prescale = psProv.l1Prescale(l1Seed, run, ls);
+      }
+      else if(analysisYear == 2016 && triggerName == "Photon175") {
+        l1Prescale = 1;
+        hltPrescale = 1;
+      }
+      if(l1Prescale <= 0 || hltPrescale <= 0)
+        std::cout << "INFO: " << triggerName << ": l1 seed = " << l1Seed << " has prescale = " << l1Prescale << "; hlt prescale = " << hltPrescale << 
+          "; run = " << run << " ls = " << ls << "; psColumn = " << psProv.getRunInfo(run)->psColumn(ls) << "; l1 menu=" << psProv.getRunInfo(run)->l1Menu() <<
+          "; hlt menu=" << psProv.getRunInfo(run)->hltMenu() << "; trig mode=" << psProv.getRunInfo(run)->triggerMode() << std::endl;
+      min_prescale = l1Prescale * hltPrescale;
       if(min_prescale <= 0)
         passTrigger = false;
-     }
+     }*/
      //std::cout<<"trigger name: "<<triggerName<<", prescale: "<<min_prescale<<", pass trigger: "<<passTrigger<<", is data?: "<<isData()<<std::endl;
 
      //--------------------------------------------------------------------------
@@ -732,13 +797,17 @@ void analysisClass::Loop()
      } 
 
      // transverse mass Mt^2 = 2 * Ele_Pt * MET * (1 - cos( Ele_phi - MET_phi )) 
-     double Mt_MET_Ele1 = sqrt( 2 * Ele1_Pt * PFMET_Type1_Pt * (1 - cos( Ele1_Phi - PFMET_Type1_Phi )));
+     //double Mt_MET_Ele1 = sqrt( 2 * Ele1_Pt * PFMET_Type1_Pt * (1 - cos( Ele1_Phi - PFMET_Type1_Phi )));
      double Mt_MET_Ele2 = sqrt( 2 * Ele2_Pt * PFMET_Type1_Pt * (1 - cos( Ele2_Phi - PFMET_Type1_Phi )));
+     double Mt_MET_Ele1 = readerTools_->ReadValueBranch<Float_t>("MT_Ele1MET");
+     //double Mt_MET_Ele2 = readerTools_->ReadValueBranch<Float_t>("MT_Ele2MET");
 
      fillVariableWithValue( "closureTestControlReg"   , 1           , pileup_weight * min_prescale  * fakeRateEffective );
      fillVariableWithValue( "closureTestPreselection" , 1                , pileup_weight * min_prescale  * fakeRateEffective );  
      fillVariableWithValue( "closureTestBDTSelection" , 1           , pileup_weight * min_prescale  * fakeRateEffective );
      fillVariableWithValue( "HTSpectrumStudy"         , 1           , pileup_weight * min_prescale  * fakeRateEffective );
+     fillVariableWithValue( "WPeakReg" , 1 , pileup_weight * min_prescale  * fakeRateEffective );
+
      //--------------------------------------------------------------------------
      // Evaluate the cuts
      //--------------------------------------------------------------------------
@@ -758,7 +827,9 @@ void analysisClass::Loop()
      bool passed_preselection = ( passedAllPreviousCuts("closureTestPreselection") && passedCut("closureTestPreselection") );
      bool passed_tightSelection = ( passedAllPreviousCuts("closureTestBDTSelection") && passedCut("closureTestBDTSelection") );
      bool passed_HTSelection = (passedAllPreviousCuts("HTSpectrumStudy") && passedCut("HTSpectrumStudy"));
-
+     bool passed_WPeakReg = (passedAllPreviousCuts("WPeakReg") && passedCut("WPeakReg"));
+     bool passed_nJet = (passedAllPreviousCuts("nJet") && passedCut("nJet"));
+    
     // if (passed_HTSelection) {
     //   FillUserTH1D("HT_fullSpectrum", HT, pileup_weight * min_prescale * fakeRateEffective ); 
     //   FillUserTH1D("min_prescale", min_prescale, 1);
@@ -771,23 +842,69 @@ void analysisClass::Loop()
      //}
      std::string ele1HEMReg = "";
      std::string ele2HEMReg = "";
+     std::string ele1EtaReg = "";
+     std::string ele2EtaReg = "";
      if (analysisYear==2018 && run < 319077) {ele1HEMReg = "_pre319077"; ele2HEMReg = "_pre319077";}
      else if (analysisYear==2018 && run >=319077){
        if (isHEMElectron(Ele1_Eta, Ele1_Phi)) {ele1HEMReg = "_post319077_HEMOnly";} else {ele1HEMReg="_post319077_noHEM";}
        if (isHEMElectron(Ele2_Eta, Ele2_Phi)) {ele2HEMReg = "_post319077_HEMOnly";} else {ele2HEMReg="_post319077_noHEM";}
      }     
+     //if(ele1_isBarrel) ele1EtaReg = "_Barrel";
+     if(ele1_isEndcap1) ele1EtaReg = "_End1";
+     else if(ele1_isEndcap2) ele1EtaReg = "_End2";
+     else ele1EtaReg = "_Barrel";
+     //if(ele2_isBarrel) ele2EtaReg = "_Barrel";
+     if(ele2_isEndcap1) ele2EtaReg = "_End1";
+     else if(ele2_isEndcap2) ele2EtaReg = "_End2";
+     else ele2EtaReg = "_Barrel";
+
+     if (passed_WPeakReg){
+       FillUserTH1D( "Mt_MET_Ele1_WPeak" , Mt_MET_Ele1, pileup_weight*min_prescale*fakeRateEffective);
+       FillUserTH1D( "Mt_MET_Ele2_WPeak" , Mt_MET_Ele2, pileup_weight*min_prescale*fakeRateEffective);
+       FillUserTH1D( "nEleLoose_fewCuts" ,  nEle_ptCut , pileup_weight*min_prescale*fakeRateEffective);
+       FillUserTH1D( "nJet_fewCuts" , nJet_ptCut , pileup_weight*min_prescale*fakeRateEffective);
+       FillUserTH1D( "nHEEPEle" , nPass, pileup_weight*min_prescale*fakeRateEffective);
+       FillUserTH1D( "MET_WPeakReg", PFMET_Type1_Pt, pileup_weight*min_prescale*fakeRateEffective);
+       if (nEle_ptCut >= 1) FillUserTH1D( "LooseEle1_Pt", Ele1_Pt, pileup_weight*min_prescale*fakeRateEffective);
+       if (nEle_ptCut >= 2) FillUserTH1D( "LooseEle2_Pt", Ele2_Pt, pileup_weight*min_prescale*fakeRateEffective);
+       if ( readerTools_->ReadValueBranch<Bool_t>("Ele1_PassHEEPID") == true ) FillUserTH1D( "HEEPEle1_Pt", Ele1_Pt, pileup_weight*min_prescale*fakeRateEffective);
+       if ( readerTools_->ReadValueBranch<Bool_t>("Ele2_PassHEEPID") == true ) FillUserTH1D( "HEEPEle2_Pt", Ele2_Pt, pileup_weight*min_prescale*fakeRateEffective);
+     }
+    
+     if(passed_nJet){
+       if(override_fakeRate > 0){
+         FillUserTH1D("Mt_MET_Ele1_passNJetCut", Mt_MET_Ele1, pileup_weight*min_prescale*fakeRateEffective);
+	 FillUserTH1D("Mt_MET_Ele1_passNJetCut", Mt_MET_Ele1, pileup_weight*min_prescale*fakeRateEffective);
+       }else{
+         FillUserTH2D("Mt_MET_Ele1_passNJetCut"+ele1EtaReg+ele1HEMReg, Mt_MET_Ele1, Ele1_Pt, pileup_weight*min_prescale*fakeRateEffective1);
+	 FillUserTH2D("Mt_MET_Ele1_passNJetCut"+ele2EtaReg+ele2HEMReg, Mt_MET_Ele1, Ele2_Pt, pileup_weight*min_prescale*fakeRateEffective2);
+	 FillUserTH2D("Mt_MET_Ele2_passNJetCut"+ele1EtaReg+ele1HEMReg, Mt_MET_Ele2, Ele1_Pt, pileup_weight*min_prescale*fakeRateEffective1);
+	 FillUserTH2D("Mt_MET_Ele2_passNJetCut"+ele2EtaReg+ele2HEMReg, Mt_MET_Ele2, Ele2_Pt, pileup_weight*min_prescale*fakeRateEffective2);
+       }
+     }
      if (passed_controlRegion) { 
        if (override_fakeRate > 0){
          FillUserTH1D("MeeControlReg", loose_e1e2.M(), pileup_weight*min_prescale*fakeRateEffective);
+	 FillUserTH1D("Mt_MET_Ele1_passMETCut", Mt_MET_Ele1, pileup_weight*min_prescale*fakeRateEffective);
+	 FillUserTH1D("Mt_MET_Ele2_passMETCut", Mt_MET_Ele2, pileup_weight*min_prescale*fakeRateEffective);
        }
        else{
-       
-       if(ele1_isBarrel) FillUserTH2D("MeeControlReg_Barrel"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
-       if(ele1_isEndcap1) FillUserTH2D("MeeControlReg_End1"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
-       if(ele1_isEndcap2) FillUserTH2D("MeeControlReg_End2"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
-       if(ele2_isBarrel) FillUserTH2D("MeeControlReg_Barrel"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
-       if(ele2_isEndcap1) FillUserTH2D("MeeControlReg_End1"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
-       if(ele2_isEndcap2) FillUserTH2D("MeeControlReg_End2"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 ); 
+         FillUserTH2D("MeeControlReg"+ele1EtaReg+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+	 FillUserTH2D("Mt_MET_Ele1_passMETCut"+ele1EtaReg+ele1HEMReg, Mt_MET_Ele1,  Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+	 FillUserTH2D("Mt_MET_Ele2_passMETCut"+ele1EtaReg+ele1HEMReg, Mt_MET_Ele2,  Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+	 FillUserTH2D("MeeControlReg"+ele2EtaReg+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
+         FillUserTH2D("Mt_MET_Ele1_passMETCut"+ele2EtaReg+ele2HEMReg, Mt_MET_Ele1,  Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
+	 FillUserTH2D("Mt_MET_Ele1_passMETCut"+ele2EtaReg+ele2HEMReg, Mt_MET_Ele1,  Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
+       //if(ele1_isBarrel) {
+//	 FillUserTH2D("MeeControlReg_Barrel"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+//	 FillUserTH2D("Mt_MET_Ele1_passMETCut"+ele1HEMReg, Mt_MET_Ele1,  Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+//	 FillUserTH2D("Mt_MET_Ele2_passMETCut"+ele1HEMReg, Mt_MET_Ele2,  Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+  //     }
+    //   if(ele1_isEndcap1) FillUserTH2D("MeeControlReg_End1"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+      // if(ele1_isEndcap2) FillUserTH2D("MeeControlReg_End2"+ele1HEMReg, loose_e1e2.M(), Ele1_Pt  ,pileup_weight * min_prescale * fakeRateEffective1 );
+      // if(ele2_isBarrel) FillUserTH2D("MeeControlReg_Barrel"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
+      // if(ele2_isEndcap1) FillUserTH2D("MeeControlReg_End1"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 );
+      // if(ele2_isEndcap2) FillUserTH2D("MeeControlReg_End2"+ele2HEMReg, loose_e1e2.M(), Ele2_Pt  ,pileup_weight * min_prescale * fakeRateEffective2 ); 
        }
      }  
 
@@ -843,7 +960,12 @@ void analysisClass::Loop()
          }
        }
        else{
-        if(ele1_isBarrel){
+	FillUserTH2D("Mt_MET_Ele1_PAS"+ele1EtaReg+ele1HEMReg, Mt_MET_Ele1, Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	FillUserTH2D("Mt_MET_Ele1_PAS"+ele2EtaReg+ele2HEMReg, Mt_MET_Ele1, Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	FillUserTH2D("Mt_MET_Ele2_PAS"+ele1EtaReg+ele1HEMReg, Mt_MET_Ele2, Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+        FillUserTH2D("Mt_MET_Ele2_PAS"+ele2EtaReg+ele2HEMReg, Mt_MET_Ele2, Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+
+	if(ele1_isBarrel){
 	FillUserTH2D("Pt1stEle_PAS_Barrel"+ele1HEMReg          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
 	FillUserTH2D("Mee_PAS_Barrel"+ele1HEMReg          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
 	FillUserTH2D("Me1j1_PAS_Barrel"+ele1HEMReg          , e1j1.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
@@ -969,6 +1091,10 @@ void analysisClass::Loop()
          FillUserTH1D("Phi2ndEle_tight"         , Ele2_Phi, pileup_weight * min_prescale * fakeRateEffective );
          FillUserTH1D("METPhi_tight"     , PFMET_Type1_Phi, pileup_weight * min_prescale * fakeRateEffective );
 
+         FillUserTH2D("Mt_MET_Ele1_tight"+ele1EtaReg+ele1HEMReg, Mt_MET_Ele1, Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	 FillUserTH2D("Mt_MET_Ele1_tight"+ele2EtaReg+ele2HEMReg, Mt_MET_Ele1, Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
+	 FillUserTH2D("Mt_MET_Ele2_tight"+ele1EtaReg+ele1HEMReg, Mt_MET_Ele2, Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
+	 FillUserTH2D("Mt_MET_Ele2_tight"+ele2EtaReg+ele2HEMReg, Mt_MET_Ele2, Ele2_Pt, pileup_weight * min_prescale * fakeRateEffective2 );
          if(ele1_isBarrel){
 	   FillUserTH2D("Pt1stEle_tight_Barrel"+ele1HEMReg          , Ele1_Pt , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
            FillUserTH2D("Mee_tight_Barrel"+ele1HEMReg          , loose_e1e2.M() , Ele1_Pt, pileup_weight * min_prescale * fakeRateEffective1 );
