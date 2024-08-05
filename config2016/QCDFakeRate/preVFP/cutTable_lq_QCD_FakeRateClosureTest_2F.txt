@@ -74,6 +74,7 @@ PassEcalDeadCellTrigPrim        0	     1			-		-		0	2 -0.5 1.5
 PassBadPFMuonFilter             0	     1			-		-		0	2 -0.5 1.5
 PassEcalBadCalibV2Filter        0            1                  -               -               0       2 -0.5  1.5
 nMuon				-inf         0			-               -               1       16 -0.5 15.5          
+WPeakReg                        -inf         +inf               -               -               1       2 -0.5 1.5
 nEleLoose 			1            2			-               -               1       11 -0.5 10.5	      
 HTSpectrumStudy                 -inf         +inf               -               -               1       2 -0.5 1.5
 nEleTight 			-inf          0			-               -               1       11 -0.5 10.5	      
