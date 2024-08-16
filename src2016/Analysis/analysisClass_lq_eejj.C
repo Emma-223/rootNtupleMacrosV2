@@ -1668,7 +1668,12 @@ void analysisClass::Loop()
     // Evaluate the cuts
     //--------------------------------------------------------------------------
 
-    evaluateCuts();
+    try {
+      evaluateCuts();
+    } catch (std::runtime_error& e) {
+      STDOUT("Caught an exception while evaluating cuts for run=" + std::to_string(run) + " ls=" + std::to_string(ls) + " event=" + std::to_string(event) + ": " + e.what());
+      exit(-7);
+    }
 
     //std::cout << "getVariableValue(\"PassNEle\")=" << getVariableValue("PassNEle") << "; passedCut(\"PassNEle\")=" << passedCut("PassNEle") << std::endl;
     //std::cout << "getVariableValue(\"asym_M_ej_LQ300\")=" << getVariableValue("asym_M_ej_LQ300") << "; passedCut(\"asym_M_ej_LQ300\")=" << passedCut("asym_M_ej_LQ300") << std::endl;
