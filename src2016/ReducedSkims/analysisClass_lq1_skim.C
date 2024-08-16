@@ -1332,6 +1332,7 @@ void analysisClass::Loop()
           string systName = jetSystNames[varIndex];
           TLorentzVector jet4Vec;
           jet4Vec.SetPtEtaPhiM(jet1.GetSystematicVariation(systName), jet1.Eta(), jet1.Phi(), 0.0);
+          //std::cout << "DEBUG for systName=" << systName << ", set Pt for jet 1 to " << jet1.GetSystematicVariation(systName) << std::endl;
           jet1FourVectors_ptVariations.push_back(jet4Vec);
         }
       }
@@ -1346,6 +1347,7 @@ void analysisClass::Loop()
             string systName = jetSystNames[varIndex];
             TLorentzVector jet4Vec;
             jet4Vec.SetPtEtaPhiM(jet2.GetSystematicVariation(systName), jet2.Eta(), jet2.Phi(), 0.0);
+            //std::cout << "DEBUG for systName=" << systName << ", set Pt for jet 2 to " << jet2.GetSystematicVariation(systName) << std::endl;
             jet2FourVectors_ptVariations.push_back(jet4Vec);
           }
         }
@@ -1448,7 +1450,7 @@ void analysisClass::Loop()
           fillVariableWithValue("M_e1j1_EES_Up"     , (t_ele1ScaledUp+t_jet1).M());
           fillVariableWithValue("M_e1j1_EES_Dn"     , (t_ele1ScaledDown+t_jet1).M());
           for(int idx = 1; idx < compSystNames.size(); ++idx)
-            fillVariableWithValue("M_e1j1_"+compSystNames[idx], (t_ele1+jet1FourVectors_ptVariations[idx]).M());
+            fillVariableWithValue("M_e1j1_"+compSystNames[idx], (t_ele1+jet1FourVectors_ptVariations[idx-1]).M());
         }
 
         if ( n_jet_store >= 2 ){ 
@@ -1463,7 +1465,7 @@ void analysisClass::Loop()
             fillVariableWithValue("M_e1j2_EES_Up"     , (t_ele1ScaledUp+t_jet2).M());
             fillVariableWithValue("M_e1j2_EES_Dn"     , (t_ele1ScaledDown+t_jet2).M());
             for(int idx = 1; idx < compSystNames.size(); ++idx)
-              fillVariableWithValue("M_e1j2_"+compSystNames[idx], (t_ele1+jet2FourVectors_ptVariations[idx]).M());
+              fillVariableWithValue("M_e1j2_"+compSystNames[idx], (t_ele1+jet2FourVectors_ptVariations[idx-1]).M());
             fillVariableWithValue("sT_enujj"   , t_ele1.Pt() + t_MET.Pt() + t_jet1.Pt() + t_jet2.Pt());
           }
         }
