@@ -117,12 +117,12 @@ void analysisClass::Loop()
    std::string qcdFileName = getPreCutString1("QCDFakeRateFileName");
    //HistoReader qcdFakeRateReader(qcdFileName,"fr2D_1Jet_TrkIsoHEEP7vsHLTPt_PAS","fr2D_1Jet_TrkIsoHEEP7vsHLTPt_PAS",true,false);
    std::vector<std::string> regionVec;
-   if(analysisYear != 2018) regionVec = {"1Jet_TrkIsoHEEP7vsHLTPt_PAS"};
+   if(analysisYear != 2018) regionVec = {"2Jet_TrkIsoHEEP7vsHLTPt_PAS"};
    else{
      regionVec = {
-       "1Jet_TrkIsoHEEP7vsHLTPt_pre319077",
-       "1Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077",
-       "1Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077",
+       "2Jet_TrkIsoHEEP7vsHLTPt_pre319077",
+       "2Jet_TrkIsoHEEP7vsHLTPt_noHEM_post319077",
+       "2Jet_TrkIsoHEEP7vsHLTPt_HEMonly_post319077",
      };
    } 
    QCDFakeRate qcdFakeRateReader(qcdFileName, "fr2D_", regionVec, true);
