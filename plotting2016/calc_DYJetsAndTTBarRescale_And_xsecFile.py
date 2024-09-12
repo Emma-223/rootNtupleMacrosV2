@@ -1147,7 +1147,7 @@ for bkgName in ["DYJets", "TTBar"]:
             print("-"*50)
 
 print("For latex scale factor table:")
-tableLineStr = "{:12} & {}~$\pm$~{} & {}~$\pm$~{}\\".format(year, round(nominalScaleFactors["DYJets"], digitsForTable), round(nominalScaleFactorErrs["DYJets"], digitsForTable), round(nominalScaleFactors["TTBar"], digitsForTable), round(nominalScaleFactorErrs["TTBar"], digitsForTable))
+tableLineStr = "{:12} & {}~$\pm$~{} & {}~$\pm$~{}\\\\".format(year, round(nominalScaleFactors["DYJets"], digitsForTable), round(nominalScaleFactorErrs["DYJets"], digitsForTable), round(nominalScaleFactors["TTBar"], digitsForTable), round(nominalScaleFactorErrs["TTBar"], digitsForTable))
 print(tableLineStr)
 print()
 
