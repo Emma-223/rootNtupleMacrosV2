@@ -1666,6 +1666,25 @@ void analysisClass::Loop()
     // nBJet_medium_ptCut << " passing the medium Btag cut." << std::endl;
 
     //--------------------------------------------------------------------------
+    // Fill mass-dependent meejj cuts
+    //--------------------------------------------------------------------------
+    if(doFinalSelections) {
+      for (int i_lq_mass = 0; i_lq_mass < n_lq_mass; ++i_lq_mass ) { 
+        int lq_mass = LQ_MASS[i_lq_mass];
+        sprintf(cut_name, "MeejjLQ%d", lq_mass );
+        fillVariableWithValue( cut_name, M_eejj, gen_weight * pileup_weight  ) ;
+        fillSystVariableWithValue("EERUp",   cut_name,  isData() ? M_eejj : M_eejj_EER_Up);
+        fillSystVariableWithValue("EERDown", cut_name,  isData() ? M_eejj : M_eejj_EER_Dn);
+        fillSystVariableWithValue("EESUp",   cut_name,  isData() ? M_eejj : M_eejj_EES_Up);
+        fillSystVariableWithValue("EESDown", cut_name,  isData() ? M_eejj : M_eejj_EES_Dn);
+        fillSystVariableWithValue("JERUp",   cut_name,  isData() ? M_eejj : M_eejj_JER_Up);
+        fillSystVariableWithValue("JERDown", cut_name,  isData() ? M_eejj : M_eejj_JER_Dn);
+        fillSystVariableWithValue("JESUp",   cut_name,  isData() ? M_eejj : M_eejj_JES_Up);
+        fillSystVariableWithValue("JESDown", cut_name,  isData() ? M_eejj : M_eejj_JES_Dn);
+      }
+    }
+
+    //--------------------------------------------------------------------------
     // Evaluate the cuts
     //--------------------------------------------------------------------------
 

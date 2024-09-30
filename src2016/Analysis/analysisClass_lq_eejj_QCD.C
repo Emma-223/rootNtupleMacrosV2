@@ -1845,6 +1845,17 @@ void analysisClass::Loop()
     // nBJet_medium_ptCut << " passing the medium Btag cut." << std::endl;
 
     //--------------------------------------------------------------------------
+    // Fill mass-dependent meejj cuts
+    //--------------------------------------------------------------------------
+    if(doFinalSelections) {
+      for (int i_lq_mass = 0; i_lq_mass < n_lq_mass; ++i_lq_mass ) { 
+        int lq_mass = LQ_MASS[i_lq_mass];
+        sprintf(cut_name, "MeejjLQ%d", lq_mass );
+        fillVariableWithValue( cut_name, M_eejj, gen_weight * pileup_weight  ) ;
+      }
+    }
+
+    //--------------------------------------------------------------------------
     // Evaluate the cuts
     //--------------------------------------------------------------------------
 
