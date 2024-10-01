@@ -214,7 +214,7 @@ BDTOutput_LQ900                         0.95                +inf 		-		-	2	100 -1
 # LQ M 1000 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ1000                   1000                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ1000                         0.96                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1000,MeejjLQ1000
+BDTOutput_LQ1000                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1000,MeejjLQ1000
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 1100 optimization
 #------------------------------------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ BDTOutput_LQ1100                         0.98                +inf 		-		-	2	100 -
 # LQ M 1200 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ1200                   1200                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ1200                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1200,MeejjLQ1200
+BDTOutput_LQ1200                         0.98                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1200,MeejjLQ1200
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 1300 optimization
 #------------------------------------------------------------------------------------------------------------------
@@ -244,12 +244,12 @@ BDTOutput_LQ1500                         0.95                +inf 		-		-	2	100 -
 # LQ M 1600 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ1600                   1600                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ1600                         0.93                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1600,MeejjLQ1600
+BDTOutput_LQ1600                         0.94                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1600,MeejjLQ1600
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 1700 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ1700                   1700                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ1700                         0.85                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1700,MeejjLQ1700
+BDTOutput_LQ1700                         0.87                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1700,MeejjLQ1700
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 1800 optimization
 #------------------------------------------------------------------------------------------------------------------
@@ -259,59 +259,59 @@ BDTOutput_LQ1800                         0.78                +inf 		-		-	2	100 -
 # LQ M 1900 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ1900                   1900                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ1900                         0.65                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1900,MeejjLQ1900
+BDTOutput_LQ1900                         0.66                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1900,MeejjLQ1900
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2000 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2000                   2000                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2000                         0.46                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2000,MeejjLQ2000
+BDTOutput_LQ2000                         0.5                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2000,MeejjLQ2000
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2100 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2100                   2100                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2100                         0.37                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2100,MeejjLQ2100
+BDTOutput_LQ2100                         0.46                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2100,MeejjLQ2100
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2200 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2200                   2200                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2200                         0.07                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2200,MeejjLQ2200
+BDTOutput_LQ2200                         0.17                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2200,MeejjLQ2200
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2300 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2300                   2300                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2300                         -0.05                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2300,MeejjLQ2300
+BDTOutput_LQ2300                         0.0                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2300,MeejjLQ2300
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2400 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2400                   2400                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2400                         -0.33                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2400,MeejjLQ2400
+BDTOutput_LQ2400                         -0.32                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2400,MeejjLQ2400
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2500 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2500                   2500                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2500                         -0.68                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2500,MeejjLQ2500
+BDTOutput_LQ2500                         -0.55                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2500,MeejjLQ2500
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2600 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2600                   2600                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2600                         -0.77                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2600,MeejjLQ2600
+BDTOutput_LQ2600                         -0.74                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2600,MeejjLQ2600
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2700 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2700                   2700                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2700                         -0.92                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2700,MeejjLQ2700
+BDTOutput_LQ2700                         -0.85                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2700,MeejjLQ2700
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2800 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2800                   2800                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2800                         -0.92                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2800,MeejjLQ2800
+BDTOutput_LQ2800                         -0.88                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2800,MeejjLQ2800
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 2900 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ2900                   2900                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ2900                         -0.94                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2900,MeejjLQ2900
+BDTOutput_LQ2900                         -0.92                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2900,MeejjLQ2900
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 3000 optimization
 #------------------------------------------------------------------------------------------------------------------
 MeejjLQ3000                   3000                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
-BDTOutput_LQ3000                         -0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM3000,MeejjLQ3000
+BDTOutput_LQ3000                         -0.96                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM3000,MeejjLQ3000
