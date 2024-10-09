@@ -10,7 +10,7 @@ from plot_class import GetFile, GetHisto
 gROOT.SetBatch()
 
 
-def plotSignalEfficiencyTimesAcceptance(filePath, signalNameTemplate, mass_points):
+def plotSignalEfficiencyTimesAcceptance(filePath, signalNameTemplate, mass_points, year=None):
     doPDFReweight = False
     # LQToDEle
     # signalNameTemplate = "LQToDEle_M-{}_pair"
@@ -25,14 +25,15 @@ def plotSignalEfficiencyTimesAcceptance(filePath, signalNameTemplate, mass_point
     # signalNameTemplate = "LQToUE_M-{}_BetaOne_pythia8"
     # mass_points = [i for i in range(300, 2100, 100)]  # go from 300-2000 in 100 GeV steps
     
-    if "2016preVFP" in filePath:
-        year = "2016preVFP"
-    elif "2016postVFP" in filePath:
-        year = "2016postVFP"
-    elif "2017" in filePath:
-        year = "2017"
-    elif "2018" in filePath:
-        year = "2018"
+    if year is None:
+         if "2016preVFP" in filePath:
+             year = "2016preVFP"
+         elif "2016postVFP" in filePath:
+             year = "2016postVFP"
+         elif "2017" in filePath:
+             year = "2017"
+         elif "2018" in filePath:
+             year = "2018"
     if "UE" in signalNameTemplate:
         signalNameShort = "eeuu"
     elif "DEle" in signalNameTemplate:
