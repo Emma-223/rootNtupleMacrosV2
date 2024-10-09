@@ -84,6 +84,7 @@ void analysisClass::Loop()
   fillAllCuts                      ( !true  ) ;
 
   bool do_roi_plots = false;
+  bool do_btag_plots = false;
 
   //--------------------------------------------------------------------------
   // Get pre-cut values
@@ -717,6 +718,10 @@ void analysisClass::Loop()
     int lq_mass = LQ_MASS[i_lq_mass];
     //TODO FIXME; hack for now
     //sprintf(cut_name, "min_M_ej_LQ%d"   , lq_mass );
+    sprintf(cut_name, "BDTOutput_ZJetCRRegion_LQ%d"   , lq_mass );
+    CreateUserHist(cut_name,2000,-1,1.001);
+    sprintf(cut_name, "BDTOutput_TTBarCRRegion_LQ%d"   , lq_mass );
+    CreateUserHist(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_TrainRegion_LQ%d"   , lq_mass );
     CreateUserHist(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_noWeight_TrainRegion_LQ%d"   , lq_mass );
@@ -1992,6 +1997,27 @@ void analysisClass::Loop()
       FillUserHist2D("MeeVsJet2Pt_BkgControlRegion", Jet2_Pt, M_e1e2, fakeRateEffective * min_prescale * gen_weight);
       FillUserHist2D("MeeVsJet3Pt_BkgControlRegion", Jet3_Pt, M_e1e2, fakeRateEffective * min_prescale * gen_weight);
       FillUserHist2D("MeeVsPFMETType1Pt_BkgControlRegion", PFMET_Type1_Pt, M_e1e2, fakeRateEffective * min_prescale * gen_weight);
+      // BDT output
+      if(evaluateBDT) {
+        if(M_e1e2 > 80 && M_e1e2 < 100) {
+          for (int i_lq_mass = 0; i_lq_mass < n_lq_mass; ++i_lq_mass ){ 
+            int lq_mass = LQ_MASS[i_lq_mass];
+            sprintf(cut_name, "BDTOutput_LQ%d", lq_mass );
+            float bdtOutput = getVariableValue(cut_name);
+            sprintf(cut_name, "BDTOutput_ZJetCRRegion_LQ%d", lq_mass );
+            FillUserHist(cut_name, bdtOutput,  fakeRateEffective * min_prescale * gen_weight);
+          }
+        }
+        else if(M_e1e2 > 140 && M_e1e2 < 220 && nBJet_ptCut >= 2) {
+          for (int i_lq_mass = 0; i_lq_mass < n_lq_mass; ++i_lq_mass ){ 
+            int lq_mass = LQ_MASS[i_lq_mass];
+            sprintf(cut_name, "BDTOutput_LQ%d", lq_mass );
+            float bdtOutput = getVariableValue(cut_name);
+            sprintf(cut_name, "BDTOutput_TTBarCRRegion_LQ%d", lq_mass );
+            FillUserHist(cut_name, bdtOutput,  fakeRateEffective * min_prescale * gen_weight);
+          }
+        }
+      }
     }
 
     //--------------------------------------------------------------------------
@@ -2201,209 +2227,211 @@ void analysisClass::Loop()
       //  FillUserHist("Mee_MejMin500To650_PAS", M_e1e2                         , min_prescale * gen_weight * fakeRateEffective );
       //else if (M_ej_min >= 650)
       //  FillUserHist("Mee_MejMin650ToInf_PAS", M_e1e2                         , min_prescale * gen_weight * fakeRateEffective );
-      //-------------------------------------------------------------------------- 
-      // no b tags
-      //-------------------------------------------------------------------------- 
-      if((isData() && nBJet_ptCut==0) || !isData()) {
-        FillUserHist("nElectron_noBtaggedJets"        , nEle_ptCut                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("nMuon_noBtaggedJets"            , nMuon_ptCut                        , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("nJet_noBtaggedJets"             , nJet_ptCut                 , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt1stEle_noBtaggedJets"	   , Ele1_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta1stEle_noBtaggedJets"	   , Ele1_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi1stEle_noBtaggedJets"	   , Ele1_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt2ndEle_noBtaggedJets"	   , Ele2_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta2ndEle_noBtaggedJets"	   , Ele2_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi2ndEle_noBtaggedJets"	   , Ele2_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Charge1stEle_noBtaggedJets"	   , Ele1_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Charge2ndEle_noBtaggedJets"	   , Ele2_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("MET_noBtaggedJets"              , PFMET_Type1_Pt                  , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("METPhi_noBtaggedJets"	   , PFMET_Type1_Phi                 , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt1stJet_noBtaggedJets"         , Jet1_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt2ndJet_noBtaggedJets"         , Jet2_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta1stJet_noBtaggedJets"        , Jet1_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta2ndJet_noBtaggedJets"        , Jet2_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi1stJet_noBtaggedJets"	   , Jet1_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi2ndJet_noBtaggedJets"	   , Jet2_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sTlep_noBtaggedJets"            , Ele1_Pt + Ele2_Pt        , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sTjet_noBtaggedJets"            , Jet1_Pt + Jet2_Pt  , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sT_noBtaggedJets"               , sT_eejj                            , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sT_zjj_noBtaggedJets"           , sT_zjj                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mjj_noBtaggedJets"		   , M_j1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mee_noBtaggedJets"		   , M_e1e2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("MTenu_noBtaggedJets"            , MT_Ele1MET                         , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me1j1_noBtaggedJets"            , M_e1j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me1j2_noBtaggedJets"            , M_e1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me2j1_noBtaggedJets"            , M_e2j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me2j2_noBtaggedJets"            , M_e2j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mej_selected_min_noBtaggedJets" , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_selected_max_noBtaggedJets" , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_minmax_noBtaggedJets"       , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_minmax_noBtaggedJets"       , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_selected_avg_noBtaggedJets" , M_ej_avg                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mejj_noBtaggedJets"             , M_ejj                              , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Meej_noBtaggedJets"             , M_eej                              , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Meejj_noBtaggedJets"            , M_eejj                             , min_prescale * gen_weight * fakeRateEffective ) ;
+      if(do_btag_plots) {
+        //-------------------------------------------------------------------------- 
+        // no b tags
+        //-------------------------------------------------------------------------- 
+        if((isData() && nBJet_ptCut==0) || !isData()) {
+          FillUserHist("nElectron_noBtaggedJets"        , nEle_ptCut                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("nMuon_noBtaggedJets"            , nMuon_ptCut                        , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("nJet_noBtaggedJets"             , nJet_ptCut                 , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt1stEle_noBtaggedJets"	   , Ele1_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta1stEle_noBtaggedJets"	   , Ele1_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi1stEle_noBtaggedJets"	   , Ele1_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt2ndEle_noBtaggedJets"	   , Ele2_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta2ndEle_noBtaggedJets"	   , Ele2_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi2ndEle_noBtaggedJets"	   , Ele2_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Charge1stEle_noBtaggedJets"	   , Ele1_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Charge2ndEle_noBtaggedJets"	   , Ele2_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("MET_noBtaggedJets"              , PFMET_Type1_Pt                  , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("METPhi_noBtaggedJets"	   , PFMET_Type1_Phi                 , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt1stJet_noBtaggedJets"         , Jet1_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt2ndJet_noBtaggedJets"         , Jet2_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta1stJet_noBtaggedJets"        , Jet1_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta2ndJet_noBtaggedJets"        , Jet2_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi1stJet_noBtaggedJets"	   , Jet1_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi2ndJet_noBtaggedJets"	   , Jet2_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sTlep_noBtaggedJets"            , Ele1_Pt + Ele2_Pt        , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sTjet_noBtaggedJets"            , Jet1_Pt + Jet2_Pt  , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sT_noBtaggedJets"               , sT_eejj                            , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sT_zjj_noBtaggedJets"           , sT_zjj                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mjj_noBtaggedJets"		   , M_j1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mee_noBtaggedJets"		   , M_e1e2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("MTenu_noBtaggedJets"            , MT_Ele1MET                         , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me1j1_noBtaggedJets"            , M_e1j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me1j2_noBtaggedJets"            , M_e1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me2j1_noBtaggedJets"            , M_e2j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me2j2_noBtaggedJets"            , M_e2j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mej_selected_min_noBtaggedJets" , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_selected_max_noBtaggedJets" , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_minmax_noBtaggedJets"       , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_minmax_noBtaggedJets"       , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_selected_avg_noBtaggedJets" , M_ej_avg                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mejj_noBtaggedJets"             , M_ejj                              , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Meej_noBtaggedJets"             , M_eej                              , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Meejj_noBtaggedJets"            , M_eejj                             , min_prescale * gen_weight * fakeRateEffective ) ;
 
-        FillUserHist( "Mee_PAS_noBtaggedJets"      , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightZeroBJets ) ;
-        if      ( isEBEB ) FillUserHist( "Mee_EBEB_PAS_noBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightZeroBJets ); 
-        else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_noBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightZeroBJets ); 
-        else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_noBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightZeroBJets ); 
+          FillUserHist( "Mee_PAS_noBtaggedJets"      , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightZeroBJets ) ;
+          if      ( isEBEB ) FillUserHist( "Mee_EBEB_PAS_noBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightZeroBJets ); 
+          else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_noBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightZeroBJets ); 
+          else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_noBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightZeroBJets ); 
 
-        //if (sT_eejj >= 300 && sT_eejj < 500)
-        //  FillUserHist("Mee_sT300To500_PAS_noBtaggedJets", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-        //else if (sT_eejj >= 500 && sT_eejj < 750)
-        //  FillUserHist("Mee_sT500To750_PAS_noBtaggedJets", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-        //else if (sT_eejj >= 750 && sT_eejj < 1250)
-        //  FillUserHist("Mee_sT750To1250_PAS_noBtaggedJets", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-        //else if (sT_eejj >= 1250)
-        //  FillUserHist("Mee_sT1250ToInf_PAS_noBtaggedJets", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //if (sT_eejj >= 300 && sT_eejj < 500)
+          //  FillUserHist("Mee_sT300To500_PAS_noBtaggedJets", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //else if (sT_eejj >= 500 && sT_eejj < 750)
+          //  FillUserHist("Mee_sT500To750_PAS_noBtaggedJets", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //else if (sT_eejj >= 750 && sT_eejj < 1250)
+          //  FillUserHist("Mee_sT750To1250_PAS_noBtaggedJets", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //else if (sT_eejj >= 1250)
+          //  FillUserHist("Mee_sT1250ToInf_PAS_noBtaggedJets", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
 
-        //if (M_ej_min >= 100 && M_ej_min < 200)
-        //  FillUserHist("Mee_MejMin100To200_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-        //else if (M_ej_min >= 200 && M_ej_min < 300)
-        //  FillUserHist("Mee_MejMin200To300_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-        //else if (M_ej_min >= 300 && M_ej_min < 400)
-        //  FillUserHist("Mee_MejMin300To400_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-        //else if (M_ej_min >= 400 && M_ej_min < 500)
-        //  FillUserHist("Mee_MejMin400To500_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-        //else if (M_ej_min >= 500 && M_ej_min < 650)
-        //  FillUserHist("Mee_MejMin500To650_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-        //else if (M_ej_min >= 650)
-        //  FillUserHist("Mee_MejMin650ToInf_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
-      }
-      if(nBJet_ptCut>=1) {
-        FillUserHist("nElectron_gteOneBtaggedJet"        , nEle_ptCut                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("nMuon_gteOneBtaggedJet"            , nMuon_ptCut                        , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("nJet_gteOneBtaggedJet"             , nJet_ptCut                 , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt1stEle_gteOneBtaggedJet"	   , Ele1_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta1stEle_gteOneBtaggedJet"	   , Ele1_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi1stEle_gteOneBtaggedJet"	   , Ele1_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt2ndEle_gteOneBtaggedJet"	   , Ele2_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta2ndEle_gteOneBtaggedJet"	   , Ele2_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi2ndEle_gteOneBtaggedJet"	   , Ele2_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Charge1stEle_gteOneBtaggedJet"	   , Ele1_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Charge2ndEle_gteOneBtaggedJet"	   , Ele2_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("MET_gteOneBtaggedJet"              , PFMET_Type1_Pt                  , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("METPhi_gteOneBtaggedJet"	   , PFMET_Type1_Phi                 , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt1stJet_gteOneBtaggedJet"         , Jet1_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt2ndJet_gteOneBtaggedJet"         , Jet2_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta1stJet_gteOneBtaggedJet"        , Jet1_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta2ndJet_gteOneBtaggedJet"        , Jet2_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi1stJet_gteOneBtaggedJet"	   , Jet1_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi2ndJet_gteOneBtaggedJet"	   , Jet2_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sTlep_gteOneBtaggedJet"            , Ele1_Pt + Ele2_Pt        , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sTjet_gteOneBtaggedJet"            , Jet1_Pt + Jet2_Pt  , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sT_gteOneBtaggedJet"               , sT_eejj                            , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sT_zjj_gteOneBtaggedJet"           , sT_zjj                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mjj_gteOneBtaggedJet"		   , M_j1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mee_gteOneBtaggedJet"		   , M_e1e2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("MTenu_gteOneBtaggedJet"            , MT_Ele1MET                         , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me1j1_gteOneBtaggedJet"            , M_e1j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me1j2_gteOneBtaggedJet"            , M_e1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me2j1_gteOneBtaggedJet"            , M_e2j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me2j2_gteOneBtaggedJet"            , M_e2j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mej_selected_min_gteOneBtaggedJet" , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_selected_max_gteOneBtaggedJet" , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_minmax_gteOneBtaggedJet"       , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_minmax_gteOneBtaggedJet"       , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_selected_avg_gteOneBtaggedJet" , M_ej_avg                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mejj_gteOneBtaggedJet"             , M_ejj                              , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Meej_gteOneBtaggedJet"             , M_eej                              , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Meejj_gteOneBtaggedJet"            , M_eejj                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          //if (M_ej_min >= 100 && M_ej_min < 200)
+          //  FillUserHist("Mee_MejMin100To200_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //else if (M_ej_min >= 200 && M_ej_min < 300)
+          //  FillUserHist("Mee_MejMin200To300_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //else if (M_ej_min >= 300 && M_ej_min < 400)
+          //  FillUserHist("Mee_MejMin300To400_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //else if (M_ej_min >= 400 && M_ej_min < 500)
+          //  FillUserHist("Mee_MejMin400To500_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //else if (M_ej_min >= 500 && M_ej_min < 650)
+          //  FillUserHist("Mee_MejMin500To650_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+          //else if (M_ej_min >= 650)
+          //  FillUserHist("Mee_MejMin650ToInf_PAS_noBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightZeroBJets );
+        }
+        if(nBJet_ptCut>=1) {
+          FillUserHist("nElectron_gteOneBtaggedJet"        , nEle_ptCut                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("nMuon_gteOneBtaggedJet"            , nMuon_ptCut                        , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("nJet_gteOneBtaggedJet"             , nJet_ptCut                 , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt1stEle_gteOneBtaggedJet"	   , Ele1_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta1stEle_gteOneBtaggedJet"	   , Ele1_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi1stEle_gteOneBtaggedJet"	   , Ele1_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt2ndEle_gteOneBtaggedJet"	   , Ele2_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta2ndEle_gteOneBtaggedJet"	   , Ele2_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi2ndEle_gteOneBtaggedJet"	   , Ele2_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Charge1stEle_gteOneBtaggedJet"	   , Ele1_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Charge2ndEle_gteOneBtaggedJet"	   , Ele2_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("MET_gteOneBtaggedJet"              , PFMET_Type1_Pt                  , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("METPhi_gteOneBtaggedJet"	   , PFMET_Type1_Phi                 , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt1stJet_gteOneBtaggedJet"         , Jet1_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt2ndJet_gteOneBtaggedJet"         , Jet2_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta1stJet_gteOneBtaggedJet"        , Jet1_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta2ndJet_gteOneBtaggedJet"        , Jet2_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi1stJet_gteOneBtaggedJet"	   , Jet1_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi2ndJet_gteOneBtaggedJet"	   , Jet2_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sTlep_gteOneBtaggedJet"            , Ele1_Pt + Ele2_Pt        , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sTjet_gteOneBtaggedJet"            , Jet1_Pt + Jet2_Pt  , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sT_gteOneBtaggedJet"               , sT_eejj                            , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sT_zjj_gteOneBtaggedJet"           , sT_zjj                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mjj_gteOneBtaggedJet"		   , M_j1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mee_gteOneBtaggedJet"		   , M_e1e2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("MTenu_gteOneBtaggedJet"            , MT_Ele1MET                         , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me1j1_gteOneBtaggedJet"            , M_e1j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me1j2_gteOneBtaggedJet"            , M_e1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me2j1_gteOneBtaggedJet"            , M_e2j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me2j2_gteOneBtaggedJet"            , M_e2j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mej_selected_min_gteOneBtaggedJet" , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_selected_max_gteOneBtaggedJet" , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_minmax_gteOneBtaggedJet"       , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_minmax_gteOneBtaggedJet"       , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_selected_avg_gteOneBtaggedJet" , M_ej_avg                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mejj_gteOneBtaggedJet"             , M_ejj                              , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Meej_gteOneBtaggedJet"             , M_eej                              , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Meejj_gteOneBtaggedJet"            , M_eejj                             , min_prescale * gen_weight * fakeRateEffective ) ;
 
-        FillUserHist( "Mee_PAS_gteOneBtaggedJet"      , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet ) ;
-        if      ( isEBEB ) FillUserHist( "Mee_EBEB_PAS_gteOneBtaggedJet"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet ); 
-        else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_gteOneBtaggedJet"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet ); 
-        else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_gteOneBtaggedJet"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet ); 
+          FillUserHist( "Mee_PAS_gteOneBtaggedJet"      , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet ) ;
+          if      ( isEBEB ) FillUserHist( "Mee_EBEB_PAS_gteOneBtaggedJet"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet ); 
+          else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_gteOneBtaggedJet"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet ); 
+          else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_gteOneBtaggedJet"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet ); 
 
-        //if (sT_eejj >= 300 && sT_eejj < 500)
-        //  FillUserHist("Mee_sT300To500_PAS_gteOneBtaggedJet", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-        //else if (sT_eejj >= 500 && sT_eejj < 750)
-        //  FillUserHist("Mee_sT500To750_PAS_gteOneBtaggedJet", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-        //else if (sT_eejj >= 750 && sT_eejj < 1250)
-        //  FillUserHist("Mee_sT750To1250_PAS_gteOneBtaggedJet", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-        //else if (sT_eejj >= 1250)
-        //  FillUserHist("Mee_sT1250ToInf_PAS_gteOneBtaggedJet", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //if (sT_eejj >= 300 && sT_eejj < 500)
+          //  FillUserHist("Mee_sT300To500_PAS_gteOneBtaggedJet", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //else if (sT_eejj >= 500 && sT_eejj < 750)
+          //  FillUserHist("Mee_sT500To750_PAS_gteOneBtaggedJet", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //else if (sT_eejj >= 750 && sT_eejj < 1250)
+          //  FillUserHist("Mee_sT750To1250_PAS_gteOneBtaggedJet", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //else if (sT_eejj >= 1250)
+          //  FillUserHist("Mee_sT1250ToInf_PAS_gteOneBtaggedJet", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
 
-        //if (M_ej_min >= 100 && M_ej_min < 200)
-        //  FillUserHist("Mee_MejMin100To200_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-        //else if (M_ej_min >= 200 && M_ej_min < 300)
-        //  FillUserHist("Mee_MejMin200To300_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-        //else if (M_ej_min >= 300 && M_ej_min < 400)
-        //  FillUserHist("Mee_MejMin300To400_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-        //else if (M_ej_min >= 400 && M_ej_min < 500)
-        //  FillUserHist("Mee_MejMin400To500_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-        //else if (M_ej_min >= 500 && M_ej_min < 650)
-        //  FillUserHist("Mee_MejMin500To650_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-        //else if (M_ej_min >= 650)
-        //  FillUserHist("Mee_MejMin650ToInf_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
-      }
-      if(nBJet_ptCut>=2) {
-        FillUserHist("nElectron_gteTwoBtaggedJets"        , nEle_ptCut                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("nMuon_gteTwoBtaggedJets"            , nMuon_ptCut                        , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("nJet_gteTwoBtaggedJets"             , nJet_ptCut                 , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt1stEle_gteTwoBtaggedJets"	   , Ele1_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta1stEle_gteTwoBtaggedJets"	   , Ele1_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi1stEle_gteTwoBtaggedJets"	   , Ele1_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt2ndEle_gteTwoBtaggedJets"	   , Ele2_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta2ndEle_gteTwoBtaggedJets"	   , Ele2_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi2ndEle_gteTwoBtaggedJets"	   , Ele2_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Charge1stEle_gteTwoBtaggedJets"	   , Ele1_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Charge2ndEle_gteTwoBtaggedJets"	   , Ele2_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("MET_gteTwoBtaggedJets"              , PFMET_Type1_Pt                  , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("METPhi_gteTwoBtaggedJets"	   , PFMET_Type1_Phi                 , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt1stJet_gteTwoBtaggedJets"         , Jet1_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Pt2ndJet_gteTwoBtaggedJets"         , Jet2_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta1stJet_gteTwoBtaggedJets"        , Jet1_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Eta2ndJet_gteTwoBtaggedJets"        , Jet2_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi1stJet_gteTwoBtaggedJets"	   , Jet1_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Phi2ndJet_gteTwoBtaggedJets"	   , Jet2_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sTlep_gteTwoBtaggedJets"            , Ele1_Pt + Ele2_Pt        , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sTjet_gteTwoBtaggedJets"            , Jet1_Pt + Jet2_Pt  , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sT_gteTwoBtaggedJets"               , sT_eejj                            , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("sT_zjj_gteTwoBtaggedJets"           , sT_zjj                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mjj_gteTwoBtaggedJets"		   , M_j1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mee_gteTwoBtaggedJets"		   , M_e1e2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("MTenu_gteTwoBtaggedJets"            , MT_Ele1MET                         , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me1j1_gteTwoBtaggedJets"            , M_e1j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me1j2_gteTwoBtaggedJets"            , M_e1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me2j1_gteTwoBtaggedJets"            , M_e2j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Me2j2_gteTwoBtaggedJets"            , M_e2j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Mej_selected_min_gteTwoBtaggedJets" , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_selected_max_gteTwoBtaggedJets" , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_minmax_gteTwoBtaggedJets"       , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_minmax_gteTwoBtaggedJets"       , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mej_selected_avg_gteTwoBtaggedJets" , M_ej_avg                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
-        FillUserHist("Mejj_gteTwoBtaggedJets"             , M_ejj                              , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Meej_gteTwoBtaggedJets"             , M_eej                              , min_prescale * gen_weight * fakeRateEffective ) ;
-        FillUserHist("Meejj_gteTwoBtaggedJets"            , M_eejj                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          //if (M_ej_min >= 100 && M_ej_min < 200)
+          //  FillUserHist("Mee_MejMin100To200_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //else if (M_ej_min >= 200 && M_ej_min < 300)
+          //  FillUserHist("Mee_MejMin200To300_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //else if (M_ej_min >= 300 && M_ej_min < 400)
+          //  FillUserHist("Mee_MejMin300To400_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //else if (M_ej_min >= 400 && M_ej_min < 500)
+          //  FillUserHist("Mee_MejMin400To500_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //else if (M_ej_min >= 500 && M_ej_min < 650)
+          //  FillUserHist("Mee_MejMin500To650_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+          //else if (M_ej_min >= 650)
+          //  FillUserHist("Mee_MejMin650ToInf_PAS_gteOneBtaggedJet", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastOneBJet );
+        }
+        if(nBJet_ptCut>=2) {
+          FillUserHist("nElectron_gteTwoBtaggedJets"        , nEle_ptCut                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("nMuon_gteTwoBtaggedJets"            , nMuon_ptCut                        , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("nJet_gteTwoBtaggedJets"             , nJet_ptCut                 , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt1stEle_gteTwoBtaggedJets"	   , Ele1_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta1stEle_gteTwoBtaggedJets"	   , Ele1_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi1stEle_gteTwoBtaggedJets"	   , Ele1_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt2ndEle_gteTwoBtaggedJets"	   , Ele2_Pt                       , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta2ndEle_gteTwoBtaggedJets"	   , Ele2_Eta                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi2ndEle_gteTwoBtaggedJets"	   , Ele2_Phi                      , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Charge1stEle_gteTwoBtaggedJets"	   , Ele1_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Charge2ndEle_gteTwoBtaggedJets"	   , Ele2_Charge                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("MET_gteTwoBtaggedJets"              , PFMET_Type1_Pt                  , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("METPhi_gteTwoBtaggedJets"	   , PFMET_Type1_Phi                 , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt1stJet_gteTwoBtaggedJets"         , Jet1_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Pt2ndJet_gteTwoBtaggedJets"         , Jet2_Pt                    , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta1stJet_gteTwoBtaggedJets"        , Jet1_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Eta2ndJet_gteTwoBtaggedJets"        , Jet2_Eta                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi1stJet_gteTwoBtaggedJets"	   , Jet1_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Phi2ndJet_gteTwoBtaggedJets"	   , Jet2_Phi                   , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sTlep_gteTwoBtaggedJets"            , Ele1_Pt + Ele2_Pt        , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sTjet_gteTwoBtaggedJets"            , Jet1_Pt + Jet2_Pt  , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sT_gteTwoBtaggedJets"               , sT_eejj                            , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("sT_zjj_gteTwoBtaggedJets"           , sT_zjj                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mjj_gteTwoBtaggedJets"		   , M_j1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mee_gteTwoBtaggedJets"		   , M_e1e2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("MTenu_gteTwoBtaggedJets"            , MT_Ele1MET                         , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me1j1_gteTwoBtaggedJets"            , M_e1j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me1j2_gteTwoBtaggedJets"            , M_e1j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me2j1_gteTwoBtaggedJets"            , M_e2j1                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Me2j2_gteTwoBtaggedJets"            , M_e2j2                             , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Mej_selected_min_gteTwoBtaggedJets" , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_selected_max_gteTwoBtaggedJets" , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_minmax_gteTwoBtaggedJets"       , M_ej_min                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_minmax_gteTwoBtaggedJets"       , M_ej_max                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mej_selected_avg_gteTwoBtaggedJets" , M_ej_avg                           , min_prescale * gen_weight * fakeRateEffective ) ;	   
+          FillUserHist("Mejj_gteTwoBtaggedJets"             , M_ejj                              , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Meej_gteTwoBtaggedJets"             , M_eej                              , min_prescale * gen_weight * fakeRateEffective ) ;
+          FillUserHist("Meejj_gteTwoBtaggedJets"            , M_eejj                             , min_prescale * gen_weight * fakeRateEffective ) ;
 
-        FillUserHist( "Mee_PAS_gteTwoBtaggedJets"      , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets ) ;
-        if      ( isEBEB ) FillUserHist( "Mee_EBEB_PAS_gteTwoBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets ); 
-        else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_gteTwoBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets ); 
-        else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_gteTwoBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets ); 
+          FillUserHist( "Mee_PAS_gteTwoBtaggedJets"      , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets ) ;
+          if      ( isEBEB ) FillUserHist( "Mee_EBEB_PAS_gteTwoBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets ); 
+          else if ( isEBEE ) FillUserHist( "Mee_EBEE_PAS_gteTwoBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets ); 
+          else if ( isEEEE ) FillUserHist( "Mee_EEEE_PAS_gteTwoBtaggedJets"		   , M_e1e2,  min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets ); 
 
-        //if (sT_eejj >= 300 && sT_eejj < 500)
-        //  FillUserHist("Mee_sT300To500_PAS_gteTwoBtaggedJets", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
-        //else if (sT_eejj >= 500 && sT_eejj < 750)
-        //  FillUserHist("Mee_sT500To750_PAS_gteTwoBtaggedJets", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
-        //else if (sT_eejj >= 750 && sT_eejj < 1250)
-        //  FillUserHist("Mee_sT750To1250_PAS_gteTwoBtaggedJets", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
-        //else if (sT_eejj >= 1250)
-        //  FillUserHist("Mee_sT1250ToInf_PAS_gteTwoBtaggedJets", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //if (sT_eejj >= 300 && sT_eejj < 500)
+          //  FillUserHist("Mee_sT300To500_PAS_gteTwoBtaggedJets", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //else if (sT_eejj >= 500 && sT_eejj < 750)
+          //  FillUserHist("Mee_sT500To750_PAS_gteTwoBtaggedJets", M_e1e2      , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //else if (sT_eejj >= 750 && sT_eejj < 1250)
+          //  FillUserHist("Mee_sT750To1250_PAS_gteTwoBtaggedJets", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //else if (sT_eejj >= 1250)
+          //  FillUserHist("Mee_sT1250ToInf_PAS_gteTwoBtaggedJets", M_e1e2     , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
 
-        //if (M_ej_min >= 100 && M_ej_min < 200)
-        //  FillUserHist("Mee_MejMin100To200_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
-        //else if (M_ej_min >= 200 && M_ej_min < 300)
-        //  FillUserHist("Mee_MejMin200To300_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
-        //else if (M_ej_min >= 300 && M_ej_min < 400)
-        //  FillUserHist("Mee_MejMin300To400_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
-        //else if (M_ej_min >= 400 && M_ej_min < 500)
-        //  FillUserHist("Mee_MejMin400To500_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
-        //else if (M_ej_min >= 500 && M_ej_min < 650)
-        //  FillUserHist("Mee_MejMin500To650_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
-        //else if (M_ej_min >= 650)
-        //  FillUserHist("Mee_MejMin650ToInf_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //if (M_ej_min >= 100 && M_ej_min < 200)
+          //  FillUserHist("Mee_MejMin100To200_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //else if (M_ej_min >= 200 && M_ej_min < 300)
+          //  FillUserHist("Mee_MejMin200To300_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //else if (M_ej_min >= 300 && M_ej_min < 400)
+          //  FillUserHist("Mee_MejMin300To400_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //else if (M_ej_min >= 400 && M_ej_min < 500)
+          //  FillUserHist("Mee_MejMin400To500_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //else if (M_ej_min >= 500 && M_ej_min < 650)
+          //  FillUserHist("Mee_MejMin500To650_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+          //else if (M_ej_min >= 650)
+          //  FillUserHist("Mee_MejMin650ToInf_PAS_gteTwoBtaggedJets", M_e1e2  , min_prescale * gen_weight * fakeRateEffective * weightAtLeastTwoBJets );
+        }
       }
       //FillUserTH3D("OptimizationCutSpace",sT_eejj,M_ej_min,M_e1e2, min_prescale * gen_weight * fakeRateEffective );
 
