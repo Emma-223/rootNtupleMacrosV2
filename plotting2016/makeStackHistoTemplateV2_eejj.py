@@ -1635,6 +1635,60 @@ if doPreselPlots:
     # plots[-1].ytit = "S_{T}(eejj) [GeV]"
     #
     #
+    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ500"))
+    plots[-1].xtit = "BDT output [ZJetCRRegion, M_{LQ} = 500 GeV]"
+    plots[-1].rebin = 10
+    plots[-1].ymax = 1e6
+    plots[-1].ymin = 1e-1
+    plots[-1].xmax = 1
+    plots[-1].xmin = -1
+    plots[-1].ylog = "yes"
+
+    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ1000"))
+    plots[-1].xtit = "BDT output [ZJetCRRegion, M_{LQ} = 1000 GeV]"
+    plots[-1].rebin = 10
+    plots[-1].ymax = 1e6
+    plots[-1].ymin = 1e-1
+    plots[-1].xmax = 1
+    plots[-1].xmin = -1
+    plots[-1].ylog = "yes"
+
+    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ1500"))
+    plots[-1].xtit = "BDT output [ZJetCRRegion, M_{LQ} = 1500 GeV]"
+    plots[-1].rebin = 10
+    plots[-1].ymax = 1e6
+    plots[-1].ymin = 1e-1
+    plots[-1].xmax = 1
+    plots[-1].xmin = -1
+    plots[-1].ylog = "yes"
+
+    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ500"))
+    plots[-1].xtit = "BDT output [TTBarCRRegion, M_{LQ} = 500 GeV]"
+    plots[-1].rebin = 10
+    plots[-1].ymax = 1e6
+    plots[-1].ymin = 1e-1
+    plots[-1].xmax = 1
+    plots[-1].xmin = -1
+    plots[-1].ylog = "yes"
+
+    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ1000"))
+    plots[-1].xtit = "BDT output [TTBarCRRegion, M_{LQ} = 1000 GeV]"
+    plots[-1].rebin = 10
+    plots[-1].ymax = 1e6
+    plots[-1].ymin = 1e-1
+    plots[-1].xmax = 1
+    plots[-1].xmin = -1
+    plots[-1].ylog = "yes"
+
+    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ1500"))
+    plots[-1].xtit = "BDT output [TTBarCRRegion, M_{LQ} = 1500 GeV]"
+    plots[-1].rebin = 10
+    plots[-1].ymax = 1e6
+    plots[-1].ymin = 1e-1
+    plots[-1].xmax = 1
+    plots[-1].xmin = -1
+    plots[-1].ylog = "yes"
+
     plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ500", dataBlindAbove=0.7))  # above 0.7 covers most of the mass ranges
     plots[-1].xtit = "BDT output [TrainRegion, M_{LQ} = 500 GeV]"
     plots[-1].rebin = 10
