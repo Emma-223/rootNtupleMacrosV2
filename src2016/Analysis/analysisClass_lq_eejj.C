@@ -906,7 +906,6 @@ void analysisClass::Loop()
     const unsigned long long int event = readerTools_->ReadValueBranch<ULong64_t>("event");
     //std::cout << static_cast<unsigned int>(run) << " " << static_cast<unsigned int>(ls) << " " << static_cast<unsigned long long int>(event) << std::endl;
 
-
     //--------------------------------------------------------------------------
     // Reset the cuts
     //--------------------------------------------------------------------------
@@ -1700,6 +1699,8 @@ void analysisClass::Loop()
       exit(-7);
     }
 
+    //std::cout << "getVariableValue(\"BDTOutput_LQ1500\")=" << getVariableValue("BDTOutput_LQ1500") << "; passedCut(\"BDTOutput_LQ1500\")=" << passedCut("BDTOutput_LQ1500") << std::endl;
+
     //std::cout << "getVariableValue(\"PassNEle\")=" << getVariableValue("PassNEle") << "; passedCut(\"PassNEle\")=" << passedCut("PassNEle") << std::endl;
     //std::cout << "getVariableValue(\"asym_M_ej_LQ300\")=" << getVariableValue("asym_M_ej_LQ300") << "; passedCut(\"asym_M_ej_LQ300\")=" << passedCut("asym_M_ej_LQ300") << std::endl;
     //--------------------------------------------------------------------------
@@ -1741,12 +1742,17 @@ void analysisClass::Loop()
         //sprintf(cut_name, "min_M_ej_LQ%d", lq_mass ); // this is actually the last cut in the cut file...!
         // TODO FIXME the right way; hack for now
         sprintf(cut_name, "BDTOutput_LQ%d", lq_mass ); // this is actually the last cut in the cut file...!
-        //bool decision = bool ( passedAllPreviousCuts(cut_name) && passedCut (cut_name));
-        bool decision = bool ( passedAllPreviousCuts("trainingSelection") && passedCut (cut_name));
+        //bool decision = bool ( passedAllPreviousCuts("MeejjLQ"+std::to_string(lq_mass)) && passedCut("MeejjLQ"+std::to_string(lq_mass)) && passedCut (cut_name));
+        bool decision = bool ( passedAllPreviousCuts(cut_name) && passedCut (cut_name));
         passed_vector.push_back (decision);
-        if(decision) {
-          //std::cout << "Passed selection" << cut_name << ", run ls event = " << run << " " << ls << " " << event << std::endl;
-        }
+        //if(decision && lq_mass == 2900) {
+        //  std::cout << "Passed decision? " << decision << ", " << run << "    " << ls << "    " << event << "    " << gen_weight*pileup_weight << "    " << getVariableValue(cut_name) << "    " << M_eejj << std::endl;
+        //  //std::cout << "Passed selection" << cut_name << ", run ls event = " << run << " " << ls << " " << event << std::endl;
+        //  //std::cout << "Passed MeejjLQ"+std::to_string(lq_mass) << "? " << passedCut("MeejjLQ"+std::to_string(lq_mass))<< ", " << run << "    " << ls << "    " << event << "    " << gen_weight*pileup_weight << "    " << getVariableValue(cut_name) << "    " << M_eejj << std::endl;
+        //  //std::cout << "PassedAllPreviousCuts(MeejjLQ"+std::to_string(lq_mass) << ")? " << passedAllPreviousCuts("MeejjLQ"+std::to_string(lq_mass))<< ", " << run << "    " << ls << "    " << event << "    " << gen_weight*pileup_weight << "    " << getVariableValue(cut_name) << "    " << M_eejj << std::endl;
+        //  //std::cout << "PassedAllPreviousCuts(" << cut_name << ")? " << passedAllPreviousCuts(cut_name) << ", " << run << "    " << ls << "    " << event << "    " << gen_weight*pileup_weight << "    " << getVariableValue(cut_name) << "    " << M_eejj << std::endl;
+        //  //std::cout << "Passed " << cut_name << "? " << passedCut(cut_name) << ", " << run << "    " << ls << "    " << event << "    " << gen_weight*pileup_weight << "    " << getVariableValue(cut_name) << "    " << M_eejj << std::endl;
+        //}
       }
     }
 
