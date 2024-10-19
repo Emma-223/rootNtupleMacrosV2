@@ -727,13 +727,13 @@ void analysisClass::Loop()
     //TODO FIXME; hack for now
     //sprintf(cut_name, "min_M_ej_LQ%d"   , lq_mass );
     sprintf(cut_name, "BDTOutput_ZJetCRRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1.001);
+    CreateUserHistWithSysts(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_TTBarCRRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1.001);
+    CreateUserHistWithSysts(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_TrainRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1.001);
+    CreateUserHistWithSysts(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_noWeight_TrainRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1.001);
+    CreateUserHistWithSysts(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_LQ%d"   , lq_mass );
     if(hasCut(cut_name))
       doFinalSelections = true;

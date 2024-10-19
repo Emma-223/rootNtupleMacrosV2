@@ -719,13 +719,13 @@ void analysisClass::Loop()
     //TODO FIXME; hack for now
     //sprintf(cut_name, "min_M_ej_LQ%d"   , lq_mass );
     sprintf(cut_name, "BDTOutput_ZJetCRRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1.001);
+    CreateUserHistWithSysts(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_TTBarCRRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1.001);
+    CreateUserHistWithSysts(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_TrainRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1.001);
+    CreateUserHistWithSysts(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_noWeight_TrainRegion_LQ%d"   , lq_mass );
-    CreateUserHist(cut_name,2000,-1,1.001);
+    CreateUserHistWithSysts(cut_name,2000,-1,1.001);
     sprintf(cut_name, "BDTOutput_LQ%d"   , lq_mass );
     if(hasCut(cut_name))
       doFinalSelections = true;
@@ -1907,6 +1907,8 @@ void analysisClass::Loop()
         sprintf(cut_name, "BDTOutput_LQ%d", lq_mass ); // this is actually the last cut in the cut file...!
         bool decision = bool ( passedAllPreviousCuts(cut_name) && passedCut (cut_name));
         passed_vector.push_back (decision);
+        //if(decision && lq_mass == 1600)
+        //  std::cout << "Passed decision, " << run << "    " << ls << "    " << event << "    " << fakeRateEffective*min_prescale*gen_weight << "=" << fakeRateEffective << "*" << min_prescale << "*" << gen_weight << "    " << getVariableValue(cut_name) << "    " << M_eejj << std::endl;
       }
     }
 
