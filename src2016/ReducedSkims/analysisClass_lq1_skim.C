@@ -991,6 +991,7 @@ void analysisClass::Loop()
       }
     }
 
+    // See; https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting#How_to_practically_apply_default
     if ( n_genTop_store >= 1 ){ 
       GenParticle genTop1 = c_genTop_final -> GetConstituent<GenParticle>(0);
       fillVariableWithValue ( "GenTop1_Pt" , genTop1.Pt () );
@@ -998,7 +999,7 @@ void analysisClass::Loop()
       fillVariableWithValue ( "GenTop1_Phi", genTop1.Phi() );
       fillVariableWithValue ( "GenTop1_Mass", genTop1.Mass() );
       fillVariableWithValue ( "GenTop1_ID" , genTop1.PdgId());
-      fillVariableWithValue ( "TopPtSF1", std::exp(0.0615-0.0005*genTop1.Pt()));
+      fillVariableWithValue ( "TopPtSF1", std::exp(0.0615-0.0005*min<double>(genTop1.Pt(), 500.))); // "Warning, important Note that beyond top pT≥ 500 GeV the value of the weight function at 500 GeV should be used."
 
       if ( n_genTop_store >= 2 ){ 
         GenParticle genTop2 = c_genTop_final -> GetConstituent<GenParticle>(1);
@@ -1007,7 +1008,7 @@ void analysisClass::Loop()
         fillVariableWithValue ( "GenTop2_Phi", genTop2.Phi() );
         fillVariableWithValue ( "GenTop2_Mass", genTop2.Mass() );
         fillVariableWithValue ( "GenTop2_ID" , genTop2.PdgId());
-        fillVariableWithValue ( "TopPtSF2", std::exp(0.0615-0.0005*genTop2.Pt()));
+        fillVariableWithValue ( "TopPtSF2", std::exp(0.0615-0.0005*min<double>(genTop2.Pt(), 500.)));
       }
     }
 
