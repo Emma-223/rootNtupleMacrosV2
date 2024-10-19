@@ -428,8 +428,9 @@ void analysisClass::Loop()
 
     //c_genZgamma_final->examine<GenParticle>("c_genZgamma_final = c_gen_all after SkimByID<GenParticle>(GEN_ZGAMMA_HARD_SCATTER)");
     CollectionPtr c_genNuFromW_final   = c_gen_all -> SkimByID<GenParticle>(GEN_NU_FROM_W);
-    //CollectionPtr c_genTop             = c_gen_all -> SkimByID<GenParticle>(GEN_TOP);
-    //CollectionPtr c_genTop_final       = c_genTop  -> SkimByID<GenParticle>(GEN_STATUS62);
+    CollectionPtr c_genTop             = c_gen_all -> SkimByID<GenParticle>(GEN_TOP);
+    CollectionPtr c_genTop_final       = c_genTop  -> SkimByID<GenParticle>(GEN_IS_LAST_COPY);
+    //c_genTop_final->examine<GenParticle>("c_genTop = c_gen_all after SkimByID GEN_TOP and GEN_IS_LAST_COPY");
 
     CollectionPtr c_genLQ              = c_gen_all ->SkimByID<GenParticle>(GEN_LQ);
     CollectionPtr c_genLQ_final        = c_genLQ  -> SkimByID<GenParticle>(GEN_STATUS62);
@@ -821,6 +822,7 @@ void analysisClass::Loop()
     int n_genNuFromW_store   = c_genNuFromW_final            -> GetSize();
 
     int n_genLQ_store = c_genLQ_final ->GetSize();
+    int n_genTop_store = c_genTop_final ->GetSize();
 
     int n_lheElectron_store = c_lheElectrons ->GetSize();
 
@@ -842,6 +844,8 @@ void analysisClass::Loop()
     fillVariableWithValue("nGenEle_store", min(n_genEle_store,2));
     fillVariableWithValue("nGenNu_store" , min(n_genNu_store,2));
     fillVariableWithValue("nGenMu_store" , min(n_genMu_store,3));
+    fillVariableWithValue("nGenLQ_store" , min(n_genLQ_store,2));
+    fillVariableWithValue("nGenTop_store" , min(n_genTop_store,2));
 
     fillVariableWithValue("nGenNuFromW_ptCut"	 , n_genNuFromW_store   );
 
@@ -984,6 +988,26 @@ void analysisClass::Loop()
         fillVariableWithValue ( "GenLQ2_Phi", genLQ2.Phi() );
         fillVariableWithValue ( "GenLQ2_Mass", genLQ2.Mass() );
         fillVariableWithValue ( "GenLQ2_ID" , genLQ2.PdgId());
+      }
+    }
+
+    if ( n_genTop_store >= 1 ){ 
+      GenParticle genTop1 = c_genTop_final -> GetConstituent<GenParticle>(0);
+      fillVariableWithValue ( "GenTop1_Pt" , genTop1.Pt () );
+      fillVariableWithValue ( "GenTop1_Eta", genTop1.Eta() );
+      fillVariableWithValue ( "GenTop1_Phi", genTop1.Phi() );
+      fillVariableWithValue ( "GenTop1_Mass", genTop1.Mass() );
+      fillVariableWithValue ( "GenTop1_ID" , genTop1.PdgId());
+      fillVariableWithValue ( "TopPtSF1", std::exp(0.0615-0.0005*genTop1.Pt()));
+
+      if ( n_genTop_store >= 2 ){ 
+        GenParticle genTop2 = c_genTop_final -> GetConstituent<GenParticle>(1);
+        fillVariableWithValue ( "GenTop2_Pt" , genTop2.Pt () );
+        fillVariableWithValue ( "GenTop2_Eta", genTop2.Eta() );
+        fillVariableWithValue ( "GenTop2_Phi", genTop2.Phi() );
+        fillVariableWithValue ( "GenTop2_Mass", genTop2.Mass() );
+        fillVariableWithValue ( "GenTop2_ID" , genTop2.PdgId());
+        fillVariableWithValue ( "TopPtSF2", std::exp(0.0615-0.0005*genTop2.Pt()));
       }
     }
 
