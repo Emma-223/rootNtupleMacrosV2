@@ -1905,7 +1905,7 @@ void analysisClass::Loop()
             sprintf(cut_name, "BDTOutput_LQ%d", lq_mass );
             float bdtOutput = getVariableValue(cut_name);
             sprintf(cut_name, "BDTOutput_ZJetCRRegion_LQ%d", lq_mass );
-            FillUserHist(cut_name, bdtOutput, gen_weight * pileup_weight );
+            FillUserHist(cut_name, bdtOutput, gen_weight * pileup_weight , "preselection");
           }
         }
         else if(M_e1e2 > 140 && M_e1e2 < 220 && nBJet_ptCut >= 2) {
@@ -1914,7 +1914,7 @@ void analysisClass::Loop()
             sprintf(cut_name, "BDTOutput_LQ%d", lq_mass );
             float bdtOutput = getVariableValue(cut_name);
             sprintf(cut_name, "BDTOutput_TTBarCRRegion_LQ%d", lq_mass );
-            FillUserHist(cut_name, bdtOutput, gen_weight * pileup_weight );
+            FillUserHist(cut_name, bdtOutput, gen_weight * pileup_weight  , "preselection");
           }
         }
       }
@@ -2728,9 +2728,9 @@ void analysisClass::Loop()
           sprintf(cut_name, "BDTOutput_LQ%d", lq_mass );
           float bdtOutput = getVariableValue(cut_name);
           sprintf(cut_name, "BDTOutput_TrainRegion_LQ%d", lq_mass );
-          FillUserHist(cut_name, bdtOutput, gen_weight * pileup_weight );
+          FillUserHist(cut_name, bdtOutput, gen_weight * pileup_weight  , "preselection");
           sprintf(cut_name, "BDTOutput_noWeight_TrainRegion_LQ%d", lq_mass );
-          FillUserHist(cut_name, bdtOutput );
+          FillUserHist(cut_name, bdtOutput  , 1.0, "preselection");
         }
       }
 
