@@ -109,25 +109,25 @@ def SetupPlots(thisHistName, histBaseName, bins=[]):
         print("INFO: For {}, using plotBaseName: {}".format(sampleName, plotBaseName))
         histDict = {}
         histDict[ttbar] = GetHisto(
-            thisHistName.replace("SAMPLE", ttbar) + plotBaseName, File_preselection
+            thisHistName.replace("SAMPLE", ttbar) + plotBaseName, dataMCFilesDict[ttbar]
         )
         histDict[zjet] = GetHisto(
             thisHistName.replace("SAMPLE", zjet) + plotBaseName,
-            File_preselection,
+            dataMCFilesDict[zjet],
         )
         histDict[singletop] = GetHisto(
-            thisHistName.replace("SAMPLE", singletop) + plotBaseName, File_preselection
+            thisHistName.replace("SAMPLE", singletop) + plotBaseName, dataMCFilesDict[singletop]
         )
         histDict[diboson] = GetHisto(
             thisHistName.replace("SAMPLE", diboson) + plotBaseName,
-            File_preselection,
+            dataMCFilesDict[diboson]
         )
         histDict[allBkg] = copy.deepcopy(histDict[diboson].Clone(allBkg))
         histDict[allBkg].Add(histDict[ttbar])
         histDict[allBkg].Add(histDict[zjet])
         histDict[allBkg].Add(histDict[singletop])
         histDict["DATA"] = GetHisto(
-            thisHistName.replace("SAMPLE", "DATA") + plotBaseName, File_preselection
+            thisHistName.replace("SAMPLE", "DATA") + plotBaseName, dataMCFilesDict[data]
             )
         histDict[qcd] = None
         histDict[wjet] = None
@@ -142,7 +142,7 @@ def SetupPlots(thisHistName, histBaseName, bins=[]):
         elif useSingleFakeMC:
             histDict[wjet] = GetHisto(
                 thisHistName.replace("SAMPLE", wjet) + plotBaseName,
-                File_preselection,
+                dataMCFilesDict[wjet],
             )
         if len(bins):
             for idx, binCoord in enumerate(bins):
@@ -797,7 +797,7 @@ if len(sys.argv) > 5:
     exit(-1)
 
 qcdFile = sys.argv[1]
-mcFile = sys.argv[2]
+dataMCFilePath = sys.argv[2].rstrip("/") + "/"
 year = sys.argv[3]
 if len(sys.argv) > 4:
     zjet = sys.argv[4]
@@ -814,7 +814,6 @@ zjetDatasetName = "DYJetsToEE.+" if zjet == "ZJet_powhegminnlo" else "DYJetsToLL
 # --- Input files
 if doQCD:
     File_QCD_preselection = GetFile(qcdFile)
-File_preselection = GetFile(mcFile)
 
 xsectionFile = "/afs/cern.ch/user/s/scooper/work/private/LQNanoAODAttempt/Leptoquarks/analyzer/rootNtupleAnalyzerV2/config/xsection_13TeV_2022.txt"
 
@@ -826,8 +825,8 @@ histNameAllPrevCuts = "histo1D__SAMPLE__cutHisto_allPreviousCuts________"
 # samples to use
 # wjet = "WJet_amcatnlo_Inc"
 # wjet = "WJet_amcatnlo_ptBinned"
-wjet = "WJet_amcatnlo_jetBinned"
 # wjet = "WJet_amcatnlo_ptBinned"
+wjet = "WJet_amcatnlo_jetBinned"
 allBkg = "allBkg"
 data = "DATA"
 if not doQCD and useSingleFakeMC:
@@ -842,6 +841,13 @@ ttbarDatasetName = "TTT"
 # ttbarDatasetName = ttbar
 singletop = "SingleTop"
 qcd = "QCDFakes_DATA"
+
+samples = [zjet, ttbar, diboson, singletop]
+if not doQCD and useSingleFakeMC:
+    samples.append(wjet)
+dataMCFilesDict = {sample: GetFile(dataMCFilePath + "analysisClass_lq_eejj_{}_plots.root".format(sample)) for sample in samples}
+dataMCFilesDict[qcd] = GetFile(qcdFile)
+dataMCFilesDict[data] = GetFile(dataMCFilePath + "analysisClass_lq_eejj_DATA_plots.root")
 
 # --- Rescaling of DY+jets and ttbar+jets backgrounds
 histBaseNames = []
@@ -1157,7 +1163,7 @@ if len(plotErrors):
     for err in plotErrors:
         print("WARN: {}".format(err), file=sys.stderr)
 print("INFO: year = {}".format(year))
-print("INFO: using file: " + File_preselection.GetName())
+print("INFO: using data/MC file path: ", dataMCFilePath)
 if doQCD:
     print("INFO: using QCD file: " + File_QCD_preselection.GetName())
 print("INFO: using samples:")
@@ -1170,3 +1176,5 @@ print("\t diboson ----->", diboson)
 if doQCD:
     print("\t QCD --------->", qcd)
 print("\t SingleTop --->", singletop)
+for tfile in dataMCFilesDict.values():
+    tfile.Close()

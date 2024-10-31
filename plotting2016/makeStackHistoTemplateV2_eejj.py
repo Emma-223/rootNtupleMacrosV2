@@ -11,47 +11,6 @@ gROOT.SetBatch(True)
 gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
 # gErrorIgnoreLevel = kWarning  # doesn't work
 
-# inputFile = "$LQDATA/nanoV6/2016/analysis/prefire_19may2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# inputFile = "$LQDATA/nanoV6/2016/analysis/prefire_19may2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# inputFile = "$LQDATA/nanoV6/2017/analysis/prefire_22may2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# inputFile = "$LQDATA/nanoV6/2017/analysis/prefire_22may2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# inputFile = "$LQDATA/nanoV6/2018/analysis/eejj_6jul2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# nanoV7 [jet/pt-binned]
-# inputFile = "nanoV7/2016/analysis/26aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# inputFile = "nanoV7/analysis/2017/prefire_26aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# inputFile = "nanoV7/2018/analysis/eejj_26aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# jet/pt-binned scaled
-# inputFile = "nanoV7/analysis/2017/prefire_26aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# inputFile = "nanoV7/2018/analysis/eejj_26aug2020/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# jet-binned, scaled
-# inputFile = "nanoV7/analysis/2017/prefire_26aug2020/output_cutTable_lq_eejj/jetBinnedDY/analysisClass_lq_eejj_plots.root"
-# inputFile = "nanoV7/2018/analysis/eejj_26aug2020/output_cutTable_lq_eejj/jetBinnedDY/analysisClass_lq_eejj_plots.root"
-# pt-binned/inc stitch
-# inputFile = "nanoV7/2017/analysis/prefire_3sep2020_dyjPt50Inc/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# inputFile = "nanoV7/2018/analysis/eejj_3sep2020_dyjPt50Inc/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# scaled
-# inputFile = "nanoV7/2017/analysis/prefire_3sep2020_dyjPt50Inc/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# inputFile = "nanoV7/2018/analysis/eejj_3sep2020_dyjPt50Inc/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# inc DYJ only
-# inputFile = "nanoV7/2017/analysis/prefire_8sep2020_dyjIncOnly/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# inputFile = "$LQDATA/nanoV7/2018/analysis/eejj_8sep2020_dyjIncOnly/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-# scaled
-# inputFile = "nanoV7/2017/analysis/prefire_8sep2020_dyjIncOnly/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# inputFile = "nanoV7/2018/analysis/eejj_8sep2020_dyjIncOnly/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# opt final sels
-# inputFile = "nanoV7/2016/analysis/eejj_16sep2020_optFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-# inputFile = "nanoV7/2017/analysis/prefire_eejj_16sep2020_optFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-#
-# inputFile = "nanoV7/2016/analysis/precomputePrefire_looserPSK_eejj_12apr2021_oldOptFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots_unscaled.root"
-#year = 2017
-#inputFiles = {}
-#inputFiles[2016] = "nanoV7/2016/analysis/precomputePrefire_looserPSK_eejj_12apr2021_oldOptFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-#inputFiles[2017] = "nanoV7/2017/analysis/precomputePrefire_looserPSK_eejj_12apr2021_oldOptFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-#inputFiles[2018] = "nanoV7/2018/analysis/precomputePrefire_looserPSK_eejj_12apr2021_oldOptFinalSels/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-#inputFilesQCD = {}
-#inputFilesQCD[2016] = "nanoV7/2016/analysis/qcdYield_eejj_23mar2021_oldOptFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-#inputFilesQCD[2017] = "nanoV7/2017/analysis/qcdYield_eejj_30apr2021_oldOptFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-#inputFilesQCD[2018] = "nanoV7/2018/analysis/qcdYield_eejj_1jun2021_oldOptFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
 if len(sys.argv) < 4:
     print("ERROR: did not find MC/data combined plot file or QCD plot file or year")
     print("Usage: python calc_DYJetsAndTTBarRescale_And_xsecFile.py combinedQCDPlotFile.root combinedDataMCPlotFile.root year")
@@ -62,19 +21,16 @@ if len(sys.argv) > 4:
     exit(-1)
 
 qcdFile = sys.argv[1]
-mcFile = sys.argv[2]
+dataMCFilePath = sys.argv[2].rstrip("/") + "/"
 year = sys.argv[3]
 
-# inputFile = "$LQDATA/"+inputFiles[year]
-# inputFileQCD = "$LQDATA/"+inputFilesQCD[year]
-inputFile = mcFile
 inputFileQCD = qcdFile
 
 doSystematics = True
 doQCD = True
 quasiRebinQCD = False  # TODO: not sure the current algorithm works correctly or is optimal
 doPreselPlots = True
-doBTagPlots = True
+doBTagPlots = False
 doFinalSelectionPlots = False
 do2016 = False
 do2016pre = False
@@ -131,38 +87,11 @@ histoBaseName2D_userDef = "histo2D__SAMPLE__VARIABLE"
 samplesForStackHistos_QCD = []
 if doQCD:
     File_QCD_preselection = GetFile(
-        # "$LQDATA/nano/2016/analysis/eejj_qcd_rsk_nov22/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # "$LQDATA/nanoV6/2017/analysis/eejj_noJets_7apr/output_cutTable_lq_eejj_noJets/analysisClass_lq_eejj_noJets_plots.root"
-        # inputFile
-        # "$LQDATA/nanoV6/2016/analysis/qcdYield_24jun2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # "$LQDATA/nanoV6/2017/analysis/qcdYield_25jun2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # "$LQDATA/nanoV6/2018/analysis/qcdYield_25jun2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # nanoV7
-        # "$LQDATA/nanoV7/2016/analysis/qcdYield_optFinalSels_25aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # "$LQDATA/nanoV7/2016/analysis/qcdYield_26aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # "$LQDATA/nanoV7/analysis/2017/qcdYield_26aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # "$LQDATA/nanoV7/2018/analysis/qcdYield_26aug2020/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # opt final sels
-        # "$LQDATA/nanoV7/2016/analysis/qcdYield_eejj_16sep2020_optFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        # "$LQDATA/nanoV7/2017/analysis/qcdYield_eejj_16sep2020_optFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
-        #
-        # "$LQDATA/nanoV7/2016/analysis/qcdYield_eejj_23mar2021_oldOptFinalSels/output_cutTable_lq_eejj_QCD/analysisClass_lq_eejj_QCD_plots.root"
         inputFileQCD
     )
     # samplesForStackHistos_QCD = ["QCD_EMEnriched"]
     samplesForStackHistos_QCD = ["QCDFakes_DATA"]
 
-File_preselection = GetFile(
-    # "$LQDATA/nano/2016/analysis/eejj_trigSFUncorrPt_dec3/output_cutTable_lq_eejj/analysisClass_lq_eejj_plots.root"
-    # "$LQDATA/nanoV6/2017/analysis/eejj_noJets_7apr/output_cutTable_lq_eejj_noJets/analysisClass_lq_eejj_noJets_plots.root"
-    inputFile
-)
-File_ttbar_preselection = GetFile(
-    # "/data3/scooper/LQData/2016ttbar/mar20_emujj_fixPlots/output_cutTable_lq_ttbar_emujj_correctTrig/analysisClass_lq_ttbarEst_plots.root"
-    # "$LQDATA/nanoV6/2017/analysis/eejj_noJets_7apr/output_cutTable_lq_eejj_noJets/analysisClass_lq_eejj_noJets_plots.root"
-    inputFile
-)
-# print "Using plot file: {}".format(inputFile)
 # print "Using QCD plot file: {}".format(inputFileQCD)
 # samplesForStackHistos_ZJets  = [ "TTbar_Madgraph", "ZJet_amcAtNLO_Inc" ]
 # samplesForStackHistos_other = [ "WJet_amcAtNLO_Inc" , "SingleTop", "QCD_EMEnriched", "DIBOSON"]
@@ -284,12 +213,14 @@ elif do2018:
 # older
 # samplesForStackHistos = samplesForStackHistos_other + samplesForStackHistos_ZJets
 #samplesForStackHistos = samplesForHistos_QCD if doQCD else []
-samplesForStackHistos = (
-    samplesForStackHistos_QCD
-    + samplesForStackHistos_other
+samplesForStackHistosMC = (
+    samplesForStackHistos_other
     + samplesForStackHistos_ttbar
     + samplesForStackHistos_ZJets
 )
+samplesForStackHistos = [samplesForStackHistos_QCD] + samplesForStackHistosMC
+
+dataMCFilesDict = {sample: GetFile(dataMCFilePath + "analysisClass_lq_eejj_{}_plots.root".format(sample)) for sample in samplesForStackHistosMC}
 #samplesForStackHistos += samplesForStackHistos_other + samplesForStackHistos_ttbar + samplesForStackHistos_ZJets
 # print 'samplesForStackHistos',samplesForStackHistos
 # keysStack             = [ "Other backgrounds", "QCD multijet", "t#bar{t} (Madgraph)"  ,  "Z/#gamma* + jets (MG HT)"  ]
@@ -318,6 +249,8 @@ stackFillStyleIds = [1001, 1001, 1001, 1001]
 signalSampleName = "LQToDEle_M-{}_pair"
 signalSampleLabel = "LQToDEle, M={} GeV"
 samplesForHistos = [signalSampleName.format(lqmass) for lqmass in LQmasses]
+for sample in samplesForHistos:
+    dataMCFilesDict[sample] = GetFile(dataMCFilePath + "analysisClass_lq_eejj_{}_plots.root".format(sample))
 keys = [signalSampleLabel.format(lqmass) for lqmass in LQmasses]
 # no signal
 # samplesForHistos = []
@@ -328,6 +261,7 @@ samplesForHistos_blank = []
 keys_blank = []
 
 sampleForDataHisto = "DATA"
+dataMCFilesDict[sampleForDataHisto] = GetFile(dataMCFilePath + "analysisClass_lq_eejj_DATA_plots.root")
 #sampleForDataHisto = "SingleElectron_2016_HIPM"
 #sampleForDataHisto = "SingleElectron_2016"
 # dataBlindAbovePt1 = 800 # GeV; used for ele Pt1, Mee, Mej
@@ -352,7 +286,8 @@ def makeDefaultPlot(
     zUncBand=zUncBand,
     makeRatio=makeRatio,
     dataBlindAbove=-1,
-    systs=False
+    systs=False,
+    systList = systNames
 ):
     plot = Plot()
     systList = []
@@ -363,13 +298,13 @@ def makeDefaultPlot(
     plot.systNames = systList
     plot.histosStack = []
     plot.histosStack.extend(generateHistoList(
-            histoBaseName, samplesForStackHistos_other, variableName, File_preselection, 1.0, True, "OTHERBKG"
+            histoBaseName, samplesForStackHistos_other, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_other], 1.0, True, "OTHERBKG"
         ))
     plot.histosStack.extend(generateHistoList(
-            histoBaseName, samplesForStackHistos_ttbar, variableName, File_ttbar_preselection,
+            histoBaseName, samplesForStackHistos_ttbar, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_ttbar]
         ))
     plot.histosStack.extend(generateHistoList(
-        histoBaseName, samplesForStackHistos_ZJets, variableName, File_preselection
+        histoBaseName, samplesForStackHistos_ZJets, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_ZJets]
         ))
     if systs:
         qcdHists = generateHistoListFakeSystsFromModel(
@@ -396,7 +331,7 @@ def makeDefaultPlot(
     #plot.histosStack = generateHistoList(histoBaseName, samplesForStackHistos_ZJets, variableName, File_preselection)
     #print("2) histosStack=", plot.histosStack)
     plot.histos = generateHistoList(
-        histoBaseName, samplesForHistos, variableName, File_preselection
+        histoBaseName, samplesForHistos, variableName, [dataMCFilesDict[sample] for sample in samplesForHistos]
     )
     if sampleForDataHisto != "":
         scale = 1.0
@@ -404,7 +339,7 @@ def makeDefaultPlot(
             histoBaseName,
             sampleForDataHisto,
             variableName,
-            File_preselection,
+            dataMCFilesDict[sampleForDataHisto],
             scale,
             dataBlindAbove,
         )
@@ -472,12 +407,12 @@ def makeDefaultPlot2D(
     plot.hasData = True
     plot.name = variableName
     plot.histosStack = generateHistoList(
-        histoBaseName, samplesForStackHistos_other, variableName, File_preselection, 1.0, True, "OTHERBKG"
+        histoBaseName, samplesForStackHistos_other, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_other], 1.0, True, "OTHERBKG"
     ) + generateHistoList(
-        histoBaseName, samplesForStackHistos_ZJets, variableName, File_preselection
+        histoBaseName, samplesForStackHistos_ZJets, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_ZJets]
     )
     plot.histodata = generateHisto(
-        histoBaseName, sampleForDataHisto, variableName, File_preselection
+        histoBaseName, sampleForDataHisto, variableName, dataMCFilesDict[sampleForDataHisto]
     )
     plot.suffix = "eejj"
 
@@ -492,14 +427,14 @@ def makeDefaultPlot2D_NoData(
     plot.hasData = False
     plot.name = variableName
     plot.histosStack = generateHistoList(
-        histoBaseName, samplesForStackHistos_other, variableName, File_preselection, 1.0, True, "OTHERBKG"
+        histoBaseName, samplesForStackHistos_other, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_other], 1.0, True, "OTHERBKG"
     ) + generateHistoList(
-        histoBaseName, samplesForStackHistos_ttbar, variableName, File_ttbar_preselection
+        histoBaseName, samplesForStackHistos_ttbar, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_ttbar]
     ) + generateHistoList(
-        histoBaseName, samplesForStackHistos_ZJets, variableName, File_preselection
+        histoBaseName, samplesForStackHistos_ZJets, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_ZJets]
     )
     plot.histodata = generateHistoBlank(
-        histoBaseName, sampleForDataHisto, variableName, File_preselection
+        histoBaseName, sampleForDataHisto, variableName, dataMCFilesDict[sampleForDataHisto]
     )
     plot.keysStack = keysStack
     plot.keys = keys
@@ -518,12 +453,12 @@ def makeDefaultPlot2D_NSigma(
 
     plot = Plot2DNSigma()
     plot.histosStack = generateHistoList(
-        histoBaseName, samplesForStackHistos_other, variableName, File_preselection, 1.0, True, "OTHERBKG"
+        histoBaseName, samplesForStackHistos_other, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_other], 1.0, True, "OTHERBKG"
     ) + generateHistoList(
-        histoBaseName, samplesForStackHistos_ZJets, variableName, File_preselection
+        histoBaseName, samplesForStackHistos_ZJets, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_ZJets]
     )
     plot.histodata = generateHisto(
-        histoBaseName, sampleForDataHisto, variableName, File_preselection
+        histoBaseName, sampleForDataHisto, variableName, dataMCFilesDict[sampleForDataHisto]
     )
     plot.gif_folder = "gif_eejj_scaled_finalOnly_2012A/"
     plot.eps_folder = "eps_eejj_scaled_finalOnly_2012A/"
@@ -538,12 +473,12 @@ def makeDefaultPlot2D_Ratio(
 
     plot = Plot2DRatio()
     plot.histosStack = generateHistoList(
-        histoBaseName, samplesForStackHistos_other, variableName, File_preselection, 1.0, True, "OTHERBKG"
+        histoBaseName, samplesForStackHistos_other, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_other], 1.0, True, "OTHERBKG"
     ) + generateHistoList(
-        histoBaseName, samplesForStackHistos_ZJets, variableName, File_preselection
+        histoBaseName, samplesForStackHistos_ZJets, variableName, [dataMCFilesDict[sample] for sample in samplesForStackHistos_ZJets]
     )
     plot.histodata = generateHisto(
-        histoBaseName, sampleForDataHisto, variableName, File_preselection
+        histoBaseName, sampleForDataHisto, variableName, dataMCFilesDict[sampleForDataHisto]
     )
     plot.gif_folder = "gif_eejj_scaled_finalOnly_2012A/"
     plot.eps_folder = "eps_eejj_scaled_finalOnly_2012A/"
@@ -1635,7 +1570,7 @@ if doPreselPlots:
     # plots[-1].ytit = "S_{T}(eejj) [GeV]"
     #
     #
-    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ500"))
+    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ500", systs=doSystematics))
     plots[-1].xtit = "BDT output [ZJetCRRegion, M_{LQ} = 500 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -1644,7 +1579,7 @@ if doPreselPlots:
     plots[-1].xmin = -1
     plots[-1].ylog = "yes"
 
-    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ1000"))
+    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ1000", systs=doSystematics))
     plots[-1].xtit = "BDT output [ZJetCRRegion, M_{LQ} = 1000 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -1653,7 +1588,7 @@ if doPreselPlots:
     plots[-1].xmin = -1
     plots[-1].ylog = "yes"
 
-    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ1500"))
+    plots.append(makeDefaultPlot("BDTOutput_ZJetCRRegion_LQ1500", systs=doSystematics))
     plots[-1].xtit = "BDT output [ZJetCRRegion, M_{LQ} = 1500 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -1662,7 +1597,7 @@ if doPreselPlots:
     plots[-1].xmin = -1
     plots[-1].ylog = "yes"
 
-    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ500"))
+    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ500", systs=doSystematics))
     plots[-1].xtit = "BDT output [TTBarCRRegion, M_{LQ} = 500 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -1671,7 +1606,7 @@ if doPreselPlots:
     plots[-1].xmin = -1
     plots[-1].ylog = "yes"
 
-    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ1000"))
+    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ1000", systs=doSystematics))
     plots[-1].xtit = "BDT output [TTBarCRRegion, M_{LQ} = 1000 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -1680,7 +1615,7 @@ if doPreselPlots:
     plots[-1].xmin = -1
     plots[-1].ylog = "yes"
 
-    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ1500"))
+    plots.append(makeDefaultPlot("BDTOutput_TTBarCRRegion_LQ1500", systs=doSystematics))
     plots[-1].xtit = "BDT output [TTBarCRRegion, M_{LQ} = 1500 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -1689,7 +1624,7 @@ if doPreselPlots:
     plots[-1].xmin = -1
     plots[-1].ylog = "yes"
 
-    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ500", dataBlindAbove=0.7))  # above 0.7 covers most of the mass ranges
+    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ500", dataBlindAbove=0.7, systs=doSystematics))  # above 0.7 covers most of the mass ranges
     plots[-1].xtit = "BDT output [TrainRegion, M_{LQ} = 500 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -1698,7 +1633,7 @@ if doPreselPlots:
     plots[-1].xmin = -1
     plots[-1].ylog = "yes"
 
-    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1000", dataBlindAbove=0.7))  # above 0.7 covers most of the mass ranges
+    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1000", dataBlindAbove=0.7, systs=doSystematics))  # above 0.7 covers most of the mass ranges
     plots[-1].xtit = "BDT output [TrainRegion, M_{LQ} = 1000 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -1707,7 +1642,7 @@ if doPreselPlots:
     plots[-1].xmin = -1
     plots[-1].ylog = "yes"
 
-    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1500", dataBlindAbove=0.7))  # above 0.7 covers most of the mass ranges
+    plots.append(makeDefaultPlot("BDTOutput_TrainRegion_LQ1500", dataBlindAbove=0.7, systs=doSystematics))  # above 0.7 covers most of the mass ranges
     plots[-1].xtit = "BDT output [TrainRegion, M_{LQ} = 1500 GeV]"
     plots[-1].rebin = 10
     plots[-1].ymax = 1e6
@@ -3957,16 +3892,19 @@ fileps = "allPlots_eejj_analysis.ps"
 print("INFO: writing canvas with plots to PDF...", end=' ')
 c.Print(fileps + "[")
 for i_plot, plot in enumerate(plots):
-    #print()
-    #print("INFO: draw plot:", plot.name, flush=True)
-    #print()
+    # print()
+    # print("INFO: draw plot:", plot.name, flush=True)
+    # print()
     plot.Draw(fileps, i_plot + 1)
 c.Print(fileps + "]")
 print("DONE")
 
 print("INFO: MakeTOC()")
 makeTOC("allPlots_eejj_analysis_toc.tex", fileps, plots)
-print("INFO: year = {}".format(year))
-print("INFO: using file: " + inputFile)
+print("INFO: year =", year)
+print("INFO: using file path:", dataMCFilePath)
 if doQCD:
-    print("INFO: using QCD file: " + inputFileQCD)
+    print("INFO: using QCD file:", inputFileQCD)
+
+for tfile in dataMCFilesDict.values():
+    tfile.Close()

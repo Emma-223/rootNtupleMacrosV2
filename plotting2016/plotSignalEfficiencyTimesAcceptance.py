@@ -57,6 +57,8 @@ def plotSignalEfficiencyTimesAcceptance(filePath, signalNameTemplate, mass_point
         # filename = filePath.format(sampleName, sampleName)
         # filename = filePath.format(mass, mass)
         filename = filePath
+        if ".root" not in filename:
+            filename += "analysisClass_lq_eejj_{}_plots.root".format(sampleName)
         tfile = GetFile(filename)
         histName = histNameBase.format(sampleName)
         eventsPassingHist = GetHisto(histName, tfile)
