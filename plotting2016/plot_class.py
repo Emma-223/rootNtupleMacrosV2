@@ -179,19 +179,21 @@ def GetHisto(histoName, file, scale=1):
     return new
 
 
-def generateHistoList(histoBaseName, samples, variableName, fileName, scale=1, sumSamples=False, sumSampleName=""):
+def generateHistoList(histoBaseName, samples, variableName, fileNames, scale=1, sumSamples=False, sumSampleName=""):
+    if not isinstance(fileNames, list):
+        fileNames = [fileNames]
     histolist = []
     for idx, sample in enumerate(samples):
         hname = (histoBaseName.replace("SAMPLE", sample)).replace(
             "VARIABLE", variableName
         )
         if not sumSamples:
-            histolist.append(GetHisto(hname, fileName, scale))
+            histolist.append(GetHisto(hname, fileNames[idx], scale))
         else:
             if idx == 0:
-                histolist.append(copy.deepcopy(GetHisto(hname, fileName, scale).Clone(sumSampleName)))
+                histolist.append(copy.deepcopy(GetHisto(hname, fileNames[idx], scale).Clone(sumSampleName)))
             else:
-                histolist[0].Add(GetHisto(hname, fileName, scale))
+                histolist[0].Add(GetHisto(hname, fileNames[idx], scale))
     return histolist
 
 
@@ -257,8 +259,9 @@ def generateHisto(histoBaseName, sample, variableName, fileName, scale=1.0, maxX
     if maxX > -1:
         maxBin = new.GetXaxis().FindBin(maxX)
         for iBin in range(maxBin, new.GetNbinsX() + 2):
-            new.SetBinContent(iBin, 0)
-            new.SetBinError(iBin, 0)
+            for yBin in range(0, new.GetNbinsY() + 2):
+                new.SetBinContent(iBin, yBin, 0)
+                new.SetBinError(iBin, yBin, 0)
     return new
 
 
@@ -467,16 +470,28 @@ def GetSystematicEffect(bkgTotalHist, systName, correlated=True):
     downErrs = []
     downBin = -1
     upBin = -1
-    systBins = [i for i in range(1, bkgTotalHist.GetNbinsY()+1) if systName in bkgTotalHist.GetYaxis().GetBinLabel(i)]
+    systBins = [i for i in range(1, bkgTotalHist.GetNbinsY()+1) if systName in bkgTotalHist.GetYaxis().GetBinLabel(i) and ("Up" in  bkgTotalHist.GetYaxis().GetBinLabel(i) or "Down" in  bkgTotalHist.GetYaxis().GetBinLabel(i))]
+    if systName == "LHEPdf":
+        binsToRemove = []
+        for i in systBins:
+            if "WeightMC" in bkgTotalHist.GetYaxis().GetBinLabel(i):
+                binsToRemove.append(i)
+        for i in binsToRemove:
+            systBins.remove(i)
     if len(systBins) < 1:
         raise RuntimeError("Could not find any bins that match for systematic named {}".format(systName))
+    if len(systBins) != 2:
+        raise RuntimeError("Did not find two bins that match for systematic named {}; found {} bins with labels {} instead.".format(systName, len(systBins), [bkgTotalHist.GetYaxis().GetBinLabel(i) for i in systBins]))
     for iBin in systBins:
         upBin = iBin
         downBin = iBin
-        if "Up" in bkgTotalHist.GetYaxis().GetBinLabel(iBin):
+        binLabel = bkgTotalHist.GetYaxis().GetBinLabel(iBin)
+        if "Up" in binLabel:
             upBin = iBin
-        elif "Down" in bkgTotalHist.GetYaxis().GetBinLabel(iBin):
+        elif "Down" in binLabel:
             downBin = iBin
+        else:
+            raise RuntimeError("Could not understand syst variation for name {} in bin labeled {}".format(systName, binLabel))
     maxErr = -1
     maxErrNominal = -1
     maxErrXbin = -1
