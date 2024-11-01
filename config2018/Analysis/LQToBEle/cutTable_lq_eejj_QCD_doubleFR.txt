@@ -22,34 +22,34 @@ eleEta_end2           2.000            2.5              -               -       
 #-----------------------------------------------------------------------------------------------------------------------------
 # BDT
 #-----------------------------------------------------------------------------------------------------------------------------
-BDTWeightFileLQM300   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-300_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM400   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-400_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM500   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-500_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM600   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-600_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM700   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-700_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM800   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-800_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM900   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-900_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1000   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1000_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1100   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1100_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1200   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1200_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1300   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1300_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1400   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1400_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1500   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1500_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1600   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1600_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1700   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1700_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1800   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1800_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM1900   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-1900_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2000   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2000_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2100   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2100_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2200   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2200_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2300   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2300_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2400   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2400_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2500   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2500_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2600   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2600_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2700   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2700_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2800   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2800_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM2900   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-2900_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
-BDTWeightFileLQM3000   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_20Sep2024/weights/TMVAClassification_LQToBEle_M-3000_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM300   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-300_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM400   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-400_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM500   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-500_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM600   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-600_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM700   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-700_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM800   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-800_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM900   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-900_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1000   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1000_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1100   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1100_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1200   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1200_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1300   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1300_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1400   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1400_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1500   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1500_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1600   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1600_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1700   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1700_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1800   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1800_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM1900   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-1900_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2000   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2000_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2100   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2100_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2200   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2200_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2300   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2300_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2400   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2400_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2500   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2500_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2600   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2600_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2700   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2700_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2800   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2800_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM2900   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-2900_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
+BDTWeightFileLQM3000   /eos/user/e/eipearso/LQ_BDTWeightFiles/LQToBEle/HTLO-amcatnlo_28Oct2024/weights/TMVAClassification_LQToBEle_M-3000_pair_TuneCP2_13TeV-madgraph-pythia8_BDTG.weights.xml - - - -1
 #-----------------------------------------------------------------------------------------------------------------------------
 # Fake rates
 #-----------------------------------------------------------------------------------------------------------------------------
@@ -175,114 +175,143 @@ trainingSelection                  -inf           +inf           -           -  
 # BDT CUTS
 #--------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------
-# LQ M 3000 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ3000                         -0.92                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM3000,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2900 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2900                         -0.88                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2900,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2700 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2700                         -0.85                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2700,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2800 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2800                         -0.85                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2800,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2600 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2600                         -0.66                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2600,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2500 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2500                         -0.33                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2500,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2400 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2400                         -0.15                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2400,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2300 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2300                         -0.13                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2300,trainingSelection
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 300 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ300                         0.11                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM300,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2200 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2200                         0.26                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2200,trainingSelection
+MeejjLQ300                   300                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ300                         0.09                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM300,MeejjLQ300
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 400 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ400                         0.46                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM400,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2100 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2100                         0.5                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2100,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 2000 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ2000                         0.53                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2000,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 1900 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1900                         0.7                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1900,trainingSelection
+MeejjLQ400                   400                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ400                         0.44                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM400,MeejjLQ400
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 500 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ500                         0.76                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM500,trainingSelection
+MeejjLQ500                   500                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ500                         0.73                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM500,MeejjLQ500
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 600 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ600                         0.78                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM600,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 1800 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1800                         0.81                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1800,trainingSelection
+MeejjLQ600                   600                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ600                         0.79                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM600,MeejjLQ600
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 700 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ700                         0.88                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM700,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 1700 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1700                         0.9                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1700,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 900 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ900                         0.93                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM900,trainingSelection
+MeejjLQ700                   700                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ700                         0.88                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM700,MeejjLQ700
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 800 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ800                         0.94                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM800,trainingSelection
+MeejjLQ800                   800                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ800                         0.94                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM800,MeejjLQ800
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 900 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ900                   900                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ900                         0.92                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM900,MeejjLQ900
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 1000 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1000                         0.94                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1000,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 1600 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1600                         0.94                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1600,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 1500 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1500                         0.96                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1500,trainingSelection
+MeejjLQ1000                   1000                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1000                         0.94                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1000,MeejjLQ1000
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 1100 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1100                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1100,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 1300 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1300                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1300,trainingSelection
-#------------------------------------------------------------------------------------------------------------------
-# LQ M 1400 optimization
-#------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1400                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1400,trainingSelection
+MeejjLQ1100                   1100                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1100                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1100,MeejjLQ1100
 #------------------------------------------------------------------------------------------------------------------
 # LQ M 1200 optimization
 #------------------------------------------------------------------------------------------------------------------
-BDTOutput_LQ1200                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1200,trainingSelection
+MeejjLQ1200                   1200                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1200                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1200,MeejjLQ1200
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 1300 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ1300                   1300                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1300                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1300,MeejjLQ1300
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 1400 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ1400                   1400                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1400                         0.97                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1400,MeejjLQ1400
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 1500 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ1500                   1500                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1500                         0.96                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1500,MeejjLQ1500
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 1600 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ1600                   1600                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1600                         0.95                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1600,MeejjLQ1600
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 1700 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ1700                   1700                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1700                         0.91                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1700,MeejjLQ1700
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 1800 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ1800                   1800                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1800                         0.84                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1800,MeejjLQ1800
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 1900 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ1900                   1900                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ1900                         0.72                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM1900,MeejjLQ1900
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2000 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2000                   2000                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2000                         0.56                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2000,MeejjLQ2000
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2100 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2100                   2100                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2100                         0.48                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2100,MeejjLQ2100
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2200 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2200                   2200                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2200                         0.17                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2200,MeejjLQ2200
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2300 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2300                   2300                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2300                         -0.02                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2300,MeejjLQ2300
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2400 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2400                   2400                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2400                         -0.21                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2400,MeejjLQ2400
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2500 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2500                   2500                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2500                         -0.31                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2500,MeejjLQ2500
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2600 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2600                   2600                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2600                         -0.66                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2600,MeejjLQ2600
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2700 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2700                   2700                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2700                         -0.76                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2700,MeejjLQ2700
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2800 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2800                   2800                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2800                         -0.81                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2800,MeejjLQ2800
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 2900 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ2900                   2900                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ2900                         -0.85                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM2900,MeejjLQ2900
+#------------------------------------------------------------------------------------------------------------------
+# LQ M 3000 optimization
+#------------------------------------------------------------------------------------------------------------------
+MeejjLQ3000                   3000                 +inf                    -                   -   2       500 0 5000 minselection:trainingSelection
+BDTOutput_LQ3000                         -0.87                +inf 		-		-	2	100 -1 1    TMVACut:BDT,BDTWeightFileLQM3000,MeejjLQ3000
